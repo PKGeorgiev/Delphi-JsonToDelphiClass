@@ -24,6 +24,7 @@ Main features:
 - Simple and responsive GUI;
 - *** Automatic check for update, based on ITask (Parallel Programming Library)!
 - It's open source! You can find the source code and binary releases on GitHub.
+- The program uses MadExcept to report unhanded exceptions;
 
 * If the JSON array is empty the contained type is unknown. Unit generation works only with known and supported types.
 
@@ -32,3 +33,5 @@ Main features:
 *** The releases of JsonToDelphiClass (source and binaries) are public and reside on GitHub. The update unit uses GitHub's REST API to enumerate tags/releases.
 
 Report any problems/suggestions using GitHub's facilities.
+
+You can find more information here: http://www.pgeorgiev.com/?p=1832
