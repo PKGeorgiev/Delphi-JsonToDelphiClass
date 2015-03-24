@@ -44,10 +44,15 @@ begin
 end;
 
 procedure TSaveUnitForm.btnSaveClick(Sender: TObject);
+var
+  tmpList: TStringList;
 begin
   if sd.Execute then
   begin
-
+    tmpList:=TStringList.Create;
+    tmpList.Assign(memo1.Lines);
+    tmpList.SaveToFile(sd.FileName);
+    tmpList.Free;
   end;
 end;
 

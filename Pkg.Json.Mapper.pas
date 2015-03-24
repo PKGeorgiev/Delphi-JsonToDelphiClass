@@ -226,7 +226,8 @@ begin
           end;
         end;
 
-        TStubArrayField.Create(AParentClass, LJsonPair.JsonString.Value, LJsonType2, LClass);
+        if LJsonType2<>jtUnknown then
+          TStubArrayField.Create(AParentClass, LJsonPair.JsonString.Value, LJsonType2, LClass);
 
       end;
       jtNumber,
@@ -554,9 +555,11 @@ begin
             LJsonType := GetJsonType(LJsonValue2);
             LClass := TStubClass.Create(FRootClass, 'Item', self);
           end;
-
-          TStubArrayField.Create(FRootClass, 'Items', LJsonType, LClass);
-          ProcessJsonObject(LJsonValue2, LClass);
+          if LJsonType<>jtUnknown then
+          begin
+            TStubArrayField.Create(FRootClass, 'Items', LJsonType, LClass);
+            ProcessJsonObject(LJsonValue2, LClass);
+          end;
         end;
       end;
     finally
