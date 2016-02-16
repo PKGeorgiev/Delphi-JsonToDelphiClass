@@ -8,9 +8,13 @@ uses
   FMX.Layouts, FMX.Memo, System.Json, Rest.Json, FMX.TreeView, TypInfo, RTTI,
   regularexpressions, generics.collections, Pkg.Json.Mapper, NetEncoding,
   FMX.Menus, FMX.Controls.Presentation, FMX.Edit, FMX.ConstrainedForm, REST.Client,
-  uUpdate, System.Threading, uGitHub, FMX.Objects, uUpdateForm;
+  uUpdate, System.Threading, uGitHub, FMX.Objects, uUpdateForm, SyncObjs,
+  FMX.ScrollBox;
+
+const JsonValidatorUrl = 'http://jsonlint.com';
 
 type
+
   TMainForm = class(TConstrainedForm)
     Memo1: TMemo;
     tv: TTreeView;
@@ -26,7 +30,7 @@ type
     Splitter1: TSplitter;
     Panel3: TPanel;
     btnVisualize: TButton;
-    btnGenerateUnit: TButton;
+    btnOnlineJsonValidator: TButton;
     btnExit: TButton;
     Label3: TLabel;
     Label4: TLabel;
@@ -38,10 +42,12 @@ type
     MenuItem6: TMenuItem;
     MenuItem7: TMenuItem;
     Panel4: TPanel;
+    MenuItem8: TMenuItem;
+    btnGenerateUnit: TButton;
     procedure btnVisualizeClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure btnGenerateUnitClick(Sender: TObject);
+    procedure PreviewUnitClick(Sender: TObject);
     procedure btnExitClick(Sender: TObject);
     procedure MainPopupMenuPopup(Sender: TObject);
     procedure tvDblClick(Sender: TObject);
@@ -55,18 +61,24 @@ type
     procedure tvKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
     procedure Panel1Resize(Sender: TObject);
+    procedure MenuItem8Click(Sender: TObject);
+    procedure btnOnlineJsonValidatorClick(Sender: TObject);
   private
     { Private declarations }
     procedure DisableMenuItems;
     procedure VisualizeClass;
     procedure PrepareMenu;
+    procedure DisableGuiElements;
   public
     { Public declarations }
     jm: TPkgJsonMapper;
-    FTerminationTask: ITask;
-    FCheckForUpdateTask: ITask;
     FCheckVersionResponse: TObject;
     FChanged: boolean;
+    //  0: Active
+    //  1: Terminating
+    //  >=2: Terminated
+    FApplicationStatus: integer;
+    FUpdateCheckEvent: TEvent;
   end;
 
 var
@@ -84,6 +96,11 @@ uses uSaveUnitForm,
   Posix.Stdlib;
 {$ENDIF POSIX}
 
+procedure TMainForm.btnOnlineJsonValidatorClick(Sender: TObject);
+begin
+  MenuItem8Click(nil);
+end;
+
 procedure TMainForm.btnVisualizeClick(Sender: TObject);
 begin
   if FChanged then
@@ -98,6 +115,17 @@ begin
     VisualizeClass;
 end;
 
+procedure TMainForm.DisableGuiElements;
+begin
+  edit2.Enabled := false;
+  Memo1.Enabled := false;
+  tv.Enabled := false;
+  tv.PopupMenu := nil;
+  btnExit.Enabled := false;
+  btnVisualize.Enabled := false;
+  btnGenerateUnit.Enabled := false;
+end;
+
 procedure TMainForm.DisableMenuItems;
 var
   k: integer;
@@ -108,7 +136,7 @@ begin
   end;
 end;
 
-procedure TMainForm.btnGenerateUnitClick(Sender: TObject);
+procedure TMainForm.PreviewUnitClick(Sender: TObject);
 begin
   if tv.Count = 0 then
     btnVisualizeClick(self);
@@ -137,118 +165,86 @@ end;
 
 procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
-  if FCheckForUpdateTask <> nil then
-    if FTerminationTask = nil then
-    begin
-
-      //  Disable GUI elements
-      CanClose := false;
-      edit2.Enabled := false;
-      Memo1.Enabled := false;
-      tv.Enabled := false;
-      tv.PopupMenu := nil;
-      btnExit.Enabled := false;
-      btnVisualize.Enabled := false;
-      btnGenerateUnit.Enabled := false;
-
-      label1.Text := 'Terminating application, please wait...';
-      //  We start a termination task.
-      //  This task will wait for the CheckForUpdateTask to complete.
-      FTerminationTask := TTask.Run(
-        procedure
-        var
-          LTask: ITask;
-        begin
-
-          LTask := FCheckForUpdateTask;
-          try
-
-            if LTask <> nil then
-            begin
-              //  Since TTask.Wait is buggy we use simple polling...
-              while FCheckForUpdateTask <> nil do
-                Sleep(100);
-            end;
-
-          finally
-
-            LTask := nil;
-            FTerminationTask := nil;
-
-            TThread.Synchronize(nil,
-              procedure
-              begin
-                Close;
-              end
-            );
-
-          end;
-
-        end
-      );
-    end
-    else
+  if FUpdateCheckEvent.WaitFor(0) = wrSignaled then
+    CanClose := true
   else
   begin
-    CanClose := true;
-    FCheckVersionResponse.Free;
+    CanClose := false;
+
+    case FApplicationStatus of
+      0:
+        begin
+          TInterlocked.Increment(FApplicationStatus);
+          DisableGuiElements;
+
+          label1.Text := 'Terminating application, please wait...';
+
+          //  We start a termination task.
+          //  This way the main thread will not freeze
+          TTask.Run(
+            procedure
+            begin
+              FUpdateCheckEvent.WaitFor();
+
+              //  Indicate next stage
+              TInterlocked.Increment(FApplicationStatus);
+
+              //  We enqueue the handler
+              TThread.Queue(nil,
+                procedure
+                begin
+                  Close;
+                end
+              );
+            end
+          );
+
+        end;
+      1: ;
+      else
+        CanClose := true;
+    end;
   end;
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
-//var
-//  LRelease: TReleaseClass;
-//  s: string;
-//  tsl: TStringList;
 begin
+  FApplicationStatus := 0;
+  FUpdateCheckEvent := TEvent.Create(nil, true, false, '');
+
   self.Constraints.MinWidth := 1024;
   self.Constraints.MinHeight := 560;
-
 
   Caption := 'JsonToDelphiClass - ' + FloatToStr(ProgramVersion, PointDsFormatSettings) + ' | By Petar Georgiev';
 
   jm := TPkgJsonMapper.Create(tv);
 
-  //  Test for MadExcept Report Leaks issue
-  //  tsl := TStringList.Create;
-  //  tsl.LoadFromFile('d:\json.txt');
-  //  LRelease := TReleaseClass.FromJsonString(tsl.Text);
-  ////  tsl.LoadFromFile('d:\json2.txt');
-  //  LRelease := TReleaseClass.FromJsonString(tsl.Text);
-
-//  btnVisualizeClick(self);
-
-  //exit;
-
   label1.Text := 'Checking for update...';
-  FCheckForUpdateTask := CheckForUpdate(
+
+  NewCheckForUpdateTask(
     procedure(ARelease: TObject)
     begin
       FCheckVersionResponse := ARelease;
-      if FTerminationTask = nil then
+      if FCheckVersionResponse is TReleaseClass then
       begin
-        if ARelease is TReleaseClass then
+        label1.StyleLookup := 'LabelLinkStyle';
+        label1.Text := 'Version ' + (FCheckVersionResponse as TReleaseClass).tag_name + ' is available! Click here to download!';
+        (label1.FindStyleResource('text') as TText).OnClick := label1Click;
+        label1.HitTest := true;
+      end
+      else
+        if FCheckVersionResponse is TErrorClass then
         begin
-          label1.StyleLookup := 'LabelLinkStyle';
-          label1.Text := 'Version ' + (FCheckVersionResponse as TReleaseClass).tag_name + ' is available! Click here to download!';
-          (label1.FindStyleResource('text') as TText).OnClick := label1Click;
-          label1.HitTest := true;
+          label1.StyleLookup := 'LabelErrorStyle';
+          label1.Text := 'Error checking for new version: ' + (FCheckVersionResponse as TErrorClass).message;
         end
         else
-          if ARelease is TErrorClass then
-          begin
-            label1.StyleLookup := 'LabelErrorStyle';
-            label1.Text := 'Error checking for new version: ' + (ARelease as TErrorClass).message;
-          end
-          else
-          begin
-            label1.StyleLookup := 'LabelGreenStyle';
-            label1.Text := 'Your version ' + FloatToStr(uUpdate.ProgramVersion, PointDsFormatSettings) + ' is up to date! For more information about JsonToDelphiClass click here!';
-            (label1.FindStyleResource('text') as TText).OnClick := label1Click;
-          end;
-      end;
-
-      FCheckForUpdateTask := nil;
+        begin
+          label1.StyleLookup := 'LabelGreenStyle';
+          label1.Text := 'Your version ' + FloatToStr(uUpdate.ProgramVersion, PointDsFormatSettings) + ' is up to date! For more information about JsonToDelphiClass click here!';
+          (label1.FindStyleResource('text') as TText).OnClick := label1Click;
+        end;
+        FUpdateCheckEvent.SetEvent;
     end
   );
 
@@ -256,7 +252,9 @@ end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
-  jm.Free;
+  FreeAndNil(FUpdateCheckEvent);
+  FreeAndNil(jm);
+  FreeAndNil(FCheckVersionResponse);
 end;
 
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;
@@ -332,6 +330,16 @@ begin
     LClass.Name := LString;
     jm.Visualize(tv, 'TreeViewItem1Style1');
   end;
+end;
+
+procedure TMainForm.MenuItem8Click(Sender: TObject);
+begin
+  {$IFDEF MSWINDOWS}
+    ShellExecute(0, 'OPEN', PChar(JsonValidatorUrl), '', '', SW_SHOWNORMAL);
+  {$ENDIF MSWINDOWS}
+  {$IFDEF POSIX}
+    _system(PAnsiChar('open ' + AnsiString(JsonValidatorUrl)));
+  {$ENDIF POSIX}
 end;
 
 procedure TMainForm.Panel1Resize(Sender: TObject);

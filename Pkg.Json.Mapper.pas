@@ -67,17 +67,19 @@ type
     FParentClass: TStubClass;
     FMapper: TPkgJsonMapper;
     FPureClassName: string;
+    FArrayProperty: string;
     procedure SortFields;
     procedure SetName(const Value: string);
     procedure SetPureClassName(const Value: string);
   public
-    constructor Create(AParentClass: TStubClass; AClassName: string; AMapper: TPkgJsonMapper);
+    constructor Create(AParentClass: TStubClass; AClassName: string; AMapper: TPkgJsonMapper; AArrayProperty: string = '');
     destructor  Destroy; override;
     property    Name: string read FName write SetName;
     property    Items: TList<TStubField> read FItems write FItems;
     function    GetDeclarationPart: string;
     function    GetImplementationPart: string;
     property    PureClassName: string read FPureClassName write SetPureClassName;
+    property    ArrayProperty: string read FArrayProperty write FArrayProperty;
 
   end;
 
@@ -555,6 +557,7 @@ begin
             LClass := TStubClass.Create(FRootClass, 'Item', self);
           end;
 
+          FRootClass.ArrayProperty := 'Items';
           TStubArrayField.Create(FRootClass, 'Items', LJsonType, LClass);
           ProcessJsonObject(LJsonValue2, LClass);
         end;
@@ -571,7 +574,7 @@ end;
 
 { TVirtualClass }
 
-constructor TStubClass.Create(AParentClass: TStubClass; AClassName: string; AMapper: TPkgJsonMapper);
+constructor TStubClass.Create(AParentClass: TStubClass; AClassName: string; AMapper: TPkgJsonMapper; AArrayProperty: string);
 begin
   inherited Create;
   FMapper := AMapper;
@@ -581,6 +584,7 @@ begin
   FComplexItems := TList<TStubField>.Create;
   FArrayItems := TList<TStubField>.Create;
   FMapper.FClasses.Add(self);
+  FArrayProperty := AArrayProperty;
 
   FParentClass := AParentClass;
 
@@ -785,10 +789,10 @@ begin
   if AItemName.Contains('-') then
     raise EJsonMapper.CreateFmt('%s: Hyphens are not allowed!', [AItemName]);
 
+  FParentClass := AParentClass;
   FFieldType := AFieldType;
   Name := AItemName;
 
-  FParentClass := AParentClass;
   if FParentClass <> nil then
     FParentClass.FItems.Add(self);
 end;
@@ -816,6 +820,10 @@ end;
 
 procedure TStubField.SetName(const Value: string);
 begin
+
+  if (FParentClass.FArrayProperty <> '') AND (FParentClass.FArrayProperty = FName) then
+    FParentClass.FArrayProperty := Value;
+
   FName := Value;
 
   FFieldName := 'F' + String(Copy(Value, 1, 1)).ToUpper + Copy(Value, 2);
@@ -824,6 +832,8 @@ begin
     FPropertyName := '&' + Value
   else
     FPropertyName := Value;
+
+
 
 end;
 

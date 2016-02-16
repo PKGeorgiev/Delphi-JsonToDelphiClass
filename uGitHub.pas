@@ -10,9 +10,34 @@ unit uGitHub;
 
 interface
 
-uses Generics.Collections, Rest.Json;
+uses Generics.Collections, Rest.Json, IdUri, IdHttp,
+  IdSSLOpenSSL, System.JSON, SysUtils, Classes;
 
 type
+
+//  Represents a serializable object with HTTP/REST capabilities (via Indy)
+//  HTTPS connections require OpenSSL binaries!
+//  Use the "AOnBeforeRequest" event to setup HTTP client's parameters like timeout, encoding etc.
+//  
+TUGitHubSerializableObject = class abstract
+protected
+  //  As per http://www.restapitutorial.com/lessons/httpmethods.html
+  class procedure EnsureHttpResponseCode(AHttpResponseCode: integer; AUrl: string; AValidValues: array of integer);
+  class procedure EnsureHttpContentType(AHttp: TIdHttp);
+public
+  //  Generic Web Request method
+  class function  WebRequest(AUrl: string; AOnRequest: TProc<TIdHttp>): integer;
+  //  Returns an instance of T from a JSON string via GET request. AArrayProperty is intended for internal use only!
+  //  HttpGet is reintroduced in descendant classes to return concrete instance
+  class function  HttpGet<T: class, constructor>
+                            (AUrl: string; AOnBeforeRequest: TProc<TIdHttp> = nil; AArrayProperty: string = ''): T;
+  //  Performs POST request, sends the current object as JSON string and returns server's response as text.
+  function        HttpPost  (AUrl: string; AOnBeforeRequest: TProc<TIdHttp> = nil): string;
+  //  Performs PUT request, sends the current object as JSON string and returns server's response as text.
+  function        HttpPut   (AUrl: string; AOnBeforeRequest: TProc<TIdHttp> = nil): string;
+  //  Performs DELETE request and returns server's response as text. This method exists just REST compliance.
+  function        HttpDelete(AUrl: string; AOnBeforeRequest: TProc<TIdHttp> = nil): string;
+end;
 
 TUploaderClass = class
 private
@@ -127,7 +152,7 @@ public
   class function FromJsonString(AJsonString: string): TAuthorClass;
 end;
 
-TReleaseClass = class
+TReleaseClass = class(TUGitHubSerializableObject)
 private
   FAssets: TArray<TAssetsClass>;
   FAssets_url: String;
@@ -168,6 +193,7 @@ public
   destructor Destroy; override;
   function ToJsonString: string;
   class function FromJsonString(AJsonString: string): TReleaseClass;
+  class function HttpGet(AUrl: string; AOnBeforeRequest: TProc<TIdHttp> = nil): TReleaseClass;
 end;
 
 TGitReleasesClass = class
@@ -179,6 +205,7 @@ public
   destructor Destroy; override;
   function ToJsonString: string;
   class function FromJsonString(AJsonString: string): TGitReleasesClass;
+  class function FromUrl(AUrl: string; ATimeout: integer): TGitReleasesClass;
 end;
 
 TErrorClass = class
@@ -274,6 +301,11 @@ begin
   result := TJson.JsonToObject<TReleaseClass>(AJsonString)
 end;
 
+class function TReleaseClass.HttpGet(AUrl: string; AOnBeforeRequest: TProc<TIdHttp>): TReleaseClass;
+begin
+  result := inherited HttpGet<TReleaseClass>(AUrl, AOnBeforeRequest);
+end;
+
 {TGitReleasesClass}
 
 constructor TGitReleasesClass.Create;
@@ -303,6 +335,67 @@ begin
 end;
 
 
+class function TGitReleasesClass.FromUrl(AUrl: string;
+  ATimeout: integer): TGitReleasesClass;
+var
+  LUri: TIdUri;
+  LHttp: TIdHttp;
+  LSslIoHandler: TIdSSLIOHandlerSocketOpenSSL;
+  LString: string;
+  LJsonValue: TJsonValue;
+  LJsonObject: TJsonObject;
+begin
+  result := nil;
+  LUri := TIdURI.Create(AUrl);
+  try
+    LHttp := TIdHTTP.Create;
+    try
+      LHttp.ConnectTimeout := ATimeout;
+      LHttp.ReadTimeout := ATimeout;
+      LHttp.HandleRedirects := true;
+
+      if LUri.Protocol.ToLower = 'https' then
+      begin
+        LSslIoHandler := TIdSSLIOHandlerSocketOpenSSL.Create(LHttp);
+        LHttp.IOHandler := LSslIoHandler;
+      end;
+
+      LString := LHttp.Get(AUrl);
+
+      if LHttp.ResponseCode <> 200 then
+        raise Exception.CreateFmt('Error getting JSON string from %s. Http error code: %d', [AUrl, LHttp.ResponseCode]);
+
+      LJsonValue := TJSONObject.ParseJSONValue(LString);
+
+      if LJsonValue = nil then
+        raise Exception.Create('Unable to parse JSON string!');
+
+      try
+        LJsonValue.Owned := false;
+        if LJsonValue is TJSONArray then
+        begin
+          LJsonObject := TJSONObject.Create;
+          try
+            LJsonObject.AddPair('Releases', LJsonValue);
+            LString := LJsonObject.ToJSON;
+          finally
+            LJsonObject.Free;
+          end;
+        end;
+
+        result := TGitReleasesClass.FromJsonString(LString);
+
+      finally
+        LJsonValue.Free;
+      end;
+    finally
+      LHttp.Free;
+    end;
+  finally
+    LUri.Free;
+  end;
+end;
+
 {TErrorClass}
 
 function TErrorClass.ToJsonString: string;
@@ -313,6 +406,206 @@ end;
 class function TErrorClass.FromJsonString(AJsonString: string): TErrorClass;
 begin
   result := TJson.JsonToObject<TErrorClass>(AJsonString)
+end;
+
+{ TUGitHubSerializableObject }
+
+class procedure TUGitHubSerializableObject.EnsureHttpContentType(
+  AHttp: TIdHttp);
+begin
+  if AHttp.Response.ContentType <> 'application/json' then
+    raise Exception.CreateFmt('Invalid content type %s!', [AHttp.Response.ContentType]);
+end;
+
+class procedure TUGitHubSerializableObject.EnsureHttpResponseCode(
+  AHttpResponseCode: integer; AUrl: string; AValidValues: array of integer);
+var
+  LValue: integer;
+begin
+  for LValue in AValidValues do
+    if LValue = AHttpResponseCode then exit;
+
+  raise Exception.CreateFmt('The request to %s has failed with code %d', [AUrl, AHttpResponseCode]);
+end;
+
+function TUGitHubSerializableObject.HttpDelete(AUrl: string;
+  AOnBeforeRequest: TProc<TIdHttp>): string;
+var
+  LResult: string;
+begin
+
+  WebRequest(AUrl,
+    procedure(LHttp: TIdHttp)
+    begin
+    
+      //  Allow HTTP client pre-configuration
+      if assigned(AOnBeforeRequest) then
+        AOnBeforeRequest(LHttp);
+
+      LResult := LHttp.Delete(AUrl); 
+      EnsureHttpResponseCode(LHttp.ResponseCode, AUrl, [200, 204]);
+
+    end
+  );
+
+  result := LResult;
+end;
+
+class function TUGitHubSerializableObject.HttpGet<T>(AUrl: string; AOnBeforeRequest: TProc<TIdHttp>; AArrayProperty: string): T;
+var
+  LResult: T;
+begin
+
+  WebRequest(AUrl, 
+    procedure(LHttp: TIdHttp)
+    var
+      LString: string;
+      LJsonValue: TJsonValue;
+      LJsonObject: TJsonObject;
+    begin
+    
+      //  Allow HTTP client pre-configuration
+      if assigned(AOnBeforeRequest) then
+        AOnBeforeRequest(LHttp);
+
+      LString := LHttp.Get(AUrl);
+      EnsureHttpResponseCode(LHttp.ResponseCode, AUrl, [200, 304]);
+      EnsureHttpContentType(LHttp);
+
+      LJsonValue := TJSONObject.ParseJSONValue(LString);
+      
+      if LJsonValue = nil then
+        raise Exception.Create('Unable to parse JSON string!');      
+
+      try
+        LJsonValue.Owned := false;
+        if LJsonValue is TJSONArray then
+          if (AArrayProperty <> '') then
+          begin
+            LJsonObject := TJSONObject.Create;
+            try
+              LJsonObject.AddPair(AArrayProperty, LJsonValue);
+              LString := LJsonObject.ToJSON;
+            finally
+              LJsonObject.Free;
+            end;
+          end
+          else
+            raise Exception.CreateFmt('The class %s does not accept array values!', [LResult.className]);
+      finally
+        LJsonValue.Free;
+      end;   
+
+      LResult := TJson.JsonToObject<T>(LString);     
+
+    end
+  );
+
+  result := LResult;
+end;
+
+function TUGitHubSerializableObject.HttpPost(AUrl: string;
+  AOnBeforeRequest: TProc<TIdHttp>): string;
+var
+  LResult: string;
+begin
+
+  WebRequest(AUrl,
+    procedure(LHttp: TIdHttp)
+    var
+      LStringStream: TStringStream;
+    begin
+    
+      //  Allow HTTP client pre-configuration
+      if assigned(AOnBeforeRequest) then
+        AOnBeforeRequest(LHttp);
+
+      LResult := TJson.ObjectToJsonString(self);  
+
+      LStringStream := TStringStream.Create(LResult, TEncoding.GetEncoding(LHttp.Request.ContentEncoding));
+      try
+        LResult := LHttp.Post(AUrl, LStringStream);
+        EnsureHttpResponseCode(LHttp.ResponseCode, AUrl, [200, 201, 202, 204]);
+        EnsureHttpContentType(LHttp);
+      finally
+        LStringStream.Free;
+      end;
+
+    end
+  );
+
+  result := LResult;
+end;
+
+function TUGitHubSerializableObject.HttpPut(AUrl: string;
+  AOnBeforeRequest: TProc<TIdHttp>): string;
+var
+  LResult: string;
+begin
+
+  WebRequest(AUrl,
+    procedure(LHttp: TIdHttp)
+    var
+      LStringStream: TStringStream;
+    begin
+    
+      //  Allow HTTP client pre-configuration
+      if assigned(AOnBeforeRequest) then
+        AOnBeforeRequest(LHttp);
+
+      LResult := TJson.ObjectToJsonString(self);  
+
+      LStringStream := TStringStream.Create(LResult, TEncoding.GetEncoding(LHttp.Request.ContentEncoding));
+      try
+        LResult := LHttp.Put(AUrl, LStringStream);
+        EnsureHttpResponseCode(LHttp.ResponseCode, AUrl, [200, 204]);
+        EnsureHttpContentType(LHttp);
+      finally
+        LStringStream.Free;
+      end;
+
+    end
+  );
+
+  result := LResult;
+end;
+
+
+class function TUGitHubSerializableObject.WebRequest(AUrl: string; AOnRequest: TProc<TIdHttp>): integer;
+var
+  LUri: TIdUri;
+  LHttp: TIdHttp;
+  LSslIoHandler: TIdSSLIOHandlerSocketOpenSSL;
+begin
+  LUri := TIdURI.Create(AUrl);
+  try
+    LHttp := TIdHTTP.Create;
+    try
+      LHttp.HandleRedirects := true;
+      //  Default encoding
+      LHttp.Request.ContentEncoding := 'utf-8';
+      //  Specify Content-Type header
+      LHttp.Request.ContentType := 'application/json';
+
+      //  Replace default IOHandler with TIdSSLIOHandlerSocketOpenSSL if the connection is SSL based
+      if LUri.Protocol.ToLower = 'https' then
+      begin
+        LSslIoHandler := TIdSSLIOHandlerSocketOpenSSL.Create(LHttp);
+        LHttp.IOHandler := LSslIoHandler;
+      end;
+
+      try
+        AOnRequest(LHttp);
+      finally
+        result := LHttp.ResponseCode;
+      end;
+
+    finally
+      LHttp.Free;
+    end;
+  finally
+    LUri.Free;
+  end;
 end;
 
 end.
