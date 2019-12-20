@@ -1,15 +1,15 @@
 unit Pkg.Json.Mapper;
 
 interface
-uses FMX.TreeView, System.JSON, Rest.Json, RTTI, RegularExpressions, TypInfo,
-  SysUtils, classes, Generics.Collections, Generics.Defaults;
+
+uses
+  System.Json, Rest.Json, System.SysUtils,
+  System.Classes, Generics.Collections, Generics.Defaults;
 
 type
-
   EJsonMapper = class(Exception);
 
-  TJsonType = (jtUnknown, jtObject, jtArray, jtString, jtTrue, 
-    jtFalse, jtNumber, jtDate, jtDateTime, jtBytes);
+  TJsonType = (jtUnknown, jtObject, jtArray, jtString, jtTrue, jtFalse, jtNumber, jtDate, jtDateTime, jtBytes, jtInteger, jtInteger64);
 
   TStubClass = class;
   TPkgJsonMapper = class;
@@ -23,14 +23,13 @@ type
     FParentClass: TStubClass;
     procedure SetName(const Value: string);
   public
-    constructor     Create(AParentClass: TStubClass; AItemName: string; AFieldType: TJsonType);
-    destructor      Destroy; override;
-    property        Name: string read FName write SetName;
-    property        FieldName: string read FFieldName write FFieldName;
-    property        PropertyName: string read FPropertyName write FPropertyName;
-    property        FieldType: TJsonType read FFieldType write FFieldType;
-    function        GetTypeAsString: string; overload; virtual;
-    class function  GetTypeAsString(AType: TJsonType): string; overload;
+    constructor Create(aParentClass: TStubClass; aItemName: string; aFieldType: TJsonType);
+    property name: string read FName write SetName;
+    property FieldName: string read FFieldName write FFieldName;
+    property PropertyName: string read FPropertyName write FPropertyName;
+    property FieldType: TJsonType read FFieldType write FFieldType;
+    function GetTypeAsString: string; overload; virtual;
+    class function GetTypeAsString(AType: TJsonType): string; overload;
   end;
 
   TStubContainerField = class(TStubField)
@@ -43,24 +42,21 @@ type
   end;
 
   TStubObjectField = class(TStubContainerField)
-  private
   public
-    constructor Create(AParentClass: TStubClass; AItemName: string; AItemClass: TStubClass);
-    function    GetTypeAsString: string; override;
+    constructor Create(aParentClass: TStubClass; aItemName: string; aItemClass: TStubClass);
+    function GetTypeAsString: string; override;
   end;
 
   TStubArrayField = class(TStubContainerField)
-  private
   public
-    constructor Create(AClass: TStubClass; AItemName: string; AItemSubType: TJsonType; AItemClass: TStubClass);
-    function    GetTypeAsString: string; override;
+    constructor Create(aClass: TStubClass; aItemName: string; aItemSubType: TJsonType; aItemClass: TStubClass);
+    function GetTypeAsString: string; override;
   end;
 
   TStubClass = class
   private
-    FItems,
-    FComplexItems,
-    FArrayItems: TList<TStubField>;
+    FItems: TObjectList<TStubField>;
+    FComplexItems, FArrayItems: TList<TStubField>;
     FName: string;
     FComparison: TComparison<TStubField>;
     FComparer: IComparer<TStubField>;
@@ -72,315 +68,296 @@ type
     procedure SetName(const Value: string);
     procedure SetPureClassName(const Value: string);
   public
-    constructor Create(AParentClass: TStubClass; AClassName: string; AMapper: TPkgJsonMapper; AArrayProperty: string = '');
-    destructor  Destroy; override;
-    property    Name: string read FName write SetName;
-    property    Items: TList<TStubField> read FItems write FItems;
-    function    GetDeclarationPart: string;
-    function    GetImplementationPart: string;
-    property    PureClassName: string read FPureClassName write SetPureClassName;
-    property    ArrayProperty: string read FArrayProperty write FArrayProperty;
-
+    constructor Create(aParentClass: TStubClass; aClassName: string; aMapper: TPkgJsonMapper; aArrayProperty: string = '');
+    destructor Destroy; override;
+    property name: string read FName write SetName;
+    property Items: TObjectList<TStubField> read FItems write FItems;
+    function GetDeclarationPart(const BaseClass: string): string;
+    function GetImplementationPart: string;
+    property PureClassName: string read FPureClassName write SetPureClassName;
+    property ArrayProperty: string read FArrayProperty write FArrayProperty;
   end;
 
   TPkgJsonMapper = class
-    private
-      FTreeView: TTreeView;
-      FClasses: TList<TStubClass>;
-      FRootClass: TStubClass;
-      FUnitName: string;
-      procedure SetUnitName(const Value: string);
-    protected
-      function  GetJsonType(AJsonValue: TJsonValue): TJsonType;
-      function  GetFirstArrayItem(AJsonValue: TJsonValue): TJsonValue;
-      procedure ProcessJsonObject(AJsonValue: TJsonValue; AParentClass: TStubClass);
-      procedure ClearClasses;
-      procedure InternalFormatTreeViewFields(AItem: TTreeViewItem);
-      procedure FormatFields(ATreeView: TTreeView);
-      procedure InternalVisualize(ATreeViewItem: TTreeViewItem; AClass: TStubClass; AItemStyleLookup: string);
-      function  SuggestClassName(ASuggestedClassName: string): string;
-    public
-      constructor Create(ATreeView: TTreeView);
-      destructor  Destroy; override;
-      //  Parses a JSON string and creates internal stub class structure
-      procedure   Parse(AJsonString: string; ARootClassName: string = 'Root');
-      //  Generates resultant unit
-      function    GenerateUnit: string;
-      procedure   Debug(ALines: TStrings);
-      //  Visualizes stub class structure in a treeview
-      procedure   Visualize(ATreeView: TTreeView; AItemStyleLookup: string);
-      property    DestinationUnitName: string read FUnitName write SetUnitName;
+  private
+    FStubClasses: TObjectList<TStubClass>;
+    FRootClass: TStubClass;
+    FUnitName: string;
+    FClassName: string;
+    procedure SetUnitName(const Value: string);
+  protected
+    function GetJsonType(aJsonValue: TJsonValue): TJsonType;
+    function GetFirstArrayItem(aJsonValue: TJsonValue): TJsonValue;
+    procedure ProcessJsonObject(aJsonValue: TJsonValue; aParentClass: TStubClass);
+    function SuggestClassName(aSuggestedClassName: string): string;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    // Parses a JSON string and creates internal stub class structure
+    function Parse(aJsonString: string): TPkgJsonMapper;
+    // Generates result unit
+    function GenerateUnit: string;
+    procedure Debug(aLines: TStrings);
+    property DestinationClassName: string read FClassName write FClassName;
+    property DestinationUnitName: string read FUnitName write SetUnitName;
+    property RootClass: TStubClass read FRootClass;
   end;
 
-procedure PrettyPrintJSON(JSONValue: TJSONValue; OutputStrings: TStrings; indent: integer = 0);
-
-var
-  PointDsFormatSettings: TFormatSettings;
+procedure PrettyPrintJSON(JSONValue: TJsonValue; OutputStrings: TStrings; Indent: Integer = 0);
 
 implementation
 
-uses uUpdate;
+uses
+  System.RegularExpressions, System.StrUtils,
+  uUpdate;
 
 var
   ReservedWords: TList<string>;
 
-const INDENT_SIZE = 2;
+const
+  INDENT_SIZE = 2;
 
-//  http://stackoverflow.com/a/12198174
-procedure PrettyPrintPair(JSONValue: TJSONPair; OutputStrings: TStrings; last: boolean; indent: integer);
-const TEMPLATE = '%s:%s';
-var
-  line: string;
-  newList: TStringList;
-begin
-  newList := TStringList.Create;
-  try
-    PrettyPrintJSON(JSONValue.JsonValue, newList, indent);
-    line := format(TEMPLATE, [JSONValue.JsonString.ToString, Trim(newList.Text)]);
-  finally
-    newList.Free;
+type
+  TStringsHelper = class helper for TStrings
+  public
+    procedure AddFormat(const aFormat: string; const Args: array of const);
   end;
 
-  line := StringOfChar(' ', indent + INDENT_SIZE) + line;
-  if not last then
-    line := line + ',';
-  OutputStrings.add(line);
-end;
+  { TStringsHelper }
 
-procedure PrettyPrintArray(JSONValue: TJSONArray; OutputStrings: TStrings; last:     boolean; indent: integer);
-var i: integer;
+procedure TStringsHelper.AddFormat(const aFormat: string; const Args: array of const);
 begin
-   OutputStrings.add(StringOfChar(' ', indent + INDENT_SIZE) + '[');
-  for i := 0 to JSONValue.Count - 1 do
-      begin
-      PrettyPrintJSON(JSONValue.Items[i], OutputStrings, indent);
-      if i < JSONValue.Count - 1 then
-         OutputStrings[OutputStrings.Count-1] := OutputStrings[OutputStrings.Count-1] + ',';
-      end;
-   OutputStrings.add(StringOfChar(' ', indent + INDENT_SIZE - 2) + ']');
+  Add(Format(aFormat, Args));
 end;
 
-procedure PrettyPrintJSON(JSONValue: TJSONValue; OutputStrings: TStrings; indent: integer = 0);
+function CapitaiazeFirst(const Value: string): string;
 var
-  i: integer;
-  LIdent: integer;
+  List: TStringList;
+  s: string;
+  i: Integer;
 begin
-  LIdent := indent + INDENT_SIZE;
+  List := TStringList.Create;
+  try
+    ExtractStrings(['_'], [], PChar(Value), List);
+    for i := 0 to List.Count - 1 do
+    begin
+      s := List[i];
+      if s.StartsWith('&') then
+        s[2] := s.ToUpper[2]
+      else
+        s[1] := s.ToUpper[1];
+      List[i] := s;
+    end;
+
+    List.Delimiter := '_';
+    Result := List.DelimitedText;
+  finally
+    List.Free;
+  end;
+end;
+
+// http://stackoverflow.com/a/12198174
+procedure PrettyPrintPair(JSONValue: TJSONPair; OutputStrings: TStrings; Last: Boolean; Indent: Integer);
+const
+  TEMPLATE = '%s:%s';
+var
+  Line: string;
+  NewList: TStringList;
+begin
+  NewList := TStringList.Create;
+  try
+    PrettyPrintJSON(JSONValue.JSONValue, NewList, Indent);
+    Line := Format(TEMPLATE, [JSONValue.JsonString.ToString, Trim(NewList.Text)]);
+  finally
+    NewList.Free;
+  end;
+
+  Line := StringOfChar(' ', Indent + INDENT_SIZE) + Line;
+  if not Last then
+    Line := Line + ',';
+  OutputStrings.Add(Line);
+end;
+
+procedure PrettyPrintArray(JSONValue: TJSONArray; OutputStrings: TStrings; Last: Boolean; Indent: Integer);
+var
+  i: Integer;
+begin
+  OutputStrings.Add(StringOfChar(' ', Indent + INDENT_SIZE) + '[');
+
+  for i := 0 to JSONValue.Count - 1 do
+  begin
+    PrettyPrintJSON(JSONValue.Items[i], OutputStrings, Indent);
+    if i < JSONValue.Count - 1 then
+      OutputStrings[OutputStrings.Count - 1] := OutputStrings[OutputStrings.Count - 1] + ',';
+  end;
+
+  OutputStrings.Add(StringOfChar(' ', Indent + INDENT_SIZE - 2) + ']');
+end;
+
+procedure PrettyPrintJSON(JSONValue: TJsonValue; OutputStrings: TStrings; Indent: Integer = 0);
+var
+  i: Integer;
+  Ident: Integer;
+begin
+  Ident := Indent + INDENT_SIZE;
   i := 0;
 
   if JSONValue is TJSONObject then
   begin
-    OutputStrings.add(StringOfChar(' ', LIdent) + '{');
+    OutputStrings.Add(StringOfChar(' ', Ident) + '{');
     for i := 0 to TJSONObject(JSONValue).Count - 1 do
-      PrettyPrintPair(TJSONObject(JSONValue).Pairs[i], OutputStrings, i = TJSONObject(JSONValue).Count - 1, LIdent);
-    OutputStrings.add(StringOfChar(' ', LIdent) + '}');
+      PrettyPrintPair(TJSONObject(JSONValue).Pairs[i], OutputStrings, i = TJSONObject(JSONValue).Count - 1, Ident);
+
+    OutputStrings.Add(StringOfChar(' ', Ident) + '}');
   end
   else if JSONValue is TJSONArray then
-    PrettyPrintArray(TJSONArray(JSONValue), OutputStrings, i = TJSONObject(JSONValue).Count - 1, LIdent)
-  else OutputStrings.add(StringOfChar(' ', LIdent) + JSONValue.ToString);
+    PrettyPrintArray(TJSONArray(JSONValue), OutputStrings, i = TJSONObject(JSONValue).Count - 1, Ident)
+  else
+    OutputStrings.Add(StringOfChar(' ', Ident) + JSONValue.ToString);
 end;
-
 
 { TPkgJsonMapper }
 
-
-procedure TPkgJsonMapper.ProcessJsonObject(AJsonValue: TJsonValue; AParentClass: TStubClass);
+procedure TPkgJsonMapper.ProcessJsonObject(aJsonValue: TJsonValue; aParentClass: TStubClass);
 var
-  LJsonObj: TJSONObject;
-  LJsonPair: TJSONPair;
-  LJsonVal,
-  LJsonVal2: TJSONValue;
-  LJsonType,
-  LJsonType2: TJsonType;
-  LClass: TStubClass;
+  JSONObject: TJSONObject;
+  JsonPair: TJSONPair;
+  JSONValue, JsonValue2: TJsonValue;
+  JsonType, JsonType2: TJsonType;
+  StubClass: TStubClass;
 begin
-  LJsonObj := AJsonValue as TJSONObject;
+  JSONObject := aJsonValue as TJSONObject;
 
-  for LJsonPair in LJsonObj do
+  for JsonPair in JSONObject do
   begin
-    LJsonVal := LJsonPair.JsonValue;
-    LJsonType := GetJsonType(LJsonVal);
+    JSONValue := JsonPair.JSONValue;
+    JsonType := GetJsonType(JSONValue);
 
-    case LJsonType of
+    case JsonType of
+      jtUnknown:
+        { do nothing };
       jtObject:
-      begin
-        LClass := TStubClass.Create(AParentClass, LJsonPair.JsonString.Value, self);
-        TStubObjectField.Create(AParentClass, LJsonPair.JsonString.Value, LClass);
-        ProcessJsonObject(LJsonVal, LClass);
-      end;
-
-      jtArray:
-      begin
-        LClass := nil;
-        LJsonType2 := jtUnknown;
-
-        LJsonVal2 := GetFirstArrayItem(LJsonVal);
-        if LJsonVal2 <> nil then
         begin
-          LJsonType2 := GetJsonType(LJsonVal2);
-          case LJsonType2 of
-            jtObject:
-            begin
-              LClass := TStubClass.Create(AParentClass, LJsonPair.JsonString.Value, self);
-              ProcessJsonObject(LJsonVal2, LClass);
-            end;
-            jtArray: raise EJsonMapper.Create('Nested Arrays are not supported!');
-          end;
+          StubClass := TStubClass.Create(aParentClass, JsonPair.JsonString.Value, Self);
+          TStubObjectField.Create(aParentClass, JsonPair.JsonString.Value, StubClass);
+          ProcessJsonObject(JSONValue, StubClass);
         end;
 
-        TStubArrayField.Create(AParentClass, LJsonPair.JsonString.Value, LJsonType2, LClass);
+      jtArray:
+        begin
+          StubClass := nil;
+          JsonType2 := jtUnknown;
 
-      end;
-      jtNumber,
-      jtString,
-      jtDate,
-      jtDateTime,
-      jtTrue,
-      jtFalse: TStubField.Create(AParentClass, LJsonPair.JsonString.Value, LJsonType);
+          JsonValue2 := GetFirstArrayItem(JSONValue);
+          if JsonValue2 <> nil then
+          begin
+            JsonType2 := GetJsonType(JsonValue2);
+            case JsonType2 of
+              jtObject:
+                begin
+                  StubClass := TStubClass.Create(aParentClass, JsonPair.JsonString.Value, Self);
+                  ProcessJsonObject(JsonValue2, StubClass);
+                end;
+              jtArray:
+                raise EJsonMapper.Create('Nested Arrays are not supported!');
+            end;
+          end;
+
+          TStubArrayField.Create(aParentClass, JsonPair.JsonString.Value, JsonType2, StubClass);
+        end;
+    else
+      TStubField.Create(aParentClass, JsonPair.JsonString.Value, JsonType);
     end;
   end;
 
-  AParentClass.SortFields;
+  aParentClass.SortFields;
 end;
-
 
 function TPkgJsonMapper.GenerateUnit: string;
 var
-  LClass: TStubClass;
-  k: integer;
-  LList: TStringList;
+  StubClass: TStubClass;
+  k: Integer;
+  StringList: TStringList;
 begin
 
-  LList := TStringList.Create;
+  StringList := TStringList.Create;
   try
+    StringList.Add('unit ' + FUnitName + ';');
+    StringList.Add('');
+    StringList.Add('interface');
+    StringList.Add('');
+    StringList.Add('uses');
+    StringList.Add('  Pkg.Json.DTO;');
+    StringList.Add('');
+    StringList.Add('{$M+}');
+    StringList.Add('');
+    StringList.Add('type');
 
-    LList.Add('unit ' + FUnitName + ';');
-    LList.Add('');
-    LList.Add('//  *************************************************');
-    LList.Add('//    Generated By: JsonToDelphiClass - ' + FloatToStr(ProgramVersion, PointDsFormatSettings));
-    LList.Add('//    Project link: https://github.com/PKGeorgiev/Delphi-JsonToDelphiClass');
-    LList.Add('//    Generated On: ' + FormatDateTime('yyyy-mm-dd hh:nn:ss', now));
-    LList.Add('//  *************************************************');
-    LList.Add('//    Created By  : Petar Georgiev - 2014');
-    LList.Add('//    WebSite     : http://pgeorgiev.com');
-    LList.Add('//  *************************************************');
-    LList.Add('');
-    LList.Add('interface');
-    LList.Add('');
-    LList.Add('uses Generics.Collections, Rest.Json;');
-    LList.Add('');
-    LList.Add('type');
-
-    for k := FClasses.Count - 1 downto 0 do
+    for k := FStubClasses.Count - 1 downto 1 do
     begin
-      LClass := FClasses[k];
-      LList.Add(LClass.GetDeclarationPart.TrimRight);
-    end;             
-
-    LList.Add('');
-    LList.Add('implementation');
-
-    for k := FClasses.Count - 1 downto 0 do
-    begin
-      LClass := FClasses[k];
-      LList.Add(LClass.GetImplementationPart.TrimRight);
+      StubClass := FStubClasses[k];
+      StringList.Add(StubClass.GetDeclarationPart('').TrimRight);
+      StringList.Add('');
     end;
 
-    LList.Add('');
-    LList.Add('end.');
+    StringList.Add(FStubClasses.First.GetDeclarationPart('TJsonDTO').TrimRight + sLineBreak);
+    StringList.Add('implementation');
 
-    result := LList.Text;
-  
+    for k := FStubClasses.Count - 1 downto 0 do
+    begin
+      StubClass := FStubClasses[k];
+      if k = 0 then
+        StringList.Add('');
+      StringList.Add(StubClass.GetImplementationPart.TrimRight);
+    end;
+
+    StringList.Add('');
+    StringList.Add('end.');
+
+    Result := StringList.Text;
   finally
-    LList.Free;
+    StringList.Free;
   end;
-  
 end;
 
-procedure TPkgJsonMapper.Visualize(ATreeView: TTreeView; AItemStyleLookup: string);
+function TPkgJsonMapper.GetFirstArrayItem(aJsonValue: TJsonValue): TJsonValue;
 var
-  LItem: TTreeViewItem;
+  JsonArray: TJSONArray;
 begin
-  ATreeView.Clear;
-  if FRootClass <> nil then
-  begin
-    ATreeView.BeginUpdate;
-    LItem := TTreeViewItem.Create(ATreeView);
-    LItem.Text := FRootClass.Name;
-    LItem.TagObject := FRootClass;
-    LItem.WordWrap := false;
-    ATreeView.AddObject(LItem);
-    InternalVisualize(LItem, FRootClass, AItemStyleLookup);
-    FormatFields(ATreeView);
-    ATreeView.EndUpdate;
-    ATreeView.ExpandAll;
-  end;
+  JsonArray := aJsonValue as TJSONArray;
+  if JsonArray.Count = 0 then
+    exit(nil)
+  else
+    exit(JsonArray.Items[0]);
 end;
 
-function TPkgJsonMapper.GetFirstArrayItem(AJsonValue: TJsonValue): TJsonValue;
-var
-  LJsonArray: TJsonArray;
-  LJsonValue: TJSONValue;
-begin
-  result := nil;
-  LJsonArray := AJsonValue as TJsonArray;
-  for LJsonValue in LJsonArray do
-  begin
-    result := LJsonValue;
-    break;
-  end;
-end;
-
-procedure TPkgJsonMapper.ClearClasses;
-var
-  LClass: TStubClass;
-begin
-  for LClass in FClasses do
-  begin
-    LClass.Free;
-  end;
-
-  FClasses.Clear;
-end;
-
-constructor TPkgJsonMapper.Create(ATreeView: TTreeView);
+constructor TPkgJsonMapper.Create;
 begin
   inherited Create;
-  FTreeView := ATreeView;
-  FClasses := TList<TStubClass>.Create;
+  FStubClasses := TObjectList<TStubClass>.Create;
+  FClassName := 'Root';
 end;
 
-procedure TPkgJsonMapper.Debug(ALines: TStrings);
+procedure TPkgJsonMapper.Debug(aLines: TStrings);
 var
-  LClass: TStubClass;
-  LField: TStubField;
+  StubClass: TStubClass;
+  StubField: TStubField;
 begin
-  ALines.Clear;
+  aLines.Clear;
 
-  for LClass in FClasses do
+  for StubClass in FStubClasses do
   begin
-    ALines.Add('-------');
-    ALines.Add(LClass.Name);
-    for LField in LClass.FItems do
-    begin
-      ALines.Add(format('%-15s | %s', [LField.FieldName, LField.GetTypeAsString]));
-    end;
+    aLines.Add('-------');
+    aLines.Add(StubClass.Name);
+    for StubField in StubClass.FItems do
+      aLines.AddFormat('%-15s | %s', [StubField.FieldName, StubField.GetTypeAsString]);
   end;
 end;
 
 destructor TPkgJsonMapper.Destroy;
 begin
-  ClearClasses;
-  FreeAndNil(FClasses);
+  FreeAndNil(FStubClasses);
   inherited;
-end;
-
-procedure TPkgJsonMapper.FormatFields(ATreeView: TTreeView);
-begin
-  if ATreeView.Count = 1 then
-  begin
-    InternalFormatTreeViewFields(ATreeView.Items[0]);
-  end;
 end;
 
 procedure TPkgJsonMapper.SetUnitName(const Value: string);
@@ -388,233 +365,157 @@ begin
   FUnitName := Value;
 end;
 
-function TPkgJsonMapper.SuggestClassName(ASuggestedClassName: string): string;
+function TPkgJsonMapper.SuggestClassName(aSuggestedClassName: string): string;
 var
-  LClass: TStubClass;
-  LMax, LVal: integer;
-  LString: string;
+  StubClass: TStubClass;
+  MaxValue, i: Integer;
+  s: string;
 begin
-  result := ASuggestedClassName;
-  LMax := 0;
-  for LClass in FClasses do
+  Result := aSuggestedClassName;
+  MaxValue := 0;
+
+  for StubClass in FStubClasses do
   begin
-    if LClass.Name.StartsWith(ASuggestedClassName, true) then
+    if StubClass.Name.StartsWith(aSuggestedClassName, True) then
     begin
-      LString := Copy(LClass.Name, length(ASuggestedClassName) + 2);
-      if (LString.Length = 3) then
+      s := Copy(StubClass.Name, length(aSuggestedClassName) + 2);
+
+      if (s.length = 3) then
       begin
-        if TryStrToInt(LString, LVal) then
+        if TryStrToInt(s, i) then
         begin
-          inc(LVal);
-          if LVal > LMax then
-            LMax := LVal;
+          inc(i);
+          if i > MaxValue then
+            MaxValue := i;
         end;
       end
       else
-        LMax := 1;
+        MaxValue := 1;
     end;
   end;
 
-  if LMax > 0 then
-    result := format('%s_%0.3d', [ASuggestedClassName, LMax]);
+  if MaxValue > 0 then
+    Result := Format('%s_%0.3d', [aSuggestedClassName, MaxValue]);
 end;
 
-function TPkgJsonMapper.GetJsonType(AJsonValue: TJsonValue): TJsonType;
+function TPkgJsonMapper.GetJsonType(aJsonValue: TJsonValue): TJsonType;
 var
-  LJsonString: TJSONString;
+  JsonString: TJSONString;
+  i: Integer;
+  j: Int64;
+  b: Boolean;
 begin
-  if AJsonValue is TJSONObject then
-    result := jtObject
-  else
-    if AJsonValue is TJSONArray then
-      result := jtArray
+  if aJsonValue is TJSONObject then
+    Result := jtObject
+  else if aJsonValue is TJSONArray then
+    Result := jtArray
+  else if (aJsonValue is TJSONNumber) then
+  begin
+    if TryStrToInt(aJsonValue.Value, i) then
+      Result := jtInteger
+    else if TryStrToInt64(aJsonValue.Value, j) then
+      Result := jtInteger64
     else
-      if (AJsonValue is TJSONNumber) then
-        result := jtNumber
+      Result := jtNumber
+  end
+  else if aJsonValue is TJSONTrue then
+    Result := jtTrue
+  else if aJsonValue is TJSONFalse then
+    Result := jtFalse
+  else if aJsonValue is TJSONString then
+  begin
+    JsonString := (aJsonValue as TJSONString);
+    if TRegEx.IsMatch(JsonString.Value, '^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*))(?:Z|(\+|-)([\d|:]*))?$') then
+      Result := jtDateTime
+    else if TRegEx.IsMatch(JsonString.Value, '^([0-9]{4})(-?)(1[0-2]|0[1-9])\2(3[01]|0[1-9]|[12][0-9])$') then
+      Result := jtDate
+    else if TryStrToBool(JsonString.Value, b) then
+    begin
+      if b then
+        Result := jtTrue
       else
-        if AJsonValue is TJSONTrue then
-          result := jtTrue
-        else
-          if  AJsonValue is TJSONFalse then
-            result := jtFalse
-          else
-            if AJsonValue is TJSONString then
-            begin
-              LJsonString := (AJsonValue as TJSONString);
-              if TRegEx.IsMatch(LJsonString.Value, '^([0-9]{4})-?(1[0-2]|0[1-9])-?(3[01]|0[1-9]|[12][0-9])(T| )(2[0-3]|[01][0-9]):?([0-5][0-9]):?([0-5][0-9])$') then
-                result := jtDateTime
-              else
-                if TRegEx.IsMatch(LJsonString.Value, '^([0-9]{4})(-?)(1[0-2]|0[1-9])\2(3[01]|0[1-9]|[12][0-9])$') then
-                  result := jtDate
-                else
-                  result := jtString
-            end
-            else
-              result := jtUnknown;
+        Result := jtFalse
+    end
+    else
+      Result := jtString
+  end
+  else
+    Result := jtUnknown;
 end;
 
-procedure TPkgJsonMapper.InternalFormatTreeViewFields(AItem: TTreeViewItem);
+function TPkgJsonMapper.Parse(aJsonString: string): TPkgJsonMapper;
 var
-  LItem: TTreeViewItem;
-  k: Integer;
-  LSize, LPos: integer;
+  JSONValue, JsonValue2: TJsonValue;
+  JsonType: TJsonType;
+  StubClass: TStubClass;
 begin
-  LSize := 0;
+  Result := Self;
+  FStubClasses.Clear;
 
-  //  Find max len
-  for k := 0 to AItem.Count - 1 do
-  begin
-    LItem := AItem.Items[k];
-    LPos := Pos(':', LItem.Text);
-    if (LPos > 0) AND (LPos > LSize) then
-      LSize := LPos;
-  end;
-
-  for k := 0 to AItem.Count - 1 do
-  begin
-    LItem := AItem.Items[k];
-    LPos := LSize - Pos(':', LItem.Text);
-    if (LPos > 0) then
-      LItem.Text := LItem.Text.Replace(':', StringOfChar(' ', LPos) + ':');
-
-    InternalFormatTreeViewFields(LItem);
-  end;
-  
-end;
-
-procedure TPkgJsonMapper.InternalVisualize(ATreeViewItem: TTreeViewItem;
-  AClass: TStubClass; AItemStyleLookup: string);
-var
-  LField: TStubField;
-  LItem: TTreeViewItem;
-begin
-  for LField in AClass.FItems do
-  begin
-
-    LItem := TTreeViewItem.Create(ATreeViewItem);
-    LItem.StyleLookup := AItemStyleLookup;
-    LItem.TagObject := LField;
-    LItem.WordWrap := false;
-
-    case LField.FieldType of
-      jtObject:
-      begin
-        LItem.Text := LField.Name + ': {} ' + LField.GetTypeAsString;
-        InternalVisualize(LItem, (LField as TStubObjectField).FieldClass, AItemStyleLookup);
-      end;
-
-      jtArray:
-      begin
-        LItem.Text := LField.Name + ': [] ' + LField.GetTypeAsString;
-        if (LField as TStubArrayField).ContainedType = jtObject then
-        begin
-          InternalVisualize(LItem, (LField as TStubArrayField).FieldClass, AItemStyleLookup);
-        end;
-      end;
-
-      else
-      begin
-        LItem.Text := LField.Name + ': ' + LField.GetTypeAsString;
-      end;
-    end;
-
-    ATreeViewItem.AddObject(LItem);
-
-  end;
-end;
-
-procedure TPkgJsonMapper.Parse(AJsonString: string; ARootClassName: string);
-var
-  LJsonValue,
-  LJsonValue2: TJSONValue;
-  LJsonType: TJsonType;
-  LClass: TStubClass;
-begin
-
-  ClearClasses;
-
-  LJsonValue := TJSONObject.ParseJSONValue(AJsonString);
-  if LJsonValue <> nil then
+  JSONValue := TJSONObject.ParseJSONValue(aJsonString);
+  if JSONValue <> nil then
   begin
     try
-      FRootClass := TStubClass.Create(nil, ARootClassName, self);
+      FRootClass := TStubClass.Create(nil, FClassName, Self);
 
-      case GetJsonType(LJsonValue) of
+      case GetJsonType(JSONValue) of
         jtObject:
-        begin
-          ProcessJsonObject(LJsonValue, FRootClass);
-        end;
+          ProcessJsonObject(JSONValue, FRootClass);
 
         jtArray:
-        begin
-          LJsonType := jtUnknown;
-          LClass := nil;
-
-          LJsonValue2 := GetFirstArrayItem(LJsonValue);
-          if LJsonValue2 <> nil then
           begin
-            LJsonType := GetJsonType(LJsonValue2);
-            LClass := TStubClass.Create(FRootClass, 'Item', self);
-          end;
+            JsonType := jtUnknown;
+            StubClass := nil;
 
-          FRootClass.ArrayProperty := 'Items';
-          TStubArrayField.Create(FRootClass, 'Items', LJsonType, LClass);
-          ProcessJsonObject(LJsonValue2, LClass);
-        end;
+            JsonValue2 := GetFirstArrayItem(JSONValue);
+            if JsonValue2 <> nil then
+            begin
+              JsonType := GetJsonType(JsonValue2);
+              StubClass := TStubClass.Create(FRootClass, 'Item', Self);
+            end;
+
+            FRootClass.ArrayProperty := 'Items';
+            TStubArrayField.Create(FRootClass, 'Items', JsonType, StubClass);
+            ProcessJsonObject(JsonValue2, StubClass);
+          end;
       end;
     finally
-      LJsonValue.Free;
+      JSONValue.Free;
     end;
   end
   else
     raise EJsonMapper.Create('Unable to parse the JSON String!');
-
-  FTreeView.ExpandAll;
 end;
 
-{ TVirtualClass }
-
-constructor TStubClass.Create(AParentClass: TStubClass; AClassName: string; AMapper: TPkgJsonMapper; AArrayProperty: string);
+constructor TStubClass.Create(aParentClass: TStubClass; aClassName: string; aMapper: TPkgJsonMapper; aArrayProperty: string);
 begin
   inherited Create;
-  FMapper := AMapper;
-  Name := AClassName;
+  FMapper := aMapper;
+  name := aClassName;
 
-  FItems := TList<TStubField>.Create;
+  FItems := TObjectList<TStubField>.Create;
   FComplexItems := TList<TStubField>.Create;
   FArrayItems := TList<TStubField>.Create;
-  FMapper.FClasses.Add(self);
-  FArrayProperty := AArrayProperty;
+  FMapper.FStubClasses.Add(Self);
+  FArrayProperty := aArrayProperty;
 
-  FParentClass := AParentClass;
+  FParentClass := aParentClass;
 
-  FComparison :=
-    function(const Left, Right: TStubField): Integer
+  FComparison := function(const Left, Right: TStubField): Integer
     begin
       if Left.FName > Right.FName then
-        result := 1
+        Result := 1
+      else if Left.FName < Right.FName then
+        Result := -1
       else
-        if Left.FName < Right.FName then
-          result := -1
-        else
-          result := 0;
-    end;  
+        Result := 0;
+    end;
 
   FComparer := TComparer<TStubField>.Construct(FComparison);
-  
 end;
 
 destructor TStubClass.Destroy;
-var
-  LItem: TStubField;
 begin
-
-  //  ToArray is needed because stub field remove themselves from FItems
-  for LItem in FItems.ToArray do
-  begin
-    LItem.Free;
-  end;
-
   FreeAndNil(FComplexItems);
   FreeAndNil(FItems);
   FreeAndNil(FArrayItems);
@@ -623,89 +524,67 @@ end;
 
 function TStubClass.GetImplementationPart: string;
 var
-  LLines: TStringList;
-  LString: string;
-  LClassName: string;
-  LItem: TStubField;
+  Lines: TStringList;
+  ClassName: string;
+  StubField: TStubField;
 begin
-  LLines := TStringList.Create;
+  Lines := TStringList.Create;
   try
-    LClassName := format('%s', [FName]);
-    LLines.Add('');
-    LLines.Add(format('{%s}', [LClassName]));
-    LLines.Add('');
+    ClassName := Format('%s', [FName]);
+
+    if (FComplexItems.Count > 0) or (FArrayItems.Count > 0) then
+    begin
+      Lines.AddFormat('{ %s }', [ClassName]);
+      Lines.Add('');
+    end;
+
     if FComplexItems.Count > 0 then
     begin
+      Lines.Add(Format('constructor %s.Create;', [ClassName]));
+      Lines.Add('begin');
+      Lines.Add('  inherited;');
 
-      LLines.Add(format('constructor %s.Create;', [LClassName]));
-      LLines.Add('begin');
-      LLines.Add('  inherited;');
+      for StubField in FComplexItems do
+        Lines.AddFormat('  %s := %s.Create;', [StubField.FieldName, (StubField).GetTypeAsString]);
 
-      for LItem in FComplexItems do
-      begin
-        LString := format('  %s := %s.Create();', [LItem.FieldName, (LItem).GetTypeAsString]);
-        LLines.Add(LString);
-      end;
-
-      LLines.Add('end;');
-      LLines.Add('');
+      Lines.Add('end;');
+      Lines.Add('');
     end;
 
-    if (FComplexItems.Count > 0) OR (FArrayItems.Count > 0) then
+    if (FComplexItems.Count > 0) or (FArrayItems.Count > 0) then
     begin
-
-      LLines.Add(format('destructor %s.Destroy;', [LClassName]));
-
-      if FArrayItems.Count > 0 then
-      begin
-        LLines.Add('var');
-        for LItem in FArrayItems do
-        begin
-          LString := format('  L%sItem: %s;', [LItem.FName, (LItem as TStubContainerField).FFieldClass.Name]);
-          LLines.Add(LString);
-        end;
-      end;
-
-
-      LLines.Add('begin');
+      Lines.Add(Format('destructor %s.Destroy;', [ClassName]));
 
       if FArrayItems.Count > 0 then
       begin
-        LLines.Add('');
-        for LItem in FArrayItems do
-        begin
-          LLines.Add(format(' for L%sItem in %s do', [LItem.FName, LItem.FieldName]));
-          LLines.Add(format('   L%sItem.free;', [LItem.FName]));
-        end;
-        LLines.Add('');
+        Lines.Add('var');
+        for StubField in FArrayItems do
+          Lines.AddFormat('  %sItem: %s;', [StubField.FName, (StubField as TStubContainerField).FFieldClass.Name]);
       end;
 
+      Lines.Add('begin');
 
-      for LItem in FComplexItems do
+      if FArrayItems.Count > 0 then
       begin
-        LString := format('  %s.free;', [LItem.FieldName]);
-        LLines.Add(LString);
+        for StubField in FArrayItems do
+        begin
+          Lines.AddFormat('  for %sItem in %s do', [StubField.FName, StubField.FieldName]);
+          Lines.AddFormat('    %sItem.Free;', [StubField.FName]);
+        end;
+        Lines.Add('');
       end;
 
-      LLines.Add('  inherited;');
-      LLines.Add('end;')
+      for StubField in FComplexItems do
+        Lines.AddFormat('  %s.Free;', [StubField.FieldName]);
+
+      Lines.Add('  inherited;');
+      Lines.Add('end;')
     end;
 
-    LLines.Add('');
-    LLines.Add(format('function %s.ToJsonString: string;', [LClassName]));
-    LLines.Add('begin');
-    LLines.Add('  result := TJson.ObjectToJsonString(self);');
-    LLines.Add('end;');
-
-    LLines.Add('');
-    LLines.Add(format('class function %s.FromJsonString(AJsonString: string): %s;', [LClassName, LClassName]));
-    LLines.Add('begin');
-    LLines.Add(format('  result := TJson.JsonToObject<%s>(AJsonString)', [LClassName]));
-    LLines.Add('end;');
-
-    result := LLines.Text;
+    Lines.TrailingLineBreak := False;
+    Result := Lines.Text;
   finally
-    LLines.Free;
+    Lines.Free;
   end;
 end;
 
@@ -713,10 +592,8 @@ procedure TStubClass.SetName(const Value: string);
 var
   LName: string;
 begin
-  FPureClassName := String(Copy(Value, 1, 1)).ToUpper + Copy(Value, 2);
-
-  LName := 'T' + FPureClassName + 'Class';
-
+  FPureClassName := string(Copy(Value, 1, 1)).ToUpper + Copy(Value, 2);
+  LName := 'T' + FPureClassName + 'DTO';
   FName := FMapper.SuggestClassName(LName);
 end;
 
@@ -730,127 +607,131 @@ begin
   FItems.Sort(FComparer);
 end;
 
-function TStubClass.GetDeclarationPart: string;
+function TStubClass.GetDeclarationPart(const BaseClass: string): string;
 var
-  LLines: TStringList;
-  LString: string;
-  LItem: TStubField;
+  Lines: TStringList;
+  s: string;
+  StubField: TStubField;
+  i: Integer;
 begin
-  LLines := TStringList.Create;
+  Lines := TStringList.Create;
   try
-    LLines.Add('');
-    LLines.Add(FName + ' = class');
-    LLines.Add('private');
+    Lines.Add(FName + ' = class' + IfThen(BaseClass = '', '', '(' + BaseClass + ')'));
+    Lines.Add('strict private');
 
-    for LItem in FItems do
+    for StubField in FItems do
     begin
-      LString := format('  %s: %s;', [LItem.FieldName, LItem.GetTypeAsString]);
-      LLines.Add(LString);
+      s := Format('  %s: %s;', [StubField.FieldName, StubField.GetTypeAsString]);
+      Lines.Add(s);
     end;
 
-    LLines.Add('public');
+    Lines.Add('published');
 
-    for LItem in FItems do
+    for StubField in FItems do
     begin
-      if (LItem.FieldType = jtUnknown) OR ((LItem is TStubContainerField) AND ((LItem as TStubContainerField).ContainedType = jtUnknown)) then
-        raise EJsonMapper.CreateFmt('The property [%s] has unknown type!', [LItem.PropertyName]);
+      if (StubField.FieldType = jtUnknown) or ((StubField is TStubContainerField) and ((StubField as TStubContainerField).ContainedType = jtUnknown)) then
+        raise EJsonMapper.CreateFmt('The property [%s] has unknown type!', [StubField.PropertyName]);
 
-      LString := format('  property %s: %s read %s write %s;', [LItem.PropertyName, LItem.GetTypeAsString, LItem.FieldName, LItem.FieldName]);
-      LLines.Add(LString);
+      s := Format('  property %s: %s read %s write %s;', [StubField.PropertyName, StubField.GetTypeAsString, StubField.FieldName, StubField.FieldName]);
+      Lines.Add(s);
     end;
+
+    if (FComplexItems.Count > 0) or (FArrayItems.Count > 0) then
+      Lines.Add('public');
 
     if FComplexItems.Count > 0 then
-    begin
-      LLines.Add('  constructor Create;');
-    end;
+      Lines.Add('  constructor Create;');
 
-    if (FComplexItems.Count > 0) OR (FArrayItems.Count > 0) then
-    begin
-      LLines.Add('  destructor Destroy; override;');
-    end;
+    if (FComplexItems.Count > 0) or (FArrayItems.Count > 0) then
+      Lines.Add('  destructor Destroy; override;');
 
-    LLines.Add('  function ToJsonString: string;');
-    LLines.Add(format('  class function FromJsonString(AJsonString: string): %s;', [FName]));
+    Lines.Add('end;');
+    Lines.Add('');
 
-    LLines.Add('end;');
+    for i := 0 to Lines.Count - 1 do
+      Lines[i] := '  ' + Lines[i];
 
-    result := LLines.Text;
+    Result := Lines.Text;
   finally
-    LLines.Free;
+    Lines.Free;
   end;
 end;
 
 { TVirtualClassItemBase }
 
-constructor TStubField.Create(AParentClass: TStubClass; AItemName: string; AFieldType: TJsonType);
+constructor TStubField.Create(aParentClass: TStubClass; aItemName: string; aFieldType: TJsonType);
 begin
   inherited Create;
 
-  if AItemName.Contains('-') then
-    raise EJsonMapper.CreateFmt('%s: Hyphens are not allowed!', [AItemName]);
+  if aItemName.Contains('-') then
+    raise EJsonMapper.CreateFmt('%s: Hyphens are not allowed!', [aItemName]);
 
-  FParentClass := AParentClass;
-  FFieldType := AFieldType;
-  Name := AItemName;
+  FParentClass := aParentClass;
+  FFieldType := aFieldType;
+
+  aItemName[1] := aItemName.ToUpper[1];
+  name := aItemName;
 
   if FParentClass <> nil then
-    FParentClass.FItems.Add(self);
-end;
-
-destructor TStubField.Destroy;
-begin
-  if FParentClass <> nil then
-    FParentClass.FItems.Remove(self);
-  inherited;
+    FParentClass.FItems.Add(Self);
 end;
 
 class function TStubField.GetTypeAsString(AType: TJsonType): string;
 begin
   case AType of
-    jtUnknown: result := 'Unknown';
-    jtString: result := 'String';
-    jtTrue,
-    jtFalse: result := 'Boolean';
-    jtNumber: result := 'Extended';
-    jtDate: result := 'TDate';
-    jtDateTime: result := 'TDateTime';
-    jtBytes: result := 'Byte';
+    jtUnknown:
+      Result := 'Unknown';
+    jtString:
+      Result := 'String';
+    jtTrue, jtFalse:
+      Result := 'Boolean';
+    jtNumber:
+      Result := 'Double';
+    jtDate:
+      Result := 'TDate';
+    jtDateTime:
+      Result := 'TDateTime';
+    jtBytes:
+      Result := 'Byte';
+    jtInteger:
+      Result := 'Integer';
+    jtInteger64:
+      Result := 'Int64';
   end;
 end;
 
 procedure TStubField.SetName(const Value: string);
 begin
-
-  if (FParentClass.FArrayProperty <> '') AND (FParentClass.FArrayProperty = FName) then
+  if (FParentClass.FArrayProperty <> '') and (FParentClass.FArrayProperty = FName) then
     FParentClass.FArrayProperty := Value;
 
   FName := Value;
 
-  FFieldName := 'F' + String(Copy(Value, 1, 1)).ToUpper + Copy(Value, 2);
+  FFieldName := 'F' + string(Copy(Value, 1, 1)).ToUpper + Copy(Value, 2);
 
   if ReservedWords.Contains(Value.ToLower) then
     FPropertyName := '&' + Value
   else
     FPropertyName := Value;
 
-
-
+  FFieldName := CapitaiazeFirst(FFieldName);
+  FPropertyName := CapitaiazeFirst(FPropertyName);
 end;
 
 function TStubField.GetTypeAsString: string;
 begin
-  result := GetTypeAsString(FFieldType);
+  Result := GetTypeAsString(FFieldType);
 end;
 
 { TArrayItem }
 
-constructor TStubArrayField.Create(AClass: TStubClass; AItemName: string; AItemSubType: TJsonType; AItemClass: TStubClass);
+constructor TStubArrayField.Create(aClass: TStubClass; aItemName: string; aItemSubType: TJsonType; aItemClass: TStubClass);
 begin
-  inherited Create(AClass, AItemName, jtArray);
-  FContainedType := AItemSubType;
-  FFieldClass := AItemClass;
+  inherited Create(aClass, aItemName, jtArray);
+  FContainedType := aItemSubType;
+  FFieldClass := aItemClass;
   if FContainedType = TJsonType.jtObject then
-    AClass.FArrayItems.Add(self);
+    aClass.FArrayItems.Add(Self);
 end;
 
 function TStubArrayField.GetTypeAsString: string;
@@ -858,51 +739,49 @@ var
   LSubType: string;
 begin
   case FContainedType of
-    jtObject: LSubType := FFieldClass.Name;
-    jtArray: raise EJsonMapper.Create('Nested arrays are not supported!');
-    else
-      LSubType := GetTypeAsString(FContainedType);
+    jtObject:
+      LSubType := FFieldClass.Name;
+    jtArray:
+      raise EJsonMapper.Create('Nested arrays are not supported!');
+  else
+    LSubType := GetTypeAsString(FContainedType);
   end;
-  result := format('TArray<%s>', [LSubType]);
+  Result := Format('TArray<%s>', [LSubType]);
 end;
 
 { TStubObjectField }
 
-constructor TStubObjectField.Create(AParentClass: TStubClass; AItemName: string; AItemClass: TStubClass);
+constructor TStubObjectField.Create(aParentClass: TStubClass; aItemName: string; aItemClass: TStubClass);
 begin
-  inherited Create(AParentClass, AItemName, jtObject);
-  FFieldClass := AItemClass;
-  AParentClass.FComplexItems.Add(self);
+  inherited Create(aParentClass, aItemName, jtObject);
+  FFieldClass := aItemClass;
+  aParentClass.FComplexItems.Add(Self);
   FContainedType := jtObject;
 end;
 
 function TStubObjectField.GetTypeAsString: string;
 begin
-  result := FFieldClass.Name;
+  Result := FFieldClass.Name;
 end;
 
 initialization
 
-  PointDsFormatSettings := TFormatSettings.Create();
-  PointDsFormatSettings.DecimalSeparator := '.';
-
-  ReservedWords := TList<string>.Create;
-  ReservedWords.Add('type');
-  ReservedWords.Add('for');
-  ReservedWords.Add('var');
-  ReservedWords.Add('begin');
-  ReservedWords.Add('end');
-  ReservedWords.Add('function');
-  ReservedWords.Add('procedure');
-  ReservedWords.Add('class');
-  ReservedWords.Add('record');
-  ReservedWords.Add('string');
-  ReservedWords.Add('initialization');
-  ReservedWords.Add('finalization');
-
+ReservedWords := TList<string>.Create;
+ReservedWords.Add('type');
+ReservedWords.Add('for');
+ReservedWords.Add('var');
+ReservedWords.Add('begin');
+ReservedWords.Add('end');
+ReservedWords.Add('function');
+ReservedWords.Add('procedure');
+ReservedWords.Add('class');
+ReservedWords.Add('record');
+ReservedWords.Add('string');
+ReservedWords.Add('initialization');
+ReservedWords.Add('finalization');
 
 finalization
 
-  FreeAndNil(ReservedWords);
+FreeAndNil(ReservedWords);
 
 end.

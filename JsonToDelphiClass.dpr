@@ -9,7 +9,8 @@ uses
   uGitHub in 'uGitHub.pas',
   FMX.ConstrainedForm in 'FMX.ConstrainedForm.pas' {/  IdSSLOpenSSLHeaders,},
   uUpdate in 'uUpdate.pas',
-  uUpdateForm in 'uUpdateForm.pas' {UpdateForm};
+  uUpdateForm in 'uUpdateForm.pas' {UpdateForm},
+  Pkg.Json.Visualizer in 'Pkg.Json.Visualizer.pas';
 
 {$R *.res}
 

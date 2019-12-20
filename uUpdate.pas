@@ -1,27 +1,32 @@
 unit uUpdate;
 
 interface
+
 uses REST.Client, uGitHub, REST.JSON, JSON,
-  IPPeerClient, SysUtils, System.Threading, Classes, Pkg.Json.Mapper;
+  IPPeerClient, SysUtils, System.Threading, Classes, Pkg.JSON.Mapper;
 
 const
-  ProgramVersion : double = 0.65;
+  ProgramVersion: double = 0.65;
   UpdateUrl = 'https://api.github.com/repos/PKGeorgiev/Delphi-JsonToDelphiClass/releases';
   ProgramUrl = 'https://github.com/PKGeorgiev/Delphi-JsonToDelphiClass';
 
 function InternalCheckForUpdate: TObject;
 procedure NewCheckForUpdateTask(AOnFinish: TProc<TObject>);
 
+var
+  PointDsFormatSettings: TFormatSettings;
+
 implementation
-uses Math;
+
+uses
+  Math;
 
 function InternalCheckForUpdate: TObject;
 var
   LRestClient: TRESTClient;
   LRestRequest: TRESTRequest;
   LRestResponse: TRESTResponse;
-  LRelease,
-  LResult: TObject;
+  LRelease, LResult: TObject;
   LJsonArray: TJsonArray;
   LJsonValue: TJsonValue;
   LTag: double;
@@ -43,7 +48,7 @@ begin
 
           if LRestResponse.StatusCode = 200 then
           begin
-            LJsonArray := TJSONObject.ParseJSONValue(LRestResponse.Content) as TJSONArray;
+            LJsonArray := TJSONObject.ParseJSONValue(LRestResponse.Content) as TJsonArray;
             try
               for LJsonValue in LJsonArray do
               begin
@@ -80,7 +85,7 @@ begin
     on e: Exception do
     begin
       LResult := TErrorClass.Create;
-      (LResult as TErrorClass).message := e.Message;
+      (LResult as TErrorClass).message := e.message;
     end;
   end;
 
@@ -94,7 +99,7 @@ begin
     var
       LResult: TObject;
     begin
-      //  Asynchronously check for update
+      // Asynchronously check for update
       LResult := InternalCheckForUpdate();
       try
         // Execute AOnFinish in the context of the Main Thread
@@ -102,12 +107,15 @@ begin
           procedure
           begin
             AOnFinish(LResult);
-          end
-        );
+          end);
       except
       end;
-    end
-  );
+    end);
 end;
+
+initialization
+
+PointDsFormatSettings := TFormatSettings.Create();
+PointDsFormatSettings.DecimalSeparator := '.';
 
 end.

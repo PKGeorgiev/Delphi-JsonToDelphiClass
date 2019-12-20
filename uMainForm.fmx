@@ -1505,8 +1505,9 @@ object MainForm: TMainForm
       Text = '-'
     end
     object MenuItem3: TMenuItem
-      Text = 'Rename Property'
-      OnClick = MenuItem3Click
+      Action = actRenameProperty
+      Enabled = True
+      ImageIndex = -1
     end
     object MenuItem5: TMenuItem
       Text = 'Change Class Name'
@@ -1514,47 +1515,11 @@ object MainForm: TMainForm
     end
     object MenuItem6: TMenuItem
       Text = 'Change Type'
+      Visible = False
     end
     object MenuItem7: TMenuItem
       Text = 'Rename Node'
-    end
-  end
-  object Panel1: TPanel
-    Align = Left
-    Padding.Left = 6.000000000000000000
-    Padding.Top = 2.000000000000000000
-    Padding.Right = 6.000000000000000000
-    Padding.Bottom = 6.000000000000000000
-    Position.X = 3.000000000000000000
-    Position.Y = 3.000000000000000000
-    Size.Width = 345.000000000000000000
-    Size.Height = 532.000000000000000000
-    Size.PlatformDefault = False
-    StyleLookup = 'Panel2Style1'
-    TabOrder = 7
-    OnResize = Panel1Resize
-    object tv: TTreeView
-      Align = Client
-      PopupMenu = MainPopupMenu
-      Size.Width = 333.000000000000000000
-      Size.Height = 507.000000000000000000
-      Size.PlatformDefault = False
-      TabOrder = 0
-      OnDblClick = tvDblClick
-      OnKeyDown = tvKeyDown
-      Viewport.Width = 329.000000000000000000
-      Viewport.Height = 503.000000000000000000
-    end
-    object Label3: TLabel
-      Align = Top
-      Margins.Left = 2.000000000000000000
-      Position.X = 8.000000000000000000
-      Position.Y = 2.000000000000000000
-      Size.Width = 331.000000000000000000
-      Size.Height = 17.000000000000000000
-      Size.PlatformDefault = False
-      StyleLookup = 'Label3Style1'
-      Text = 'Treeview output:'
+      Visible = False
     end
   end
   object Panel2: TPanel
@@ -1564,7 +1529,7 @@ object MainForm: TMainForm
     Padding.Right = 6.000000000000000000
     Padding.Bottom = 6.000000000000000000
     Size.Width = 669.000000000000000000
-    Size.Height = 532.000000000000000000
+    Size.Height = 479.000000000000000000
     Size.PlatformDefault = False
     StyleLookup = 'Panel2Style1'
     TabOrder = 8
@@ -1703,6 +1668,7 @@ object MainForm: TMainForm
         ']')
       StyledSettings = [Size, Style, FontColor]
       TextSettings.Font.Family = 'Consolas'
+      OnChange = Memo1Change
       Align = Client
       Margins.Bottom = 6.000000000000000000
       PopupMenu = MemoPopupMenu
@@ -1711,96 +1677,8 @@ object MainForm: TMainForm
       Size.PlatformDefault = False
       StyleLookup = 'Memo1Style1'
       TabOrder = 0
-      OnDblClick = Memo1DblClick
       Viewport.Width = 637.000000000000000000
       Viewport.Height = 428.000000000000000000
-    end
-    object Panel3: TPanel
-      Align = Bottom
-      Padding.Left = 6.000000000000000000
-      Padding.Top = 6.000000000000000000
-      Padding.Right = 6.000000000000000000
-      Padding.Bottom = 6.000000000000000000
-      Position.X = 6.000000000000000000
-      Position.Y = 473.000000000000000000
-      Size.Width = 657.000000000000000000
-      Size.Height = 53.000000000000000000
-      Size.PlatformDefault = False
-      TabOrder = 1
-      object btnVisualize: TButton
-        Align = Right
-        Margins.Right = 9.000000000000000000
-        Position.X = 482.000000000000000000
-        Position.Y = 6.000000000000000000
-        Size.Width = 80.000000000000000000
-        Size.Height = 41.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 0
-        Text = 'Visualize'
-        OnClick = btnVisualizeClick
-      end
-      object btnOnlineJsonValidator: TButton
-        Align = Right
-        Margins.Right = 9.000000000000000000
-        Position.X = 216.000000000000000000
-        Position.Y = 6.000000000000000000
-        Size.Width = 144.000000000000000000
-        Size.Height = 41.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 2
-        Text = 'Online JSON Validator'
-        OnClick = btnOnlineJsonValidatorClick
-      end
-      object btnExit: TButton
-        Align = Right
-        Position.X = 571.000000000000000000
-        Position.Y = 6.000000000000000000
-        Size.Width = 80.000000000000000000
-        Size.Height = 41.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 3
-        Text = 'Exit'
-        OnClick = btnExitClick
-      end
-      object Panel4: TPanel
-        Align = Client
-        Margins.Right = 6.000000000000000000
-        Size.Width = 204.000000000000000000
-        Size.Height = 41.000000000000000000
-        Size.PlatformDefault = False
-        StyleLookup = 'Panel4Style1'
-        TabOrder = 6
-        object Label5: TLabel
-          Position.X = 3.000000000000000000
-          Position.Y = -1.000000000000000000
-          Size.Width = 182.000000000000000000
-          Size.Height = 17.000000000000000000
-          Size.PlatformDefault = False
-          Text = 'Destination Unit Name:'
-        end
-        object Edit2: TEdit
-          Touch.InteractiveGestures = [LongTap, DoubleTap]
-          TabOrder = 1
-          Text = 'RootUnit'
-          Position.X = 3.000000000000000000
-          Position.Y = 17.000000000000000000
-          Size.Width = 182.000000000000000000
-          Size.Height = 22.000000000000000000
-          Size.PlatformDefault = False
-        end
-      end
-      object btnGenerateUnit: TButton
-        Align = Right
-        Margins.Right = 9.000000000000000000
-        Position.X = 369.000000000000000000
-        Position.Y = 6.000000000000000000
-        Size.Width = 104.000000000000000000
-        Size.Height = 41.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 1
-        Text = 'Preview Unit'
-        OnClick = PreviewUnitClick
-      end
     end
     object Label4: TLabel
       Align = Top
@@ -1820,19 +1698,194 @@ object MainForm: TMainForm
     Position.X = 348.000000000000000000
     Position.Y = 3.000000000000000000
     Size.Width = 4.000000000000000000
-    Size.Height = 532.000000000000000000
+    Size.Height = 479.000000000000000000
     Size.PlatformDefault = False
   end
   object MemoPopupMenu: TPopupMenu
     Left = 272
     Top = 32
-    object MenuItem4: TMenuItem
-      Text = 'Pretty Print JSON string'
-      OnClick = Memo1DblClick
-    end
     object MenuItem8: TMenuItem
+      Action = actPrettyPrintJSON
+      Enabled = True
+      ImageIndex = -1
+    end
+    object MenuItem4: TMenuItem
+      Action = actValidateJSON
+      Enabled = True
+      ImageIndex = -1
+    end
+  end
+  object Panel3: TPanel
+    Align = Bottom
+    Padding.Left = 6.000000000000000000
+    Padding.Top = 6.000000000000000000
+    Padding.Right = 6.000000000000000000
+    Padding.Bottom = 6.000000000000000000
+    Position.X = 3.000000000000000000
+    Position.Y = 482.000000000000000000
+    Size.Width = 1018.000000000000000000
+    Size.Height = 53.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    object btnVisualize: TButton
+      Align = Right
+      Margins.Right = 9.000000000000000000
+      Position.X = 843.000000000000000000
+      Position.Y = 6.000000000000000000
+      Size.Width = 80.000000000000000000
+      Size.Height = 41.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'Visualize'
+      OnClick = btnVisualizeClick
+    end
+    object btnOnlineJsonValidator: TButton
+      Action = actValidateJSON
+      Align = Right
+      Enabled = True
+      ImageIndex = -1
+      Margins.Right = 9.000000000000000000
+      Position.X = 552.000000000000000000
+      Position.Y = 6.000000000000000000
+      Size.Width = 169.000000000000000000
+      Size.Height = 41.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+    end
+    object btnExit: TButton
+      Align = Right
+      Position.X = 932.000000000000000000
+      Position.Y = 6.000000000000000000
+      Size.Width = 80.000000000000000000
+      Size.Height = 41.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
+      Text = 'Exit'
+      OnClick = btnExitClick
+    end
+    object Panel4: TPanel
+      Align = Client
+      Margins.Right = 6.000000000000000000
+      Size.Width = 540.000000000000000000
+      Size.Height = 41.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'Panel4Style1'
+      TabOrder = 6
+      object Label5: TLabel
+        Position.X = 203.000000000000000000
+        Position.Y = -1.000000000000000000
+        Size.Width = 182.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Destination Unit Name:'
+      end
+      object Edit2: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 2
+        Text = 'RootU'
+        Position.X = 203.000000000000000000
+        Position.Y = 17.000000000000000000
+        Size.Width = 182.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+      end
+      object Label2: TLabel
+        Position.X = 3.000000000000000000
+        Position.Y = -1.000000000000000000
+        Size.Width = 182.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Destination Class Name:'
+        TabOrder = 3
+      end
+      object Edit1: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 1
+        Text = 'Root'
+        Position.X = 3.000000000000000000
+        Position.Y = 17.000000000000000000
+        Size.Width = 182.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        OnChange = Edit1Change
+      end
+    end
+    object btnGenerateUnit: TButton
+      Align = Right
+      Margins.Right = 9.000000000000000000
+      Position.X = 730.000000000000000000
+      Position.Y = 6.000000000000000000
+      Size.Width = 104.000000000000000000
+      Size.Height = 41.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = 'Preview Unit'
+      OnClick = PreviewUnitClick
+    end
+  end
+  object Panel1: TPanel
+    Align = Left
+    Padding.Left = 6.000000000000000000
+    Padding.Top = 2.000000000000000000
+    Padding.Right = 6.000000000000000000
+    Padding.Bottom = 6.000000000000000000
+    Position.X = 3.000000000000000000
+    Position.Y = 3.000000000000000000
+    Size.Width = 345.000000000000000000
+    Size.Height = 479.000000000000000000
+    Size.PlatformDefault = False
+    StyleLookup = 'Panel2Style1'
+    TabOrder = 7
+    OnResize = Panel1Resize
+    object TreeView: TTreeView
+      Align = Client
+      PopupMenu = MainPopupMenu
+      Size.Width = 333.000000000000000000
+      Size.Height = 454.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      OnDblClick = TreeViewDblClick
+      OnKeyDown = TreeViewKeyDown
+      Viewport.Width = 329.000000000000000000
+      Viewport.Height = 450.000000000000000000
+    end
+    object Label3: TLabel
+      Align = Top
+      Margins.Left = 2.000000000000000000
+      Position.X = 8.000000000000000000
+      Position.Y = 2.000000000000000000
+      Size.Width = 331.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'Label3Style1'
+      Text = 'Treeview output:'
+    end
+    object Button1: TButton
+      Position.X = 136.000000000000000000
+      Position.Y = 256.000000000000000000
+      TabOrder = 1
+      Text = 'Button1'
+      Visible = False
+    end
+  end
+  object ActionList1: TActionList
+    OnUpdate = ActionList1Update
+    Left = 168
+    Top = 248
+    object actPrettyPrintJSON: TAction
+      Category = 'Memo Actions'
+      Text = 'Pretty Print JSON string'
+      OnExecute = actPrettyPrintJSONExecute
+    end
+    object actValidateJSON: TAction
+      Category = 'Memo Actions'
       Text = 'Validate JSON string Online'
-      OnClick = MenuItem8Click
+      OnExecute = actValidateJSONExecute
+    end
+    object actRenameProperty: TAction
+      Category = 'Main Actions'
+      Text = 'Rename Property'
+      OnExecute = actRenamePropertyExecute
     end
   end
 end

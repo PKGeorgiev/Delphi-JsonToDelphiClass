@@ -5,7 +5,7 @@ interface
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.StdCtrls,
-  FMX.Layouts, FMX.Memo;
+  FMX.Layouts, FMX.Memo, FMX.Controls.Presentation, FMX.ScrollBox;
 
 type
   TSaveUnitForm = class(TForm)
@@ -18,10 +18,8 @@ type
     StyleBook1: TStyleBook;
     procedure btnCloseClick(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
-    procedure Memo1KeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
-      Shift: TShiftState);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
-      Shift: TShiftState);
+    procedure Memo1KeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
     procedure FormShow(Sender: TObject);
   private
     { Private declarations }
@@ -45,14 +43,12 @@ end;
 
 procedure TSaveUnitForm.btnSaveClick(Sender: TObject);
 begin
-  if sd.Execute then
-  begin
-
-  end;
+  if not sd.Execute then
+    exit;
+ Memo1.Lines.SaveToFile(sd.FileName);
 end;
 
-procedure TSaveUnitForm.FormKeyDown(Sender: TObject; var Key: Word;
-  var KeyChar: Char; Shift: TShiftState);
+procedure TSaveUnitForm.FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = 27 then
     ModalResult := mrCancel;
@@ -60,14 +56,13 @@ end;
 
 procedure TSaveUnitForm.FormShow(Sender: TObject);
 begin
-  SaveUnitForm.width := MainForm.Width - 50;
-  SaveUnitForm.height := MainForm.Height - 50;
-  SaveUnitForm.left := MainForm.Left + 25;
-  SaveUnitForm.top := MainForm.Top + 25;
+  SaveUnitForm.width := MainForm.width - 50;
+  SaveUnitForm.height := MainForm.height - 50;
+  SaveUnitForm.left := MainForm.left + 25;
+  SaveUnitForm.top := MainForm.top + 25;
 end;
 
-procedure TSaveUnitForm.Memo1KeyUp(Sender: TObject; var Key: Word;
-  var KeyChar: Char; Shift: TShiftState);
+procedure TSaveUnitForm.Memo1KeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = 27 then
     ModalResult := mrCancel;
