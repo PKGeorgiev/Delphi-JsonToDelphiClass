@@ -1,6 +1,17 @@
 Delphi-JsonToDelphiClass
 ========================
 
+## This is a fork of Petar Georgiev original work  ##
+
+Lots of changes in this version:
+* Only floating poiunt numbers are mapped to Double
+* Numbers are mapped to Integer or Int64 depending on their size
+* Generated code restructored, and simplified
+* Generated classes inheriteds from TJsonDTO
+* Socurce Code restructored
+* Parser logic are seperated from GUI logic
+* Fixed bug in the RegEx for recognizing an ISO8601 Date
+
 Generates Delphi Classes based on JSON string. Just like XML Data Binding, but for JSON.
 
 Main features:
@@ -16,7 +27,8 @@ Main features:
 - Adds helper serialization/deserialization functions;
 - Serialization and deserialization results in the same JSON structure!
 - Automatically detects date/datetime parts and maps them to TDate/TDateTime (as long as dates are ISO8601 compliant);
-- Maps all numbers to Double;
+- Maps floating point numbers to Double
+- Maps Number to Integer or Int64 depending on the number
 - Maps true/false values to Boolean;
 - Allows you to change property names (keys);
 - Allows you to change the names of the stub classes;
