@@ -123,6 +123,9 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
+        <RcCompile Include="JSON_PAS.rc">
+            <Form>JSON_PAS.res</Form>
+        </RcCompile>
         <DCCReference Include="uMainForm.pas">
             <Form>MainForm</Form>
             <FormType>fmx</FormType>

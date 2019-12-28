@@ -221,7 +221,7 @@ begin
   if (s <> '') and (s.ToLower <> StubField.Name.ToLower) then
   begin
     FChanged := True;
-    StubField.Name := s;
+//    StubField.Name := s;
     JsonVisualizer.Visualize(TreeView, 'TreeViewItem1Style1', FJsonMapper);
   end;
 end;
@@ -292,7 +292,7 @@ begin
   self.Constraints.MinWidth := 1024;
   self.Constraints.MinHeight := 560;
 
-  Caption := 'JsonToDelphiClass - ' + FloatToStr(ProgramVersion, PointDsFormatSettings) + ' | By Petar Georgiev';
+  Caption := 'JsonToDelphiClass - ' + FloatToStr(ProgramVersion, PointDsFormatSettings) + ' | By Jens Borrisholt';
 
   FJsonMapper := TPkgJsonMapper.Create;
 

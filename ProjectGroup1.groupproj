@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{353C9ED7-1E10-4228-A4AE-D6F9671EEA80}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="JsonToDelphiClass.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\OnlineOffline\OnlineOffline.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="JsonToDelphiClass">
+        <MSBuild Projects="JsonToDelphiClass.dproj"/>
+    </Target>
+    <Target Name="JsonToDelphiClass:Clean">
+        <MSBuild Projects="JsonToDelphiClass.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="JsonToDelphiClass:Make">
+        <MSBuild Projects="JsonToDelphiClass.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OnlineOffline">
+        <MSBuild Projects="..\OnlineOffline\OnlineOffline.dproj"/>
+    </Target>
+    <Target Name="OnlineOffline:Clean">
+        <MSBuild Projects="..\OnlineOffline\OnlineOffline.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OnlineOffline:Make">
+        <MSBuild Projects="..\OnlineOffline\OnlineOffline.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="JsonToDelphiClass;OnlineOffline"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="JsonToDelphiClass:Clean;OnlineOffline:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="JsonToDelphiClass:Make;OnlineOffline:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

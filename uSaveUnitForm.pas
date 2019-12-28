@@ -34,7 +34,8 @@ implementation
 
 {$R *.fmx}
 
-uses uMainForm;
+uses
+  uMainForm, System.IoUtils;
 
 procedure TSaveUnitForm.btnCloseClick(Sender: TObject);
 begin
@@ -42,10 +43,26 @@ begin
 end;
 
 procedure TSaveUnitForm.btnSaveClick(Sender: TObject);
+var
+  Buffer: TStringList;
+  ResourceStream: TResourceStream;
 begin
   if not sd.Execute then
     exit;
- Memo1.Lines.SaveToFile(sd.FileName);
+
+  Memo1.Lines.SaveToFile(sd.FileName);
+
+  Buffer := TStringList.Create;
+  try
+    ResourceStream := TResourceStream.Create(HInstance, 'JsonDTO', 'PAS');
+    ResourceStream.Position := 0;
+    Buffer.LoadFromStream(ResourceStream);
+    Buffer.SaveToFile(  TPath.GetDirectoryName(sd.FileName) + TPath.DirectorySeparatorChar  + 'Pkg.Json.DTO.pas' );
+  finally
+    ResourceStream.Free;
+    Buffer.Free;
+  end;
+
 end;
 
 procedure TSaveUnitForm.FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);

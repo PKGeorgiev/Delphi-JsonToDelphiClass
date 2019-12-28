@@ -1,5 +1,7 @@
 program JsonToDelphiClass;
 
+{$R 'JSON_PAS.res' 'JSON_PAS.rc'}
+
 uses
   System.StartUpCopy,
   FMX.Forms,
@@ -7,7 +9,7 @@ uses
   Pkg.Json.Mapper in 'Pkg.Json.Mapper.pas',
   uSaveUnitForm in 'uSaveUnitForm.pas' {SaveUnitForm},
   uGitHub in 'uGitHub.pas',
-  FMX.ConstrainedForm in 'FMX.ConstrainedForm.pas' {/  IdSSLOpenSSLHeaders,},
+  FMX.ConstrainedForm in 'FMX.ConstrainedForm.pas',
   uUpdate in 'uUpdate.pas',
   uUpdateForm in 'uUpdateForm.pas' {UpdateForm},
   Pkg.Json.Visualizer in 'Pkg.Json.Visualizer.pas';

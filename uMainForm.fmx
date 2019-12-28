@@ -1537,135 +1537,108 @@ object MainForm: TMainForm
       Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
       DataDetectorTypes = []
       Lines.Strings = (
-        '['
-        '  {'
+        '{"web-app": {'
+        '  "servlet": [   '
+        '    {'
+        '      "servlet-name": "cofaxCDS",'
+        '      "servlet-class": "org.cofax.cds.CDSServlet",'
+        '      "init-param": {'
+        '        "configGlossary:installationAt": "Philadelphia, PA",'
+        '        "configGlossary:adminEmail": "ksm@pobox.com",'
+        '        "configGlossary:poweredBy": "Cofax",'
+        '        "configGlossary:poweredByIcon": "/images/cofax.gif",'
+        '        "configGlossary:staticPath": "/content/static",'
+        '        "templateProcessorClass": "org.cofax.WysiwygTemplate",'
+        '        "templateLoaderClass": "org.cofax.FilesTemplateLoader",'
+        '        "templatePath": "templates",'
+        '        "templateOverridePath": "",'
+        '        "defaultListTemplate": "listTemplate.htm",'
+        '        "defaultFileTemplate": "articleTemplate.htm",'
+        '        "useJSP": false,'
+        '        "jspListTemplate": "listTemplate.jsp",'
+        '        "jspFileTemplate": "articleTemplate.jsp",'
+        '        "cachePackageTagsTrack": 200,'
+        '        "cachePackageTagsStore": 200,'
+        '        "cachePackageTagsRefresh": 60,'
+        '        "cacheTemplatesTrack": 100,'
+        '        "cacheTemplatesStore": 50,'
+        '        "cacheTemplatesRefresh": 15,'
+        '        "cachePagesTrack": 200,'
+        '        "cachePagesStore": 100,'
+        '        "cachePagesRefresh": 10,'
+        '        "cachePagesDirtyRead": 10,'
+        '        "searchEngineListTemplate": "forSearchEnginesList.htm",'
+        '        "searchEngineFileTemplate": "forSearchEngines.htm",'
+        '        "searchEngineRobotsDb": "WEB-INF/robots.db",'
+        '        "useDataStore": true,'
+        '        "dataStoreClass": "org.cofax.SqlDataStore",'
+        '        "redirectionClass": "org.cofax.SqlRedirection",'
+        '        "dataStoreName": "cofax",'
         
-          '    "url": "https://api.github.com/repos/PKGeorgiev/Delphi-JsonT' +
-          'oDelphiClass/releases/821827",'
+          '        "dataStoreDriver": "com.microsoft.jdbc.sqlserver.SQLServ' +
+          'erDriver",'
         
-          '    "assets_url": "https://api.github.com/repos/PKGeorgiev/Delph' +
-          'i-JsonToDelphiClass/releases/821827/assets",'
+          '        "dataStoreUrl": "jdbc:microsoft:sqlserver://LOCALHOST:14' +
+          '33;DatabaseName=goon",'
+        '        "dataStoreUser": "sa",'
+        '        "dataStorePassword": "dataStoreTestQuery",'
         
-          '    "upload_url": "https://uploads.github.com/repos/PKGeorgiev/D' +
-          'elphi-JsonToDelphiClass/releases/821827/assets{?name}",'
+          '        "dataStoreTestQuery": "SET NOCOUNT ON;select test='#39'test'#39 +
+          ';",'
         
-          '    "html_url": "https://github.com/PKGeorgiev/Delphi-JsonToDelp' +
-          'hiClass/releases/tag/0.64",'
-        '    "id": 821827,'
-        '    "tag_name": "0.64",'
-        '    "target_commitish": "master",'
-        '    "name": "Initial Public Release.",'
-        '    "draft": false,'
-        '    "author": {'
-        '      "login": "PKGeorgiev",'
-        '      "id": 9254467,'
+          '        "dataStoreLogFile": "/usr/local/tomcat/logs/datastore.lo' +
+          'g",'
+        '        "dataStoreInitConns": 10,'
+        '        "dataStoreMaxConns": 100,'
+        '        "dataStoreConnUsageLimit": 100,'
+        '        "dataStoreLogLevel": "debug",'
+        '        "maxUrlLength": 500}},'
+        '    {'
+        '      "servlet-name": "cofaxEmail",'
+        '      "servlet-class": "org.cofax.cds.EmailServlet",'
+        '      "init-param": {'
+        '      "mailHost": "mail1",'
+        '      "mailHostOverride": "mail2"}},'
+        '    {'
+        '      "servlet-name": "cofaxAdmin",'
+        '      "servlet-class": "org.cofax.cds.AdminServlet"},'
+        ' '
+        '    {'
+        '      "servlet-name": "fileServlet",'
+        '      "servlet-class": "org.cofax.cds.FileServlet"},'
+        '    {'
+        '      "servlet-name": "cofaxTools",'
+        '      "servlet-class": "org.cofax.cms.CofaxToolsServlet",'
+        '      "init-param": {'
+        '        "templatePath": "toolstemplates/",'
+        '        "log": 1,'
+        '        "logLocation": "/usr/local/tomcat/logs/CofaxTools.log",'
+        '        "logMaxSize": "",'
+        '        "dataLog": 1,'
+        '        "dataLogLocation": "/usr/local/tomcat/logs/dataLog.log",'
+        '        "dataLogMaxSize": "",'
         
-          '      "avatar_url": "https://avatars.githubusercontent.com/u/925' +
-          '4467?v=3",'
-        '      "gravatar_id": "",'
-        '      "url": "https://api.github.com/users/PKGeorgiev",'
-        '      "html_url": "https://github.com/PKGeorgiev",'
+          '        "removePageCache": "/content/admin/remove?cache=pages&id' +
+          '=",'
         
-          '      "followers_url": "https://api.github.com/users/PKGeorgiev/' +
-          'followers",'
+          '        "removeTemplateCache": "/content/admin/remove?cache=temp' +
+          'lates&id=",'
         
-          '      "following_url": "https://api.github.com/users/PKGeorgiev/' +
-          'following{/other_user}",'
-        
-          '      "gists_url": "https://api.github.com/users/PKGeorgiev/gist' +
-          's{/gist_id}",'
-        
-          '      "starred_url": "https://api.github.com/users/PKGeorgiev/st' +
-          'arred{/owner}{/repo}",'
-        
-          '      "subscriptions_url": "https://api.github.com/users/PKGeorg' +
-          'iev/subscriptions",'
-        
-          '      "organizations_url": "https://api.github.com/users/PKGeorg' +
-          'iev/orgs",'
-        
-          '      "repos_url": "https://api.github.com/users/PKGeorgiev/repo' +
-          's",'
-        
-          '      "events_url": "https://api.github.com/users/PKGeorgiev/eve' +
-          'nts{/privacy}",'
-        
-          '      "received_events_url": "https://api.github.com/users/PKGeo' +
-          'rgiev/received_events",'
-        '      "type": "User",'
-        '      "site_admin": false'
-        '    },'
-        '    "prerelease": true,'
-        '    "created_at": "2015-01-03T18:51:51Z",'
-        '    "published_at": "2015-01-03T18:54:25Z",'
-        '    "assets": ['
-        '      {'
-        
-          '        "url": "https://api.github.com/repos/PKGeorgiev/Delphi-J' +
-          'sonToDelphiClass/releases/assets/364101",'
-        '        "id": 364101,'
-        '        "name": "JsonToDelphiClass-0.64.zip",'
-        '        "label": null,'
-        '        "uploader": {'
-        '          "login": "PKGeorgiev",'
-        '          "id": 9254467,'
-        
-          '          "avatar_url": "https://avatars.githubusercontent.com/u' +
-          '/9254467?v=3",'
-        '          "gravatar_id": "",'
-        '          "url": "https://api.github.com/users/PKGeorgiev",'
-        '          "html_url": "https://github.com/PKGeorgiev",'
-        
-          '          "followers_url": "https://api.github.com/users/PKGeorg' +
-          'iev/followers",'
-        
-          '          "following_url": "https://api.github.com/users/PKGeorg' +
-          'iev/following{/other_user}",'
-        
-          '          "gists_url": "https://api.github.com/users/PKGeorgiev/' +
-          'gists{/gist_id}",'
-        
-          '          "starred_url": "https://api.github.com/users/PKGeorgie' +
-          'v/starred{/owner}{/repo}",'
-        
-          '          "subscriptions_url": "https://api.github.com/users/PKG' +
-          'eorgiev/subscriptions",'
-        
-          '          "organizations_url": "https://api.github.com/users/PKG' +
-          'eorgiev/orgs",'
-        
-          '          "repos_url": "https://api.github.com/users/PKGeorgiev/' +
-          'repos",'
-        
-          '          "events_url": "https://api.github.com/users/PKGeorgiev' +
-          '/events{/privacy}",'
-        
-          '          "received_events_url": "https://api.github.com/users/P' +
-          'KGeorgiev/received_events",'
-        '          "type": "User",'
-        '          "site_admin": false'
-        '        },'
-        '        "content_type": "application/x-zip-compressed",'
-        '        "state": "uploaded",'
-        '        "size": 4697167,'
-        '        "download_count": 6,'
-        '        "created_at": "2015-01-03T18:53:08Z",'
-        '        "updated_at": "2015-01-03T18:54:23Z",'
-        
-          '        "browser_download_url": "https://github.com/PKGeorgiev/D' +
-          'elphi-JsonToDelphiClass/releases/download/0.64/JsonToDelphiClass' +
-          '-0.64.zip"'
-        '      }'
-        '    ],'
-        
-          '    "tarball_url": "https://api.github.com/repos/PKGeorgiev/Delp' +
-          'hi-JsonToDelphiClass/tarball/0.64",'
-        
-          '    "zipball_url": "https://api.github.com/repos/PKGeorgiev/Delp' +
-          'hi-JsonToDelphiClass/zipball/0.64",'
-        '    "body": "Initial Public Release."'
-        '  }'
-        ']')
+          '        "fileTransferFolder": "/usr/local/tomcat/webapps/content' +
+          '/fileTransferFolder",'
+        '        "lookInContext": 1,'
+        '        "adminGroupID": 4,'
+        '        "betaServer": true}}],'
+        '  "servlet-mapping": {'
+        '    "cofaxCDS": "/",'
+        '    "cofaxEmail": "/cofaxutil/aemail/*",'
+        '    "cofaxAdmin": "/admin/*",'
+        '    "fileServlet": "/static/*",'
+        '    "cofaxTools": "/tools/*"},'
+        ' '
+        '  "taglib": {'
+        '    "taglib-uri": "cofax.tld",'
+        '    "taglib-location": "/WEB-INF/tlds/cofax.tld"}}}')
       StyledSettings = [Size, Style, FontColor]
       TextSettings.Font.Family = 'Consolas'
       OnChange = Memo1Change
@@ -1678,7 +1651,7 @@ object MainForm: TMainForm
       StyleLookup = 'Memo1Style1'
       TabOrder = 0
       Viewport.Width = 637.000000000000000000
-      Viewport.Height = 428.000000000000000000
+      Viewport.Height = 444.000000000000000000
     end
     object Label4: TLabel
       Align = Top
