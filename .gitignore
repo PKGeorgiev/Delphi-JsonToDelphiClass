@@ -53,3 +53,6 @@
 __history/
 __recover/
 *.~*
+__recovery/__recovery.ini
+__recovery/uMainForm.fmx
+__recovery/uMainForm.pas
