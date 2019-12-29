@@ -53,16 +53,15 @@ begin
   Memo1.Lines.SaveToFile(sd.FileName);
 
   Buffer := TStringList.Create;
+  ResourceStream := TResourceStream.Create(HInstance, 'JsonDTO', 'PAS');
   try
-    ResourceStream := TResourceStream.Create(HInstance, 'JsonDTO', 'PAS');
     ResourceStream.Position := 0;
     Buffer.LoadFromStream(ResourceStream);
-    Buffer.SaveToFile(  TPath.GetDirectoryName(sd.FileName) + TPath.DirectorySeparatorChar  + 'Pkg.Json.DTO.pas' );
+    Buffer.SaveToFile(TPath.GetDirectoryName(sd.FileName) + TPath.DirectorySeparatorChar + 'Pkg.Json.DTO.pas');
   finally
     ResourceStream.Free;
     Buffer.Free;
   end;
-
 end;
 
 procedure TSaveUnitForm.FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);

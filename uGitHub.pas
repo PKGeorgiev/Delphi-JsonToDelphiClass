@@ -340,7 +340,6 @@ var
   LJsonValue: TJsonValue;
   LJsonObject: TJsonObject;
 begin
-  result := nil;
   LUri := TIdUri.Create(AUrl);
   try
     LHttp := TIdHttp.Create;

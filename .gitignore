@@ -51,4 +51,5 @@
 
 # Delphi history and backups
 __history/
+__recover/
 *.~*

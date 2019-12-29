@@ -12,6 +12,7 @@ type
 
   TJsonType = (jtUnknown, jtObject, jtArray, jtString, jtTrue, jtFalse, jtNumber, jtDate, jtDateTime, jtBytes, jtInteger, jtInteger64);
 
+type
   TStubClass = class;
   TPkgJsonMapper = class;
 
@@ -40,13 +41,14 @@ type
     FParentClass: TStubClass;
     FJsonFieldName: string;
     procedure SetName(const Value: string);
-  public
-    constructor Create(aParentClass: TStubClass; aItemName: string; aFieldType: TJsonType);
+  published
     property FieldName: string read FFieldName write FFieldName;
     property name: string read FName;
     property JsonFieldName: string read FJsonFieldName write FJsonFieldName;
     property PropertyName: string read FPropertyName write FPropertyName;
     property FieldType: TJsonType read FFieldType write FFieldType;
+  public
+    constructor Create(aParentClass: TStubClass; aItemName: string; aFieldType: TJsonType);
     function GetTypeAsString: string; overload; virtual;
     class function GetTypeAsString(AType: TJsonType): string; overload;
   end;
@@ -55,7 +57,7 @@ type
   private
     FFieldClass: TStubClass;
     FContainedType: TJsonType;
-  public
+  published
     property ContainedType: TJsonType read FContainedType write FContainedType;
     property FieldClass: TStubClass read FFieldClass write FFieldClass;
   end;
@@ -85,16 +87,15 @@ type
     FArrayProperty: string;
     procedure SortFields;
     procedure SetName(const Value: string);
-    procedure SetPureClassName(const Value: string);
   public
     constructor Create(aParentClass: TStubClass; aClassName: string; aMapper: TPkgJsonMapper; aArrayProperty: string = '');
     destructor Destroy; override;
-    property name: string read FName write SetName;
-
-    property Items: TObjectList<TStubField> read FItems write FItems;
     function GetDeclarationPart(const BaseClass: string): string;
     function GetImplementationPart: string;
-    property PureClassName: string read FPureClassName write SetPureClassName;
+  published
+    property name: string read FName write SetName;
+    property Items: TObjectList<TStubField> read FItems write FItems;
+    property PureClassName: string read FPureClassName write FPureClassName;
     property ArrayProperty: string read FArrayProperty write FArrayProperty;
   end;
 
@@ -118,12 +119,11 @@ type
     // Generates result unit
     function GenerateUnit: string;
     procedure Debug(aLines: TStrings);
+  published
     property DestinationClassName: string read FClassName write FClassName;
     property DestinationUnitName: string read FUnitName write SetUnitName;
     property RootClass: TStubClass read FRootClass;
   end;
-
-procedure PrettyPrintJSON(JSONValue: TJsonValue; OutputStrings: TStrings; Indent: Integer = 0);
 
 implementation
 
@@ -148,92 +148,6 @@ type
 procedure TStringsHelper.AddFormat(const aFormat: string; const Args: array of const);
 begin
   Add(Format(aFormat, Args));
-end;
-
-function CapitaiazeFirst(const Value: string): string;
-var
-  List: TStringList;
-  s: string;
-  i: Integer;
-begin
-  List := TStringList.Create;
-  try
-    ExtractStrings(['_'], [], PChar(Value), List);
-    for i := 0 to List.Count - 1 do
-    begin
-      s := List[i];
-      if s.StartsWith('&') then
-        s[2] := s.ToUpper[2]
-      else
-        s[1] := s.ToUpper[1];
-      List[i] := s;
-    end;
-
-    List.Delimiter := '_';
-    Result := List.DelimitedText;
-  finally
-    List.Free;
-  end;
-end;
-
-// http://stackoverflow.com/a/12198174
-procedure PrettyPrintPair(JSONValue: TJSONPair; OutputStrings: TStrings; Last: Boolean; Indent: Integer);
-const
-  TEMPLATE = '%s:%s';
-var
-  Line: string;
-  NewList: TStringList;
-begin
-  NewList := TStringList.Create;
-  try
-    PrettyPrintJSON(JSONValue.JSONValue, NewList, Indent);
-    Line := Format(TEMPLATE, [JSONValue.JsonString.ToString, Trim(NewList.Text)]);
-  finally
-    NewList.Free;
-  end;
-
-  Line := StringOfChar(' ', Indent + INDENT_SIZE) + Line;
-  if not Last then
-    Line := Line + ',';
-  OutputStrings.Add(Line);
-end;
-
-procedure PrettyPrintArray(JSONValue: TJSONArray; OutputStrings: TStrings; Last: Boolean; Indent: Integer);
-var
-  i: Integer;
-begin
-  OutputStrings.Add(StringOfChar(' ', Indent + INDENT_SIZE) + '[');
-
-  for i := 0 to JSONValue.Count - 1 do
-  begin
-    PrettyPrintJSON(JSONValue.Items[i], OutputStrings, Indent);
-    if i < JSONValue.Count - 1 then
-      OutputStrings[OutputStrings.Count - 1] := OutputStrings[OutputStrings.Count - 1] + ',';
-  end;
-
-  OutputStrings.Add(StringOfChar(' ', Indent + INDENT_SIZE - 2) + ']');
-end;
-
-procedure PrettyPrintJSON(JSONValue: TJsonValue; OutputStrings: TStrings; Indent: Integer = 0);
-var
-  i: Integer;
-  Ident: Integer;
-begin
-  Ident := Indent + INDENT_SIZE;
-  i := 0;
-
-  if JSONValue is TJSONObject then
-  begin
-    OutputStrings.Add(StringOfChar(' ', Ident) + '{');
-    for i := 0 to TJSONObject(JSONValue).Count - 1 do
-      PrettyPrintPair(TJSONObject(JSONValue).Pairs[i], OutputStrings, i = TJSONObject(JSONValue).Count - 1, Ident);
-
-    OutputStrings.Add(StringOfChar(' ', Ident) + '}');
-  end
-  else if JSONValue is TJSONArray then
-    PrettyPrintArray(TJSONArray(JSONValue), OutputStrings, i = TJSONObject(JSONValue).Count - 1, Ident)
-  else
-    OutputStrings.Add(StringOfChar(' ', Ident) + JSONValue.ToString);
 end;
 
 { TPkgJsonMapper }
@@ -328,7 +242,7 @@ begin
     StringList.Add('interface');
     StringList.Add('');
     StringList.Add('uses');
-    StringList.Add('  Pkg.Json.DTO' + IfThen(NeedsAttribute, ', REST.Json.Types', '') + ';');
+    StringList.Add('  Pkg.Json.DTO, System.Generics.Collections' + IfThen(NeedsAttribute, ', REST.Json.Types', '') + ';');
     StringList.Add('');
     StringList.Add('{$M+}');
     StringList.Add('');
@@ -579,14 +493,17 @@ begin
       Lines.Add('');
     end;
 
-    if FComplexItems.Count > 0 then
+    if (FComplexItems.Count > 0) or (FArrayItems.Count > 0) then
     begin
       Lines.Add(Format('constructor %s.Create;', [ClassName]));
       Lines.Add('begin');
       Lines.Add('  inherited;');
 
+      if FArrayItems.Count > 0 then
+        Lines.AddFormat('  FItems := %s.Create;', [FArrayItems[0].GetTypeAsString]);
+
       for StubField in FComplexItems do
-        Lines.AddFormat('  %s := %s.Create;', [StubField.FieldName, (StubField).GetTypeAsString]);
+        Lines.AddFormat('  %s := %s.Create;', [StubField.FieldName, StubField.GetTypeAsString]);
 
       Lines.Add('end;');
       Lines.Add('');
@@ -595,31 +512,20 @@ begin
     if (FComplexItems.Count > 0) or (FArrayItems.Count > 0) then
     begin
       Lines.Add(Format('destructor %s.Destroy;', [ClassName]));
-
-      if FArrayItems.Count > 0 then
-      begin
-        Lines.Add('var');
-        for StubField in FArrayItems do
-          Lines.AddFormat('  %sItem: %s;', [StubField.FName, (StubField as TStubContainerField).FieldClass.Name]);
-      end;
-
       Lines.Add('begin');
+    end;
 
-      if FArrayItems.Count > 0 then
-      begin
-        for StubField in FArrayItems do
-        begin
-          Lines.AddFormat('  for %sItem in %s do', [StubField.Name, StubField.FieldName]);
-          Lines.AddFormat('    %sItem.Free;', [StubField.Name]);
-        end;
+    for StubField in FComplexItems do
+      Lines.AddFormat('  %s.Free;', [StubField.FieldName]);
+
+    if FArrayItems.Count > 0 then
+    begin
+      if FComplexItems.Count > 0 then
         Lines.Add('');
-      end;
 
-      for StubField in FComplexItems do
-        Lines.AddFormat('  %s.Free;', [StubField.FieldName]);
-
+      Lines.Add('  FItems.Free;');
       Lines.Add('  inherited;');
-      Lines.Add('end;')
+      Lines.Add('end;');
     end;
 
     Lines.TrailingLineBreak := false;
@@ -633,11 +539,6 @@ procedure TStubClass.SetName(const Value: string);
 begin
   FPureClassName := Value;
   FName := FMapper.SuggestClassName('T' + FPureClassName + 'DTO');
-end;
-
-procedure TStubClass.SetPureClassName(const Value: string);
-begin
-  FPureClassName := Value;
 end;
 
 procedure TStubClass.SortFields;
@@ -654,8 +555,6 @@ var
 begin
   Lines := TStringList.Create;
   try
-    if NeedsAttribute then
-      Lines.Add(NameAttribute);
     Lines.Add(FName + ' = class' + IfThen(BaseClass = '', '', '(' + BaseClass + ')'));
     Lines.Add('private');
 
@@ -680,18 +579,13 @@ begin
     end;
 
     if (FComplexItems.Count > 0) or (FArrayItems.Count > 0) then
+    begin
       Lines.Add('public');
-
-    if FComplexItems.Count > 0 then
-      Lines.Add('  constructor Create;');
-
-    if (FComplexItems.Count > 0) or (FArrayItems.Count > 0) then
+      Lines.Add('  constructor Create; override;');
       Lines.Add('  destructor Destroy; override;');
-
+    end;
     Lines.Add('end;');
     Lines.Add('');
-
-    i := 0;
 
     for i := 0 to Lines.Count - 1 do
       Lines[i] := '  ' + Lines[i];
@@ -783,7 +677,7 @@ begin
   else
     LSubType := GetTypeAsString(FContainedType);
   end;
-  Result := Format('TArray<%s>', [LSubType]);
+  Result := Format('TObjectList<%s>', [LSubType]);
 end;
 
 { TStubObjectField }

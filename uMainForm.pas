@@ -58,7 +58,6 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure PreviewUnitClick(Sender: TObject);
-    procedure btnExitClick(Sender: TObject);
     procedure MainPopupMenuPopup(Sender: TObject);
     procedure TreeViewDblClick(Sender: TObject);
     procedure MenuItem5Click(Sender: TObject);
@@ -73,6 +72,7 @@ type
     procedure actValidateJSONExecute(Sender: TObject);
     procedure actRenamePropertyExecute(Sender: TObject);
     procedure ActionList1Update(Action: TBasicAction; var Handled: Boolean);
+    procedure btnExitClick(Sender: TObject);
   private
     { Private declarations }
     FJsonMapper: TPkgJsonMapper;
@@ -83,7 +83,6 @@ type
     // >=2: Terminated
     FApplicationStatus: Integer;
     FUpdateCheckEvent: TEvent;
-    procedure DisableMenuItems;
     procedure VisualizeClass;
     procedure PrepareMenu;
     procedure DisableGuiElements;
@@ -99,13 +98,18 @@ implementation
 {$R *.fmx}
 
 uses
-  uSaveUnitForm, Pkg.Json.Visualizer,
+  uSaveUnitForm, Pkg.Json.Visualizer, Pkg.Json.DTO,
 {$IFDEF MSWINDOWS}
   Winapi.ShellAPI, Winapi.Windows;
 {$ENDIF MSWINDOWS}
 {$IFDEF POSIX}
 Posix.Stdlib;
 {$ENDIF POSIX}
+
+procedure TMainForm.btnExitClick(Sender: TObject);
+begin
+  CLose;
+end;
 
 procedure TMainForm.btnVisualizeClick(Sender: TObject);
 begin
@@ -129,14 +133,6 @@ begin
   btnExit.Enabled := false;
   btnVisualize.Enabled := false;
   btnGenerateUnit.Enabled := false;
-end;
-
-procedure TMainForm.DisableMenuItems;
-var
-  k: Integer;
-begin
-  for k := 0 to MainPopupMenu.ItemsCount - 1 do
-    MainPopupMenu.Items[k].Enabled := false;
 end;
 
 procedure TMainForm.Edit1Change(Sender: TObject);
@@ -191,24 +187,8 @@ begin
 end;
 
 procedure TMainForm.actPrettyPrintJSONExecute(Sender: TObject);
-var
-  StringList: TStringList;
-  JsonValue: TJSONValue;
 begin
-  StringList := TStringList.Create;
-  try
-    JsonValue := TJSONObject.ParseJSONValue(Memo1.Text);
-    try
-      if JsonValue <> nil then
-        PrettyPrintJSON(JsonValue, StringList);
-    finally
-      JsonValue.Free;
-    end;
-
-    Memo1.Text := StringList.Text;
-  finally
-    StringList.Free;
-  end;
+  Memo1.Text := TJsonDTO.PrettyPrintJSON(Memo1.Text);
 end;
 
 procedure TMainForm.actRenamePropertyExecute(Sender: TObject);
@@ -221,7 +201,7 @@ begin
   if (s <> '') and (s.ToLower <> StubField.Name.ToLower) then
   begin
     FChanged := True;
-//    StubField.Name := s;
+    // StubField.Name := s;
     JsonVisualizer.Visualize(TreeView, 'TreeViewItem1Style1', FJsonMapper);
   end;
 end;
@@ -234,11 +214,6 @@ begin
 {$IFDEF POSIX}
   _system(PAnsiChar('open ' + AnsiString(JsonValidatorUrl)));
 {$ENDIF POSIX}
-end;
-
-procedure TMainForm.btnExitClick(Sender: TObject);
-begin
-  Close;
 end;
 
 procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);

@@ -1727,6 +1727,7 @@ object MainForm: TMainForm
     end
     object btnExit: TButton
       Align = Right
+      ModalResult = 1
       Position.X = 932.000000000000000000
       Position.Y = 6.000000000000000000
       Size.Width = 80.000000000000000000
