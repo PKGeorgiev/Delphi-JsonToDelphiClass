@@ -11,7 +11,6 @@ type
     FOptions: TJsonOptions;
     function GetAsJson: string;
     procedure SetAsJson(aValue: string);
-    class function GetSubTypeItemClassFromList(ObjectList: TObject): TClass;
     class procedure PrettyPrintPair(aJSONValue: TJSONPair; aOutputStrings: TStrings; Last: Boolean; Indent: Integer);
     class procedure PrettyPrintJSON(aJSONValue: TJsonValue; aOutputStrings: TStrings; Indent: Integer = 0); overload;
     class procedure PrettyPrintArray(aJSONValue: TJSONArray; aOutputStrings: TStrings; Last: Boolean; Indent: Integer);
@@ -41,7 +40,6 @@ end;
 
 const
   INDENT_SIZE = 2;
-
 class procedure TJsonDTO.PrettyPrintJSON(aJSONValue: TJsonValue; aOutputStrings: TStrings; Indent: Integer);
 var
   i: Integer;
@@ -122,38 +120,11 @@ begin
   aOutputStrings.Add(Line);
 end;
 
-class function TJsonDTO.GetSubTypeItemClassFromList(ObjectList: TObject): TClass;
-var
-  CtxRtti: TRttiContext;
-  TypeRtti: TRttiType;
-  MethodRtti: TRttiMethod;
-  ParameterRtti: TRttiParameter;
-begin
-  Result := nil;
-  CtxRtti := TRttiContext.Create;
-  TypeRtti := CtxRtti.GetType(ObjectList.ClassType);
-  MethodRtti := TypeRtti.GetMethod('Add');
-
-  for ParameterRtti in MethodRtti.GetParameters do
-    if SameText(ParameterRtti.Name, 'Value') then
-      if ParameterRtti.ParamType.IsInstance then
-        Exit(ParameterRtti.ParamType.AsInstance.MetaclassType);
-end;
-
 procedure TJsonDTO.SetAsJson(aValue: string);
 var
   JSONValue: TJsonValue;
   JSONObject: TJSONObject;
-var
-  RttiField: TRttiField;
-  RttiContext: TRttiContext;
-
-  Value: TValue;
-  List: TObjectList<TObject>;
-  ElementType: TClass;
-  Element: TObject;
 begin
-  RttiContext := TRttiContext.Create;
   JSONValue := TJSONObject.ParseJSONValue(aValue);
   try
     if not Assigned(JSONValue) then
@@ -161,22 +132,12 @@ begin
 
     if (JSONValue is TJSONArray) then
     begin
-      RttiField := TRttiContext.Create.GetType(ClassInfo).GetField('FItems');
-      Value := RttiField.GetValue(Self);
-      List := TObjectList<TObject>(Value.AsObject);
-      ElementType := GetSubTypeItemClassFromList(Value.AsObject);
-
-      for JSONValue in (JSONValue as TJSONArray) do
-      begin
-        Element := ElementType.Create;
-        if (JSONValue is TJSONObject) then
-        begin
-          TJson.JsonToObject(Element, TJSONObject(JSONValue), FOptions);
-          List.Add(Element);
-        end
-        else
-          Element.Free;
-      end;
+      with TJSONUnMarshal.Create do
+        try
+          SetFieldArray(Self, 'Items', (JSONValue as TJSONArray));
+        finally
+          Free;
+        end;
 
       Exit;
     end;
@@ -199,3 +160,4 @@ begin
 end;
 
 end.
+

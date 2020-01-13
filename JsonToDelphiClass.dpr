@@ -9,10 +9,11 @@ uses
   Pkg.Json.Mapper in 'Pkg.Json.Mapper.pas',
   uSaveUnitForm in 'uSaveUnitForm.pas' {SaveUnitForm},
   uGitHub in 'uGitHub.pas',
-  FMX.ConstrainedForm in 'FMX.ConstrainedForm.pas',
+  FMX.ConstrainedForm in 'FMX.ConstrainedForm.pas' {/  IdSSLOpenSSLHeaders,},
   uUpdate in 'uUpdate.pas',
   uUpdateForm in 'uUpdateForm.pas' {UpdateForm},
-  Pkg.Json.Visualizer in 'Pkg.Json.Visualizer.pas';
+  Pkg.Json.Visualizer in 'Pkg.Json.Visualizer.pas',
+  Pkg.Json.DTO in 'Pkg.Json.DTO.pas';
 
 {$R *.res}
 

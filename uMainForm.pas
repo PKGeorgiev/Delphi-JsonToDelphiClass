@@ -183,7 +183,7 @@ begin
   else
     StubContainerField := nil;
 
-  actRenameProperty.Enabled := (StubContainerField <> nil) and (StubContainerField.FieldType = jtObject);
+  actRenameProperty.Enabled := (StubContainerField = nil); // and (StubContainerField.FieldType = jtObject);
 end;
 
 procedure TMainForm.actPrettyPrintJSONExecute(Sender: TObject);
@@ -193,17 +193,27 @@ end;
 
 procedure TMainForm.actRenamePropertyExecute(Sender: TObject);
 var
-  s: string;
   StubField: TStubField;
 begin
-  StubField := (Sender as TFmxObject).TagObject as TStubField;
-  s := InputBox('Rename Property ' + StubField.Name, 'Enter new Property name', StubField.Name);
-  if (s <> '') and (s.ToLower <> StubField.Name.ToLower) then
-  begin
-    FChanged := True;
-    // StubField.Name := s;
-    JsonVisualizer.Visualize(TreeView, 'TreeViewItem1Style1', FJsonMapper);
-  end;
+  if TreeView.Selected.TagObject is TStubContainerField then
+    exit;
+
+  StubField := TStubField(TreeView.Selected.TagObject);
+
+  TDialogService.InputQuery('Rename Property ' + StubField.Name, ['Enter new Property name'], [StubField.Name],
+    procedure(const AResult: TModalResult; const AValues: array of string)
+    var
+      s: string;
+    begin
+      s := AValues[0];
+
+      if (s <> '') and (s.ToLower <> StubField.Name.ToLower) then
+      begin
+        FChanged := True;
+        StubField.Name := s;
+        JsonVisualizer.Visualize(TreeView, 'TreeViewItem1Style1', FJsonMapper);
+      end;
+    end);
 end;
 
 procedure TMainForm.actValidateJSONExecute(Sender: TObject);
@@ -246,7 +256,7 @@ begin
               TThread.Queue(nil,
                 procedure
                 begin
-                  Close;
+                  CLose;
                 end);
             end);
 
@@ -310,7 +320,7 @@ end;
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = 27 then
-    Close;
+    CLose;
 end;
 
 procedure TMainForm.Label1Click(Sender: TObject);
@@ -338,17 +348,27 @@ end;
 
 procedure TMainForm.MenuItem5Click(Sender: TObject);
 var
-  s: string;
-  StubClass: TStubClass;
+  StubField: TStubField;
 begin
-  StubClass := (Sender as TFmxObject).TagObject as TStubClass;
-  s := InputBox('Rename Class ' + StubClass.Name, 'Enter new Class name', StubClass.PureClassName);
-  if (s <> '') and (s.ToLower <> StubClass.PureClassName.ToLower) then
-  begin
-    FChanged := True;
-    StubClass.Name := s;
-    JsonVisualizer.Visualize(TreeView, 'TreeViewItem1Style1', FJsonMapper);
-  end;
+  if TreeView.Selected.TagObject is TStubContainerField then
+    exit;
+
+  StubField := TStubField(TreeView.Selected.TagObject);
+
+  TDialogService.InputQuery('Rename Class ' + StubField.Name, ['Enter new Property name'], [StubField.Name],
+    procedure(const AResult: TModalResult; const AValues: array of string)
+    var
+      s: string;
+    begin
+      s := AValues[0];
+
+      if (s <> '') and (s.ToLower <> StubField.Name.ToLower) then
+      begin
+        FChanged := True;
+        StubField.Name := s;
+        JsonVisualizer.Visualize(TreeView, 'TreeViewItem1Style1', FJsonMapper);
+      end;
+    end);
 end;
 
 procedure TMainForm.Panel1Resize(Sender: TObject);
@@ -364,13 +384,11 @@ var
   Item: TTreeViewItem;
   Point: TPointF;
 begin
-  // DisableMenuItems;
   MainPopupMenu.Items[0].Text := '---';
   Point := TreeView.AbsoluteToLocal(ScreenToClient(MainPopupMenu.PopupPoint));
   Item := TreeView.ItemByPoint(Point.X, Point.Y);
   if Item <> nil then
     Item.Select;
-  //
   PrepareMenu;
 end;
 
@@ -419,7 +437,6 @@ begin
       MenuItem5Click(MenuItem5)
     else
       actRenameProperty.Execute;
-    // MenuItem3Click(MenuItem3);
   end;
 end;
 
