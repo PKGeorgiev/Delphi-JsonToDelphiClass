@@ -6,8 +6,8 @@ uses REST.Client, uGitHub, REST.JSON, JSON,
   IPPeerClient, SysUtils, System.Threading, Classes, Pkg.JSON.Mapper;
 
 const
-  ProgramVersion: double = 0.65;
-  UpdateUrl = 'https://api.github.com/repos/PKGeorgiev/Delphi-JsonToDelphiClass/releases';
+  ProgramVersion: double = 1;
+  UpdateUrl = 'https://api.github.com/repos/JensBorrisholt/Delphi-JsonToDelphiClass/releases';
   ProgramUrl = 'https://github.com/PKGeorgiev/Delphi-JsonToDelphiClass';
 
 function InternalCheckForUpdate: TObject;
