@@ -108,7 +108,6 @@ type
     FRootClass: TStubClass;
     FUnitName: string;
     FClassName: string;
-    procedure SetUnitName(const Value: string);
   strict protected
     function GetJsonType(aJsonValue: TJsonValue): TJsonType;
     function GetFirstArrayItem(aJsonValue: TJsonValue): TJsonValue;
@@ -124,7 +123,7 @@ type
     procedure Debug(aLines: TStrings);
   published
     property DestinationClassName: string read FClassName write FClassName;
-    property DestinationUnitName: string read FUnitName write SetUnitName;
+    property DestinationUnitName: string read FUnitName write FUnitName;
     property RootClass: TStubClass read FRootClass;
     property StubClasses: TObjectList<TStubClass> read FStubClasses;
   end;
@@ -191,8 +190,6 @@ begin
       jtArray:
         begin
           StubClass := nil;
-          JsonType2 := jtUnknown;
-
           JsonValue2 := GetFirstArrayItem(JSONValue);
           if JsonValue2 <> nil then
           begin
@@ -206,6 +203,12 @@ begin
               jtArray:
                 raise EJsonMapper.Create('Nested Arrays are not supported!');
             end;
+          end
+          else
+          begin
+            // if we meet an empty array then
+            JsonType2 := jtObject;
+            StubClass := TStubClass.Create(aParentClass, JsonPair.JsonString.Value, Self);
           end;
 
           TStubArrayField.Create(aParentClass, JsonPair.JsonString.Value, JsonType2, StubClass);
@@ -317,11 +320,6 @@ destructor TPkgJsonMapper.Destroy;
 begin
   FreeAndNil(FStubClasses);
   inherited;
-end;
-
-procedure TPkgJsonMapper.SetUnitName(const Value: string);
-begin
-  FUnitName := Value;
 end;
 
 function TPkgJsonMapper.SuggestClassName(aSuggestedClassName: string): string;
@@ -553,33 +551,32 @@ end;
 function TStubClass.GetDeclarationPart(const BaseClass: string): string;
 var
   Lines: TStringList;
-  s: string;
   StubField: TStubField;
   i: Integer;
 begin
   Lines := TStringList.Create;
   try
     Lines.Add(FName + ' = class' + IfThen(BaseClass = '', '', '(' + BaseClass + ')'));
-    Lines.Add('private');
+    if FItems.Count > 0 then
+      Lines.Add('private');
 
     for StubField in FItems do
     begin
       if StubField.NeedsAttribute then
         Lines.Add('  ' + StubField.NameAttribute);
 
-      s := Format('  %s: %s;', [StubField.FieldName, StubField.GetTypeAsString]);
-      Lines.Add(s);
+      Lines.AddFormat('  %s: %s;', [StubField.FieldName, StubField.GetTypeAsString]);
     end;
 
-    Lines.Add('published');
+    if FItems.Count > 0 then
+      Lines.Add('published');
 
     for StubField in FItems do
     begin
       if (StubField.FieldType = jtUnknown) or ((StubField is TStubContainerField) and ((StubField as TStubContainerField).ContainedType = jtUnknown)) then
         raise EJsonMapper.CreateFmt('The property [%s] has unknown type!', [StubField.PropertyName]);
 
-      s := Format('  property %s: %s read %s write %s;', [StubField.PropertyName, StubField.GetTypeAsString, StubField.FieldName, StubField.FieldName]);
-      Lines.Add(s);
+      Lines.AddFormat('  property %s: %s read %s write %s;', [StubField.PropertyName, StubField.GetTypeAsString, StubField.FieldName, StubField.FieldName]);
     end;
 
     if FComplexItems.Count > 0 then

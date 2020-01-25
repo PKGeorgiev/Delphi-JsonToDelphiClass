@@ -443,7 +443,6 @@ end;
 procedure TMainForm.VisualizeClass;
 begin
   FChanged := false;
-
   FJsonMapper.DestinationUnitName := Edit1.Text;
   FJsonMapper.Parse(Memo1.Text);
 

@@ -40,158 +40,158 @@ type
 
   TUploaderClass = class
   private
-    FAvatar_url: String;
-    FEvents_url: String;
-    FFollowers_url: String;
-    FFollowing_url: String;
-    FGists_url: String;
-    FGravatar_id: String;
-    FHtml_url: String;
+    FAvatar_url: string;
+    FEvents_url: string;
+    FFollowers_url: string;
+    FFollowing_url: string;
+    FGists_url: string;
+    FGravatar_id: string;
+    FHtml_url: string;
     FId: Extended;
-    FLogin: String;
-    FOrganizations_url: String;
-    FReceived_events_url: String;
-    FRepos_url: String;
+    FLogin: string;
+    FOrganizations_url: string;
+    FReceived_events_url: string;
+    FRepos_url: string;
     FSite_admin: Boolean;
-    FStarred_url: String;
-    FSubscriptions_url: String;
-    FType: String;
-    FUrl: String;
+    FStarred_url: string;
+    FSubscriptions_url: string;
+    FType: string;
+    FUrl: string;
   public
-    property avatar_url: String read FAvatar_url write FAvatar_url;
-    property events_url: String read FEvents_url write FEvents_url;
-    property followers_url: String read FFollowers_url write FFollowers_url;
-    property following_url: String read FFollowing_url write FFollowing_url;
-    property gists_url: String read FGists_url write FGists_url;
-    property gravatar_id: String read FGravatar_id write FGravatar_id;
-    property html_url: String read FHtml_url write FHtml_url;
+    property avatar_url: string read FAvatar_url write FAvatar_url;
+    property events_url: string read FEvents_url write FEvents_url;
+    property followers_url: string read FFollowers_url write FFollowers_url;
+    property following_url: string read FFollowing_url write FFollowing_url;
+    property gists_url: string read FGists_url write FGists_url;
+    property gravatar_id: string read FGravatar_id write FGravatar_id;
+    property html_url: string read FHtml_url write FHtml_url;
     property id: Extended read FId write FId;
-    property login: String read FLogin write FLogin;
-    property organizations_url: String read FOrganizations_url write FOrganizations_url;
-    property received_events_url: String read FReceived_events_url write FReceived_events_url;
-    property repos_url: String read FRepos_url write FRepos_url;
+    property login: string read FLogin write FLogin;
+    property organizations_url: string read FOrganizations_url write FOrganizations_url;
+    property received_events_url: string read FReceived_events_url write FReceived_events_url;
+    property repos_url: string read FRepos_url write FRepos_url;
     property site_admin: Boolean read FSite_admin write FSite_admin;
-    property starred_url: String read FStarred_url write FStarred_url;
-    property subscriptions_url: String read FSubscriptions_url write FSubscriptions_url;
-    property &type: String read FType write FType;
-    property url: String read FUrl write FUrl;
+    property starred_url: string read FStarred_url write FStarred_url;
+    property subscriptions_url: string read FSubscriptions_url write FSubscriptions_url;
+    property &type: string read FType write FType;
+    property url: string read FUrl write FUrl;
     function ToJsonString: string;
-    class function FromJsonString(AJsonString: string): TUploaderClass;
+    class function FromJsonString(aJsonString: string): TUploaderClass;
   end;
 
   TAssetsClass = class
   private
-    FBrowser_download_url: String;
-    FContent_type: String;
-    FCreated_at: String;
+    FBrowser_download_url: string;
+    FContent_type: string;
+    FCreated_at: string;
     FDownload_count: Extended;
     FId: Extended;
-    FName: String;
+    FName: string;
     FSize: Extended;
-    FState: String;
-    FUpdated_at: String;
+    FState: string;
+    FUpdated_at: string;
     FUploader: TUploaderClass;
-    FUrl: String;
+    FUrl: string;
   public
-    property browser_download_url: String read FBrowser_download_url write FBrowser_download_url;
-    property content_type: String read FContent_type write FContent_type;
-    property created_at: String read FCreated_at write FCreated_at;
+    property browser_download_url: string read FBrowser_download_url write FBrowser_download_url;
+    property content_type: string read FContent_type write FContent_type;
+    property created_at: string read FCreated_at write FCreated_at;
     property download_count: Extended read FDownload_count write FDownload_count;
     property id: Extended read FId write FId;
-    property name: String read FName write FName;
+    property name: string read FName write FName;
     property size: Extended read FSize write FSize;
-    property state: String read FState write FState;
-    property updated_at: String read FUpdated_at write FUpdated_at;
+    property state: string read FState write FState;
+    property updated_at: string read FUpdated_at write FUpdated_at;
     property uploader: TUploaderClass read FUploader write FUploader;
-    property url: String read FUrl write FUrl;
+    property url: string read FUrl write FUrl;
     constructor Create;
     destructor Destroy; override;
     function ToJsonString: string;
-    class function FromJsonString(AJsonString: string): TAssetsClass;
+    class function FromJsonString(aJsonString: string): TAssetsClass;
   end;
 
   TAuthorClass = class
   private
-    FAvatar_url: String;
-    FEvents_url: String;
-    FFollowers_url: String;
-    FFollowing_url: String;
-    FGists_url: String;
-    FGravatar_id: String;
-    FHtml_url: String;
+    FAvatar_url: string;
+    FEvents_url: string;
+    FFollowers_url: string;
+    FFollowing_url: string;
+    FGists_url: string;
+    FGravatar_id: string;
+    FHtml_url: string;
     FId: Extended;
-    FLogin: String;
-    FOrganizations_url: String;
-    FReceived_events_url: String;
-    FRepos_url: String;
+    FLogin: string;
+    FOrganizations_url: string;
+    FReceived_events_url: string;
+    FRepos_url: string;
     FSite_admin: Boolean;
-    FStarred_url: String;
-    FSubscriptions_url: String;
-    FType: String;
-    FUrl: String;
+    FStarred_url: string;
+    FSubscriptions_url: string;
+    FType: string;
+    FUrl: string;
   public
-    property avatar_url: String read FAvatar_url write FAvatar_url;
-    property events_url: String read FEvents_url write FEvents_url;
-    property followers_url: String read FFollowers_url write FFollowers_url;
-    property following_url: String read FFollowing_url write FFollowing_url;
-    property gists_url: String read FGists_url write FGists_url;
-    property gravatar_id: String read FGravatar_id write FGravatar_id;
-    property html_url: String read FHtml_url write FHtml_url;
+    property avatar_url: string read FAvatar_url write FAvatar_url;
+    property events_url: string read FEvents_url write FEvents_url;
+    property followers_url: string read FFollowers_url write FFollowers_url;
+    property following_url: string read FFollowing_url write FFollowing_url;
+    property gists_url: string read FGists_url write FGists_url;
+    property gravatar_id: string read FGravatar_id write FGravatar_id;
+    property html_url: string read FHtml_url write FHtml_url;
     property id: Extended read FId write FId;
-    property login: String read FLogin write FLogin;
-    property organizations_url: String read FOrganizations_url write FOrganizations_url;
-    property received_events_url: String read FReceived_events_url write FReceived_events_url;
-    property repos_url: String read FRepos_url write FRepos_url;
+    property login: string read FLogin write FLogin;
+    property organizations_url: string read FOrganizations_url write FOrganizations_url;
+    property received_events_url: string read FReceived_events_url write FReceived_events_url;
+    property repos_url: string read FRepos_url write FRepos_url;
     property site_admin: Boolean read FSite_admin write FSite_admin;
-    property starred_url: String read FStarred_url write FStarred_url;
-    property subscriptions_url: String read FSubscriptions_url write FSubscriptions_url;
-    property &type: String read FType write FType;
-    property url: String read FUrl write FUrl;
+    property starred_url: string read FStarred_url write FStarred_url;
+    property subscriptions_url: string read FSubscriptions_url write FSubscriptions_url;
+    property &type: string read FType write FType;
+    property url: string read FUrl write FUrl;
     function ToJsonString: string;
-    class function FromJsonString(AJsonString: string): TAuthorClass;
+    class function FromJsonString(aJsonString: string): TAuthorClass;
   end;
 
   TReleaseClass = class(TUGitHubSerializableObject)
   private
     FAssets: TArray<TAssetsClass>;
-    FAssets_url: String;
+    FAssets_url: string;
     FAuthor: TAuthorClass;
-    FBody: String;
-    FCreated_at: String;
+    FBody: string;
+    FCreated_at: string;
     FDraft: Boolean;
-    FHtml_url: String;
+    FHtml_url: string;
     FId: Extended;
-    FName: String;
+    FName: string;
     FPrerelease: Boolean;
-    FPublished_at: String;
-    FTag_name: String;
-    FTarball_url: String;
-    FTarget_commitish: String;
-    FUpload_url: String;
-    FUrl: String;
-    FZipball_url: String;
+    FPublished_at: string;
+    FTag_name: string;
+    FTarball_url: string;
+    FTarget_commitish: string;
+    FUpload_url: string;
+    FUrl: string;
+    FZipball_url: string;
   public
     property assets: TArray<TAssetsClass> read FAssets write FAssets;
-    property assets_url: String read FAssets_url write FAssets_url;
+    property assets_url: string read FAssets_url write FAssets_url;
     property author: TAuthorClass read FAuthor write FAuthor;
-    property body: String read FBody write FBody;
-    property created_at: String read FCreated_at write FCreated_at;
+    property body: string read FBody write FBody;
+    property created_at: string read FCreated_at write FCreated_at;
     property draft: Boolean read FDraft write FDraft;
-    property html_url: String read FHtml_url write FHtml_url;
+    property html_url: string read FHtml_url write FHtml_url;
     property id: Extended read FId write FId;
-    property name: String read FName write FName;
+    property name: string read FName write FName;
     property prerelease: Boolean read FPrerelease write FPrerelease;
-    property published_at: String read FPublished_at write FPublished_at;
-    property tag_name: String read FTag_name write FTag_name;
-    property tarball_url: String read FTarball_url write FTarball_url;
-    property target_commitish: String read FTarget_commitish write FTarget_commitish;
-    property upload_url: String read FUpload_url write FUpload_url;
-    property url: String read FUrl write FUrl;
-    property zipball_url: String read FZipball_url write FZipball_url;
+    property published_at: string read FPublished_at write FPublished_at;
+    property tag_name: string read FTag_name write FTag_name;
+    property tarball_url: string read FTarball_url write FTarball_url;
+    property target_commitish: string read FTarget_commitish write FTarget_commitish;
+    property upload_url: string read FUpload_url write FUpload_url;
+    property url: string read FUrl write FUrl;
+    property zipball_url: string read FZipball_url write FZipball_url;
     constructor Create;
     destructor Destroy; override;
     function ToJsonString: string;
-    class function FromJsonString(AJsonString: string): TReleaseClass;
+    class function FromJsonString(aJsonString: string): TReleaseClass;
     class function HttpGet(AUrl: string; AOnBeforeRequest: TProc<TIdHttp> = nil): TReleaseClass;
   end;
 
@@ -203,19 +203,19 @@ type
     constructor Create;
     destructor Destroy; override;
     function ToJsonString: string;
-    class function FromJsonString(AJsonString: string): TGitReleasesClass;
+    class function FromJsonString(aJsonString: string): TGitReleasesClass;
     class function FromUrl(AUrl: string; ATimeout: integer): TGitReleasesClass;
   end;
 
   TErrorClass = class
   private
-    FDocumentation_url: String;
-    FMessage: String;
+    FDocumentation_url: string;
+    FMessage: string;
   public
-    property documentation_url: String read FDocumentation_url write FDocumentation_url;
-    property message: String read FMessage write FMessage;
+    property documentation_url: string read FDocumentation_url write FDocumentation_url;
+    property message: string read FMessage write FMessage;
     function ToJsonString: string;
-    class function FromJsonString(AJsonString: string): TErrorClass;
+    class function FromJsonString(aJsonString: string): TErrorClass;
   end;
 
 implementation
@@ -224,12 +224,12 @@ implementation
 
 function TUploaderClass.ToJsonString: string;
 begin
-  result := TJson.ObjectToJsonString(self);
+  Result := TJson.ObjectToJsonString(Self);
 end;
 
-class function TUploaderClass.FromJsonString(AJsonString: string): TUploaderClass;
+class function TUploaderClass.FromJsonString(aJsonString: string): TUploaderClass;
 begin
-  result := TJson.JsonToObject<TUploaderClass>(AJsonString)
+  Result := TJson.JsonToObject<TUploaderClass>(aJsonString)
 end;
 
 { TAssetsClass }
@@ -242,30 +242,30 @@ end;
 
 destructor TAssetsClass.Destroy;
 begin
-  FUploader.free;
+  FUploader.Free;
   inherited;
 end;
 
 function TAssetsClass.ToJsonString: string;
 begin
-  result := TJson.ObjectToJsonString(self);
+  Result := TJson.ObjectToJsonString(Self);
 end;
 
-class function TAssetsClass.FromJsonString(AJsonString: string): TAssetsClass;
+class function TAssetsClass.FromJsonString(aJsonString: string): TAssetsClass;
 begin
-  result := TJson.JsonToObject<TAssetsClass>(AJsonString)
+  Result := TJson.JsonToObject<TAssetsClass>(aJsonString)
 end;
 
 { TAuthorClass }
 
 function TAuthorClass.ToJsonString: string;
 begin
-  result := TJson.ObjectToJsonString(self);
+  Result := TJson.ObjectToJsonString(Self);
 end;
 
-class function TAuthorClass.FromJsonString(AJsonString: string): TAuthorClass;
+class function TAuthorClass.FromJsonString(aJsonString: string): TAuthorClass;
 begin
-  result := TJson.JsonToObject<TAuthorClass>(AJsonString)
+  Result := TJson.JsonToObject<TAuthorClass>(aJsonString)
 end;
 
 { TReleaseClass }
@@ -280,27 +280,26 @@ destructor TReleaseClass.Destroy;
 var
   LassetsItem: TAssetsClass;
 begin
-
   for LassetsItem in FAssets do
-    LassetsItem.free;
+    LassetsItem.Free;
 
-  FAuthor.free;
+  FAuthor.Free;
   inherited;
 end;
 
 function TReleaseClass.ToJsonString: string;
 begin
-  result := TJson.ObjectToJsonString(self);
+  Result := TJson.ObjectToJsonString(Self);
 end;
 
-class function TReleaseClass.FromJsonString(AJsonString: string): TReleaseClass;
+class function TReleaseClass.FromJsonString(aJsonString: string): TReleaseClass;
 begin
-  result := TJson.JsonToObject<TReleaseClass>(AJsonString)
+  Result := TJson.JsonToObject<TReleaseClass>(aJsonString)
 end;
 
 class function TReleaseClass.HttpGet(AUrl: string; AOnBeforeRequest: TProc<TIdHttp>): TReleaseClass;
 begin
-  result := inherited HttpGet<TReleaseClass>(AUrl, AOnBeforeRequest);
+  Result := inherited HttpGet<TReleaseClass>(AUrl, AOnBeforeRequest);
 end;
 
 { TGitReleasesClass }
@@ -316,19 +315,19 @@ var
 begin
 
   for LReleasesItem in FReleases do
-    LReleasesItem.free;
+    LReleasesItem.Free;
 
   inherited;
 end;
 
 function TGitReleasesClass.ToJsonString: string;
 begin
-  result := TJson.ObjectToJsonString(self);
+  Result := TJson.ObjectToJsonString(Self);
 end;
 
-class function TGitReleasesClass.FromJsonString(AJsonString: string): TGitReleasesClass;
+class function TGitReleasesClass.FromJsonString(aJsonString: string): TGitReleasesClass;
 begin
-  result := TJson.JsonToObject<TGitReleasesClass>(AJsonString)
+  Result := TJson.JsonToObject<TGitReleasesClass>(aJsonString)
 end;
 
 class function TGitReleasesClass.FromUrl(AUrl: string; ATimeout: integer): TGitReleasesClass;
@@ -373,20 +372,20 @@ begin
             LJsonObject.AddPair('Releases', LJsonValue);
             LString := LJsonObject.ToJSON;
           finally
-            LJsonObject.free;
+            LJsonObject.Free;
           end;
         end;
 
-        result := TGitReleasesClass.FromJsonString(LString);
+        Result := TGitReleasesClass.FromJsonString(LString);
 
       finally
-        LJsonValue.free;
+        LJsonValue.Free;
       end;
     finally
-      LHttp.free;
+      LHttp.Free;
     end;
   finally
-    LUri.free;
+    LUri.Free;
   end;
 end;
 
@@ -394,12 +393,12 @@ end;
 
 function TErrorClass.ToJsonString: string;
 begin
-  result := TJson.ObjectToJsonString(self);
+  Result := TJson.ObjectToJsonString(Self);
 end;
 
-class function TErrorClass.FromJsonString(AJsonString: string): TErrorClass;
+class function TErrorClass.FromJsonString(aJsonString: string): TErrorClass;
 begin
-  result := TJson.JsonToObject<TErrorClass>(AJsonString)
+  Result := TJson.JsonToObject<TErrorClass>(aJsonString)
 end;
 
 { TUGitHubSerializableObject }
@@ -439,14 +438,13 @@ begin
 
     end);
 
-  result := LResult;
+  Result := LResult;
 end;
 
 class function TUGitHubSerializableObject.HttpGet<T>(AUrl: string; AOnBeforeRequest: TProc<TIdHttp>; AArrayProperty: string): T;
 var
   LResult: T;
 begin
-
   WebRequest(AUrl,
     procedure(LHttp: TIdHttp)
     var
@@ -478,20 +476,20 @@ begin
               LJsonObject.AddPair(AArrayProperty, LJsonValue);
               LString := LJsonObject.ToJSON;
             finally
-              LJsonObject.free;
+              LJsonObject.Free;
             end;
           end
           else
             raise Exception.CreateFmt('The class %s does not accept array values!', [LResult.className]);
       finally
-        LJsonValue.free;
+        LJsonValue.Free;
       end;
 
       LResult := TJson.JsonToObject<T>(LString);
 
     end);
 
-  result := LResult;
+  Result := LResult;
 end;
 
 function TUGitHubSerializableObject.HttpPost(AUrl: string; AOnBeforeRequest: TProc<TIdHttp>): string;
@@ -509,7 +507,7 @@ begin
       if assigned(AOnBeforeRequest) then
         AOnBeforeRequest(LHttp);
 
-      LResult := TJson.ObjectToJsonString(self);
+      LResult := TJson.ObjectToJsonString(Self);
 
       LStringStream := TStringStream.Create(LResult, TEncoding.GetEncoding(LHttp.Request.ContentEncoding));
       try
@@ -517,12 +515,12 @@ begin
         EnsureHttpResponseCode(LHttp.ResponseCode, AUrl, [200, 201, 202, 204]);
         EnsureHttpContentType(LHttp);
       finally
-        LStringStream.free;
+        LStringStream.Free;
       end;
 
     end);
 
-  result := LResult;
+  Result := LResult;
 end;
 
 function TUGitHubSerializableObject.HttpPut(AUrl: string; AOnBeforeRequest: TProc<TIdHttp>): string;
@@ -540,7 +538,7 @@ begin
       if assigned(AOnBeforeRequest) then
         AOnBeforeRequest(LHttp);
 
-      LResult := TJson.ObjectToJsonString(self);
+      LResult := TJson.ObjectToJsonString(Self);
 
       LStringStream := TStringStream.Create(LResult, TEncoding.GetEncoding(LHttp.Request.ContentEncoding));
       try
@@ -548,12 +546,12 @@ begin
         EnsureHttpResponseCode(LHttp.ResponseCode, AUrl, [200, 204]);
         EnsureHttpContentType(LHttp);
       finally
-        LStringStream.free;
+        LStringStream.Free;
       end;
 
     end);
 
-  result := LResult;
+  Result := LResult;
 end;
 
 class function TUGitHubSerializableObject.WebRequest(AUrl: string; AOnRequest: TProc<TIdHttp>): integer;
@@ -582,14 +580,14 @@ begin
       try
         AOnRequest(LHttp);
       finally
-        result := LHttp.ResponseCode;
+        Result := LHttp.ResponseCode;
       end;
 
     finally
-      LHttp.free;
+      LHttp.Free;
     end;
   finally
-    LUri.free;
+    LUri.Free;
   end;
 end;
 
