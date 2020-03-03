@@ -258,7 +258,7 @@ begin
     StringList.Add('interface');
     StringList.Add('');
     StringList.Add('uses');
-    StringList.Add('  Pkg.Json.DTO' + IfThen(NeedsAttribute, ', REST.Json.Types', '') + ';');
+    StringList.Add('  Pkg.Json.DTO, System.Generics.Collections' + IfThen(NeedsAttribute, ', REST.Json.Types', '') + ';');
     StringList.Add('');
     StringList.Add('{$M+}');
     StringList.Add('');
@@ -483,6 +483,7 @@ function TStubClass.GetImplementationPart: string;
 var
   Lines: TStringList;
   StubField: TStubField;
+  StubArrayField: TStubArrayField;
 begin
   Lines := TStringList.Create;
   try
@@ -509,24 +510,30 @@ begin
     if (FComplexItems.Count > 0) or (FArrayItems.Count > 0) then
     begin
       Lines.Add(Format('destructor %s.Destroy;', [FName]));
-      if FArrayItems.Count > 0 then
-      begin
-        Lines.Add('var');
-        Lines.Add('  Element: TObject;');
-      end;
-
       Lines.Add('begin');
 
       for StubField in FComplexItems do
         Lines.AddFormat('  %s.Free;', [StubField.FieldName]);
 
       for StubField in FArrayItems do
-      begin
-        Lines.AddFormat('  for Element in %s do', [StubField.FieldName]);
-        Lines.Add('    Element.Free;');
-      end;
+        Lines.AddFormat('  Get%s.Free;', [StubField.Name]);
 
       Lines.Add('  inherited;');
+      Lines.Add('end;');
+    end;
+
+    for StubField in FArrayItems do
+    begin
+      StubArrayField := StubField as TStubArrayField;
+      Lines.Add('');
+      Lines.AddFormat('function %s.Get%s: TObjectList<%s>;', [FName, StubArrayField.Name, StubArrayField.FieldClass.Name]);
+      Lines.Add('begin');
+      Lines.AddFormat('  if not Assigned(%s) then', [StubArrayField.FieldName]);
+      Lines.Add('  begin');
+      Lines.AddFormat('    %s := TObjectList<%s>.Create;', [StubArrayField.FieldName, StubArrayField.FieldClass.Name]);
+      Lines.AddFormat('    %s.AddRange(%sArray);', [StubArrayField.FieldName, StubArrayField.FieldName]);
+      Lines.Add('  end;');
+      Lines.AddFormat('  Result := %s;', [StubArrayField.FieldName]);
       Lines.Add('end;');
     end;
 
@@ -552,6 +559,7 @@ function TStubClass.GetDeclarationPart(const BaseClass: string): string;
 var
   Lines: TStringList;
   StubField: TStubField;
+  StubArrayField: TStubArrayField;
   i: Integer;
 begin
   Lines := TStringList.Create;
@@ -562,10 +570,27 @@ begin
 
     for StubField in FItems do
     begin
-      if StubField.NeedsAttribute then
+      if StubField is TStubArrayField then
+      begin
+        StubArrayField := StubField as TStubArrayField;
         Lines.Add('  ' + StubField.NameAttribute);
+        Lines.AddFormat('  %sArray: %s;', [StubField.FieldName, StubField.GetTypeAsString]);
+        Lines.Add('  [GenericListReflect]');
+        Lines.AddFormat('  %s: TObjectList<%s>;', [StubField.FieldName, StubArrayField.FieldClass.Name]);
+      end
+      else
+      begin
+        if StubField.NeedsAttribute then
+          Lines.Add('  ' + StubField.NameAttribute);
 
-      Lines.AddFormat('  %s: %s;', [StubField.FieldName, StubField.GetTypeAsString]);
+        Lines.AddFormat('  %s: %s;', [StubField.FieldName, StubField.GetTypeAsString]);
+      end;
+    end;
+
+    for StubField in FArrayItems do
+    begin
+      StubArrayField := StubField as TStubArrayField;
+      Lines.AddFormat('  function Get%s: TObjectList<%s>;', [StubField.Name, StubArrayField.FieldClass.Name]);
     end;
 
     if FItems.Count > 0 then
@@ -576,7 +601,14 @@ begin
       if (StubField.FieldType = jtUnknown) or ((StubField is TStubContainerField) and ((StubField as TStubContainerField).ContainedType = jtUnknown)) then
         raise EJsonMapper.CreateFmt('The property [%s] has unknown type!', [StubField.PropertyName]);
 
-      Lines.AddFormat('  property %s: %s read %s write %s;', [StubField.PropertyName, StubField.GetTypeAsString, StubField.FieldName, StubField.FieldName]);
+      if StubField is TStubArrayField then
+      begin
+        StubArrayField := StubField as TStubArrayField;
+        Lines.AddFormat('  property %s: TObjectList<%s> read Get%s;', [StubField.Name, StubArrayField.FieldClass.Name, StubArrayField.Name]);
+      end
+      else
+        Lines.AddFormat('  property %s: %s read %s write %s;', [StubField.PropertyName, StubField.GetTypeAsString, StubField.FieldName, StubField.FieldName]);
+
     end;
 
     if FComplexItems.Count > 0 then

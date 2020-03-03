@@ -3,7 +3,7 @@ unit Pkg.Json.DTO;
 interface
 
 uses
-  System.Classes, System.Json, Rest.Json;
+  System.Classes, System.Json, Rest.Json, Rest.JsonReflect;
 
 type
   TJsonDTO = class
@@ -20,10 +20,15 @@ type
     property AsJson: string read GetAsJson write SetAsJson;
   end;
 
+  GenericListReflectAttribute = class(JsonReflectAttribute)
+  public
+    constructor Create;
+  end;
+
 implementation
 
 uses
-  System.Sysutils, Rest.JsonReflect, System.JSONConsts, System.Rtti, System.Generics.Collections;
+  System.Sysutils, System.JSONConsts, System.Rtti, System.Generics.Collections;
 
 { TJsonDTO }
 
@@ -159,5 +164,27 @@ begin
   end;
 end;
 
-end.
+type
+  TGenericListFieldInterceptor = class(TJSONInterceptor)
+  public
+    function ObjectsConverter(Data: TObject; Field: string): TListOfObjects; override;
+  end;
 
+  { TListFieldInterceptor }
+
+function TGenericListFieldInterceptor.ObjectsConverter(Data: TObject; Field: string): TListOfObjects;
+var
+  ctx: TRttiContext;
+  List: TList<TObject>;
+begin
+  List := TList<TObject>(ctx.GetType(Data.ClassInfo).GetField(Field).GetValue(Data).AsObject);
+  Result := TListOfObjects(List.List);
+  SetLength(Result, List.Count);
+end;
+
+constructor GenericListReflectAttribute.Create;
+begin
+  inherited Create(ctObjects, rtObjects, TGenericListFieldInterceptor, nil, false);
+end;
+
+end.

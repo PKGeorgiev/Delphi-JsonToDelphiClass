@@ -3,21 +3,17 @@
 interface
 
 uses
-  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
-  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.DialogService, FMX.Dialogs,
-  FMX.Layouts, FMX.TreeView, FMX.Edit, FMX.StdCtrls, FMX.ScrollBox, FMX.Memo,
-  FMX.Menus, FMX.Controls.Presentation,
-  System.Json, Rest.Json, TypInfo, RTTI,
-  regularexpressions, generics.collections, Pkg.Json.Mapper, NetEncoding,
-  FMX.ConstrainedForm, Rest.Client,
-  uUpdate, System.Threading, uGitHub, FMX.Objects, uUpdateForm, SyncObjs,
-  System.Actions, FMX.ActnList;
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, System.Threading, System.SyncObjs, System.NetEncoding,
+
+  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.DialogService, FMX.Dialogs, FMX.Layouts, FMX.TreeView, FMX.Edit, FMX.StdCtrls, FMX.ScrollBox, FMX.Memo,
+  FMX.Menus, FMX.Controls.Presentation, FMX.Objects, System.Actions, FMX.ActnList, FMX.ConstrainedForm,
+
+  Pkg.Json.Mapper, uUpdate, uGitHub, uUpdateForm;
 
 const
   JsonValidatorUrl = 'http://jsonlint.com';
 
 type
-
   TMainForm = class(TConstrainedForm)
     Memo1: TMemo;
     StyleBook1: TStyleBook;
@@ -103,12 +99,12 @@ uses
   Winapi.ShellAPI, Winapi.Windows;
 {$ENDIF MSWINDOWS}
 {$IFDEF POSIX}
-Posix.Stdlib;
+  Posix.Stdlib;
 {$ENDIF POSIX}
 
 procedure TMainForm.btnExitClick(Sender: TObject);
 begin
-  CLose;
+  Close;
 end;
 
 procedure TMainForm.btnVisualizeClick(Sender: TObject);
@@ -256,7 +252,7 @@ begin
               TThread.Queue(nil,
                 procedure
                 begin
-                  CLose;
+                  Close;
                 end);
             end);
 
@@ -320,7 +316,7 @@ end;
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = 27 then
-    CLose;
+    Close;
 end;
 
 procedure TMainForm.Label1Click(Sender: TObject);
@@ -343,6 +339,7 @@ end;
 
 procedure TMainForm.Memo1Change(Sender: TObject);
 begin
+  exit;
   actPrettyPrintJSON.Execute;
 end;
 
