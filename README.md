@@ -11,7 +11,9 @@ Lots of changes in this version:
 * Socurce Code restructored
 * Parser logic are seperated from GUI logic
 * Fixed bug in the RegEx for recognizing an ISO8601 Date
-
+* Serialization removed the "noise" of List<T> i.e. includes internal properties that did not exist in the original JSON string.
+* Generated code uses TobjectList<T>
+  
 Generates Delphi Classes based on JSON string. Just like XML Data Binding, but for JSON.
 
 Main features:
@@ -34,16 +36,13 @@ Main features:
 - Allows you to change the names of the stub classes;
 - Supports JSON pretty print to format the input string;
 - Simple and responsive GUI;
-- *** Automatic check for update, based on ITask (Parallel Programming Library)!
+- Automatic check for update, based on ITask (Parallel Programming Library)!
 - It's open source! You can find the source code and binary releases on GitHub.
 - The program uses MadExcept to report unhanded exceptions;
 
 * If the JSON array is empty the contained type is unknown. Unit generation works only with known and supported types.
 
-** This is because serialization of TList<T> adds "noise" i.e. includes internal properties that did not exist in the original JSON string.
-
 *** The releases of JsonToDelphiClass (source and binaries) are public and reside on GitHub. The update unit uses GitHub's REST API to enumerate tags/releases.
 
 Report any problems/suggestions using GitHub's facilities.
 
-You can find more information here: http://www.pgeorgiev.com/?p=1832
