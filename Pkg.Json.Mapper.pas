@@ -746,7 +746,7 @@ begin
 
   if aItemName.IsEmpty then
     raise Exception.Create('aItemName can not be empty');
-
+  
   FNeedsAttribute := False;
   FJsonName := aItemName;
 
@@ -756,7 +756,7 @@ begin
     else
       s := s + '_';
 
-  FNeedsAttribute := s <> FJsonName;
+  FNeedsAttribute := (s <> FJsonName) or (aItemName.StartsWith('_'));
 
   if s.StartsWith('_') then
     s := s.Substring(1);
