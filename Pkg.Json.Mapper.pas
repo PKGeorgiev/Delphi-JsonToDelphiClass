@@ -223,32 +223,9 @@ end;
 
 function TPkgJsonMapper.GenerateUnit: string;
 var
-  StubClass: TStubClass;
-  StubField: TStubField;
   StringList: TStringList;
-  NeedsAttribute: Boolean;
   i: Integer;
 begin
-  NeedsAttribute := False;
-  for StubClass in FStubClasses do
-  begin
-    if StubClass.NeedsAttribute then
-    begin
-      NeedsAttribute := True;
-      Break;
-    end;
-
-    for StubField in StubClass.Items do
-      if StubField.NeedsAttribute then
-      begin
-        NeedsAttribute := True;
-        Break;
-      end;
-
-    if NeedsAttribute then
-      Break;
-  end;
-
   StringList := TStringList.Create;
   try
     StringList.TrailingLineBreak := False;
@@ -258,7 +235,7 @@ begin
     StringList.Add('interface');
     StringList.Add('');
     StringList.Add('uses');
-    StringList.Add('  Pkg.Json.DTO, System.Generics.Collections' + IfThen(NeedsAttribute, ', REST.Json.Types', '') + ';');
+    StringList.Add('  Pkg.Json.DTO, System.Generics.Collections, REST.Json.Types;');
     StringList.Add('');
     StringList.Add('{$M+}');
     StringList.Add('');
