@@ -339,13 +339,13 @@ var
   j: Int64;
   b: Boolean;
 begin
-      Result := jtUnknown;
+  Result := jtUnknown;
 
   if aJsonValue is TJSONObject then
     Result := jtObject
   else if aJsonValue is TJSONArray then
     Result := jtArray
-  else if (aJsonValue is TJSONNumber) or (aJsonValue is TJSONString) then
+  else if (aJsonValue is TJSONNumber) then
   begin
     if TryStrToInt(aJsonValue.Value, i) then
       exit(jtInteger);
@@ -355,28 +355,24 @@ begin
 
     if (aJsonValue is TJSONNumber) then
       exit(jtNumber);
-  end
-  else if aJsonValue is TJSONTrue then
-    Result := jtTrue
-  else if aJsonValue is TJSONFalse then
-    Result := jtFalse;
+  end;
+
+  if aJsonValue is TJSONTrue then
+    exit(jtTrue);
+
+  if aJsonValue is TJSONFalse then
+    exit(jtFalse);
 
   if aJsonValue is TJSONString then
   begin
     JsonString := (aJsonValue as TJSONString);
     if TRegEx.IsMatch(JsonString.Value, '^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*))(?:Z|(\+|-)([\d|:]*))?$') then
-      Result := jtDateTime
-    else if TRegEx.IsMatch(JsonString.Value, '^([0-9]{4})(-?)(1[0-2]|0[1-9])\2(3[01]|0[1-9]|[12][0-9])$') then
-      Result := jtDate
-    else if TryStrToBool(JsonString.Value, b) then
-    begin
-      if b then
-        Result := jtTrue
-      else
-        Result := jtFalse
-    end
-    else
-      Result := jtString
+      exit(jtDateTime);
+
+    if TRegEx.IsMatch(JsonString.Value, '^([0-9]{4})(-?)(1[0-2]|0[1-9])\2(3[01]|0[1-9]|[12][0-9])$') then
+      exit(jtDate);
+
+    Result := jtString
   end;
 end;
 
