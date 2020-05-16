@@ -58,3 +58,5 @@ __recovery/uMainForm.fmx
 __recovery/__recovery.ini
 
 Win32/Debug/
+
+*.skincfg
