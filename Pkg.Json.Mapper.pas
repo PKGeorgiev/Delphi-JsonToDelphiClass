@@ -207,11 +207,10 @@ begin
           StubClass := nil;
           JsonArray := JSONValue as TJSONArray;
 
+          JsonType2 := jtObject;
+
           if JsonArray.Count = 0 then // if we meet an empty array then
-          begin
-            JsonType2 := jtObject;
             StubClass := GetStub(aParentClass, JsonName, Self);
-          end;
 
           for JsonValue2 in JsonArray do
           begin
