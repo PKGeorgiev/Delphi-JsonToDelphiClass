@@ -86,24 +86,20 @@ type
     FMapper: TPkgJsonMapper;
     FPureClassName: string;
     FArrayProperty: string;
-    FStubClasses: TDictionary<string, TStubClass>;
     procedure SetName(const Value: string);
   public
     constructor Create(aParentClass: TStubClass; aClassName: string; aMapper: TPkgJsonMapper; aArrayProperty: string = '');
     destructor Destroy; override;
     function GetDeclarationPart(const BaseClass: string = ''): string;
     function GetImplementationPart: string;
-    function HasPropety(aJsonName: string): Boolean;
-    function GetItemFromName(aJsonName: string): TStubField;
     procedure SortFields;
   published
-    property name: string read FName;
-    property Items: TObjectList<TStubField> read FItems;
-    property PureClassName: string read FPureClassName;
+    property name: string read FName write SetName;
+    property Items: TObjectList<TStubField> read FItems write FItems;
+    property PureClassName: string read FPureClassName write FPureClassName;
     property ArrayProperty: string read FArrayProperty write FArrayProperty;
     property ComplexItems: TList<TStubField> read FComplexItems;
     property ArrayItems: TList<TStubField> read FArrayItems;
-    property StubClasses: TDictionary<string, TStubClass> read FStubClasses;
   end;
 
   TPkgJsonMapper = class
@@ -171,18 +167,8 @@ var
   JSONObject: TJSONObject;
   JsonPair: TJSONPair;
   JSONValue, JsonValue2: TJsonValue;
-  JsonArray: TJSONArray;
   JsonType, JsonType2: TJsonType;
   StubClass: TStubClass;
-  JsonName: string;
-
-  function GetStub(aParentClass: TStubClass; aClassName: string; aMapper: TPkgJsonMapper): TStubClass;
-  begin
-    aParentClass.StubClasses.TryGetValue(aClassName, Result);
-    if Result = nil then
-      Exit(TStubClass.Create(aParentClass, JsonName, Self));
-  end;
-
 begin
   JSONObject := aJsonValue as TJSONObject;
 
@@ -190,49 +176,45 @@ begin
   begin
     JSONValue := JsonPair.JSONValue;
     JsonType := GetJsonType(JSONValue);
-    JsonName := JsonPair.JsonString.Value;
 
     case JsonType of
       jtUnknown:
         { do nothing };
       jtObject:
         begin
-          StubClass := TStubClass.Create(aParentClass, JsonName, Self);
-          TStubObjectField.Create(aParentClass, JsonName, StubClass);
+          StubClass := TStubClass.Create(aParentClass, JsonPair.JsonString.Value, Self);
+          TStubObjectField.Create(aParentClass, JsonPair.JsonString.Value, StubClass);
           ProcessJsonObject(JSONValue, StubClass);
         end;
 
       jtArray:
         begin
           StubClass := nil;
-          JsonArray := JSONValue as TJSONArray;
-
-          JsonType2 := jtObject;
-
-          if JsonArray.Count = 0 then // if we meet an empty array then
-            StubClass := GetStub(aParentClass, JsonName, Self);
-
-          for JsonValue2 in JsonArray do
+          JsonValue2 := GetFirstArrayItem(JSONValue);
+          if JsonValue2 <> nil then
           begin
             JsonType2 := GetJsonType(JsonValue2);
             case JsonType2 of
               jtObject:
                 begin
-                  StubClass := GetStub(aParentClass, JsonName, Self);
+                  StubClass := TStubClass.Create(aParentClass, JsonPair.JsonString.Value, Self);
                   ProcessJsonObject(JsonValue2, StubClass);
                 end;
               jtArray:
                 raise EJsonMapper.Create('Nested Arrays are not supported!');
             end;
+          end
+          else
+          begin
+            // if we meet an empty array then
+            JsonType2 := jtObject;
+            StubClass := TStubClass.Create(aParentClass, JsonPair.JsonString.Value, Self);
           end;
 
-          TStubArrayField.Create(aParentClass, JsonName, JsonType2, StubClass);
+          TStubArrayField.Create(aParentClass, JsonPair.JsonString.Value, JsonType2, StubClass);
         end;
     else
-      begin
-        if (aParentClass = nil) or (not aParentClass.HasPropety(JsonName)) then
-          TStubField.Create(aParentClass, JsonName, JsonType);
-      end;
+      TStubField.Create(aParentClass, JsonPair.JsonString.Value, JsonType);
     end;
   end;
 
@@ -283,9 +265,9 @@ var
 begin
   JsonArray := aJsonValue as TJSONArray;
   if JsonArray.Count = 0 then
-    Exit(nil)
+    exit(nil)
   else
-    Exit(JsonArray.Items[0]);
+    exit(JsonArray.Items[0]);
 end;
 
 constructor TPkgJsonMapper.Create;
@@ -355,6 +337,7 @@ var
   JsonString: TJSONString;
   i: Integer;
   j: Int64;
+  b: Boolean;
 begin
   Result := jtUnknown;
 
@@ -365,29 +348,29 @@ begin
   else if (aJsonValue is TJSONNumber) then
   begin
     if TryStrToInt(aJsonValue.Value, i) then
-      Exit(jtInteger);
+      exit(jtInteger);
 
     if TryStrToInt64(aJsonValue.Value, j) then
-      Exit(jtInteger64);
+      exit(jtInteger64);
 
     if (aJsonValue is TJSONNumber) then
-      Exit(jtNumber);
+      exit(jtNumber);
   end;
 
   if aJsonValue is TJSONTrue then
-    Exit(jtTrue);
+    exit(jtTrue);
 
   if aJsonValue is TJSONFalse then
-    Exit(jtFalse);
+    exit(jtFalse);
 
   if aJsonValue is TJSONString then
   begin
     JsonString := (aJsonValue as TJSONString);
     if TRegEx.IsMatch(JsonString.Value, '^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*))(?:Z|(\+|-)([\d|:]*))?$') then
-      Exit(jtDateTime);
+      exit(jtDateTime);
 
     if TRegEx.IsMatch(JsonString.Value, '^([0-9]{4})(-?)(1[0-2]|0[1-9])\2(3[01]|0[1-9]|[12][0-9])$') then
-      Exit(jtDate);
+      exit(jtDate);
 
     Result := jtString
   end;
@@ -448,12 +431,8 @@ begin
   FArrayItems := TList<TStubField>.Create;
   FMapper.StubClasses.Add(Self);
   FArrayProperty := aArrayProperty;
-  FStubClasses := TDictionary<string, TStubClass>.Create();
 
   FParentClass := aParentClass;
-
-  if FParentClass <> nil then
-    FParentClass.StubClasses.Add(aClassName, Self);
 
   FComparison := function(const Left, Right: TStubField): Integer
     begin
@@ -539,27 +518,6 @@ begin
   finally
     Lines.free;
   end;
-end;
-
-function TStubClass.GetItemFromName(aJsonName: string): TStubField;
-var
-  StubField: TStubField;
-begin
-  for StubField in FItems do
-    if AnsiSameText(aJsonName, StubField.JsonName) then
-      Exit(StubField);
-
-  Result := nil;
-end;
-
-function TStubClass.HasPropety(aJsonName: string): Boolean;
-var
-  StubField: TStubField;
-begin
-  for StubField in FItems do
-    if AnsiSameText(aJsonName, StubField.JsonName) then
-      Exit(True);
-  Result := False;
 end;
 
 procedure TStubClass.SetName(const Value: string);
@@ -809,7 +767,7 @@ end;
 
 function TSOJName.NameAttribute: string;
 begin
-  Exit('[JSONName(' + AnsiQuotedStr(FJsonName, #39) + ')]');
+  exit('[JSONName(' + AnsiQuotedStr(FJsonName, #39) + ')]');
 end;
 
 initialization
@@ -833,3 +791,4 @@ finalization
 FreeAndNil(ReservedWords);
 
 end.
+
