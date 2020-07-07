@@ -56,3 +56,5 @@ __recover/
 __recovery/uMainForm.pas
 __recovery/uMainForm.fmx
 __recovery/__recovery.ini
+
+Win32/Debug/
