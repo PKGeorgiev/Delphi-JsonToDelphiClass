@@ -3,6 +3,35 @@ Delphi-JsonToDelphiClass
 
 ## This is a fork of Petar Georgiev original work  ##
 
+New feature:
+* Support for objects with diffrents properties in an Array
+
+Eg this JSON 
+```
+{
+   "ArrayTest":[
+      {
+           "S1":"5102"
+      },
+      {
+           "S2":"True"
+      }      
+   ]
+}
+```
+
+Generates the following DTO:
+```
+  TArrayTestDTO = class
+  private
+    FS1: string;
+    FS2: string;
+  published
+    property S1: string read FS1 write FS1;
+    property S2: string read FS2 write FS2;
+  end;
+```
+
 Lots of changes in this version:
 * Only floating poiunt numbers are mapped to Double
 * Numbers are mapped to Integer or Int64 depending on their size
@@ -12,7 +41,7 @@ Lots of changes in this version:
 * Parser logic are seperated from GUI logic
 * Fixed bug in the RegEx for recognizing an ISO8601 Date
 * Serialization removed the "noise" of List<T> i.e. includes internal properties that did not exist in the original JSON string.
-* Generated code uses TobjectList<T>
+* Generated code uses TObjectList<T>
   
 Generates Delphi Classes based on JSON string. Just like XML Data Binding, but for JSON.
 
