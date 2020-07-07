@@ -91,19 +91,19 @@ begin
     case StubField.FieldType of
       jtObject:
         begin
-          TreeViewItem.Text := StubField.Name + ': {} ' + StubField.GetTypeAsString;
+          TreeViewItem.Text := StubField.Name + ': {} ' + StubField.TypeAsString;
           InternalVisualize(TreeViewItem, (StubField as TStubObjectField).FieldClass, AItemStyleLookup);
         end;
 
       jtArray:
         begin
-          TreeViewItem.Text := StubField.Name + ': [] ' + StubField.GetTypeAsString;
+          TreeViewItem.Text := StubField.Name + ': [] ' + StubField.TypeAsString;
           if (StubField as TStubArrayField).ContainedType = jtObject then
             InternalVisualize(TreeViewItem, (StubField as TStubArrayField).FieldClass, AItemStyleLookup);
         end;
 
     else
-      TreeViewItem.Text := StubField.Name + ': ' + StubField.GetTypeAsString;
+      TreeViewItem.Text := StubField.Name + ': ' + StubField.TypeAsString;
     end;
 
     aTreeViewItem.AddObject(TreeViewItem);
@@ -137,3 +137,4 @@ begin
 end;
 
 end.
+

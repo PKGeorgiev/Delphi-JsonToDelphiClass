@@ -1490,8 +1490,8 @@ object MainForm: TMainForm
           740500000000000000A404401453697A652E506C6174666F726D44656661756C
           74080B5374726F6B652E4B696E6407044E6F6E650756697369626C65080000}
       end>
-    Left = 32
-    Top = 32
+    Left = 65216
+    Top = 65520
   end
   object MainPopupMenu: TPopupMenu
     OnPopup = MainPopupMenuPopup
@@ -1528,7 +1528,7 @@ object MainForm: TMainForm
     Padding.Top = 2.000000000000000000
     Padding.Right = 6.000000000000000000
     Padding.Bottom = 6.000000000000000000
-    Size.Width = 669.000000000000000000
+    Size.Width = 852.000000000000000000
     Size.Height = 479.000000000000000000
     Size.PlatformDefault = False
     StyleLookup = 'Panel2Style1'
@@ -1537,120 +1537,23 @@ object MainForm: TMainForm
       Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
       DataDetectorTypes = []
       Lines.Strings = (
-        '{"web-app": {'
-        '  "servlet": [   '
-        '    {'
-        '      "servlet-name": "cofaxCDS",'
-        '      "servlet-class": "org.cofax.cds.CDSServlet",'
-        '      "init-param": {'
-        '        "configGlossary:installationAt": "Philadelphia, PA",'
-        '        "configGlossary:adminEmail": "ksm@pobox.com",'
-        '        "configGlossary:poweredBy": "Cofax",'
-        '        "configGlossary:poweredByIcon": "/images/cofax.gif",'
-        '        "configGlossary:staticPath": "/content/static",'
-        '        "templateProcessorClass": "org.cofax.WysiwygTemplate",'
-        '        "templateLoaderClass": "org.cofax.FilesTemplateLoader",'
-        '        "templatePath": "templates",'
-        '        "templateOverridePath": "",'
-        '        "defaultListTemplate": "listTemplate.htm",'
-        '        "defaultFileTemplate": "articleTemplate.htm",'
-        '        "useJSP": false,'
-        '        "jspListTemplate": "listTemplate.jsp",'
-        '        "jspFileTemplate": "articleTemplate.jsp",'
-        '        "cachePackageTagsTrack": 200,'
-        '        "cachePackageTagsStore": 200,'
-        '        "cachePackageTagsRefresh": 60,'
-        '        "cacheTemplatesTrack": 100,'
-        '        "cacheTemplatesStore": 50,'
-        '        "cacheTemplatesRefresh": 15,'
-        '        "cachePagesTrack": 200,'
-        '        "cachePagesStore": 100,'
-        '        "cachePagesRefresh": 10,'
-        '        "cachePagesDirtyRead": 10,'
-        '        "searchEngineListTemplate": "forSearchEnginesList.htm",'
-        '        "searchEngineFileTemplate": "forSearchEngines.htm",'
-        '        "searchEngineRobotsDb": "WEB-INF/robots.db",'
-        '        "useDataStore": true,'
-        '        "dataStoreClass": "org.cofax.SqlDataStore",'
-        '        "redirectionClass": "org.cofax.SqlRedirection",'
-        '        "dataStoreName": "cofax",'
-        
-          '        "dataStoreDriver": "com.microsoft.jdbc.sqlserver.SQLServ' +
-          'erDriver",'
-        
-          '        "dataStoreUrl": "jdbc:microsoft:sqlserver://LOCALHOST:14' +
-          '33;DatabaseName=goon",'
-        '        "dataStoreUser": "sa",'
-        '        "dataStorePassword": "dataStoreTestQuery",'
-        
-          '        "dataStoreTestQuery": "SET NOCOUNT ON;select test='#39'test'#39 +
-          ';",'
-        
-          '        "dataStoreLogFile": "/usr/local/tomcat/logs/datastore.lo' +
-          'g",'
-        '        "dataStoreInitConns": 10,'
-        '        "dataStoreMaxConns": 100,'
-        '        "dataStoreConnUsageLimit": 100,'
-        '        "dataStoreLogLevel": "debug",'
-        '        "maxUrlLength": 500}},'
-        '    {'
-        '      "servlet-name": "cofaxEmail",'
-        '      "servlet-class": "org.cofax.cds.EmailServlet",'
-        '      "init-param": {'
-        '      "mailHost": "mail1",'
-        '      "mailHostOverride": "mail2"}},'
-        '    {'
-        '      "servlet-name": "cofaxAdmin",'
-        '      "servlet-class": "org.cofax.cds.AdminServlet"},'
-        ' '
-        '    {'
-        '      "servlet-name": "fileServlet",'
-        '      "servlet-class": "org.cofax.cds.FileServlet"},'
-        '    {'
-        '      "servlet-name": "cofaxTools",'
-        '      "servlet-class": "org.cofax.cms.CofaxToolsServlet",'
-        '      "init-param": {'
-        '        "templatePath": "toolstemplates/",'
-        '        "log": 1,'
-        '        "logLocation": "/usr/local/tomcat/logs/CofaxTools.log",'
-        '        "logMaxSize": "",'
-        '        "dataLog": 1,'
-        '        "dataLogLocation": "/usr/local/tomcat/logs/dataLog.log",'
-        '        "dataLogMaxSize": "",'
-        
-          '        "removePageCache": "/content/admin/remove?cache=pages&id' +
-          '=",'
-        
-          '        "removeTemplateCache": "/content/admin/remove?cache=temp' +
-          'lates&id=",'
-        
-          '        "fileTransferFolder": "/usr/local/tomcat/webapps/content' +
-          '/fileTransferFolder",'
-        '        "lookInContext": 1,'
-        '        "adminGroupID": 4,'
-        '        "betaServer": true}}],'
-        '  "servlet-mapping": {'
-        '    "cofaxCDS": "/",'
-        '    "cofaxEmail": "/cofaxutil/aemail/*",'
-        '    "cofaxAdmin": "/admin/*",'
-        '    "fileServlet": "/static/*",'
-        '    "cofaxTools": "/tools/*"},'
-        ' '
-        '  "taglib": {'
-        '    "taglib-uri": "cofax.tld",'
-        '    "taglib-location": "/WEB-INF/tlds/cofax.tld"}}}')
+        '{'
+        '    "Tags": ['
+        '        "Teast Tag"'
+        '    ]'
+        '}')
       StyledSettings = [Size, Style, FontColor]
       TextSettings.Font.Family = 'Consolas'
       OnChange = Memo1Change
       Align = Client
       Margins.Bottom = 6.000000000000000000
       PopupMenu = MemoPopupMenu
-      Size.Width = 657.000000000000000000
+      Size.Width = 840.000000000000000000
       Size.Height = 448.000000000000000000
       Size.PlatformDefault = False
       StyleLookup = 'Memo1Style1'
       TabOrder = 0
-      Viewport.Width = 637.000000000000000000
+      Viewport.Width = 836.000000000000000000
       Viewport.Height = 444.000000000000000000
     end
     object Label4: TLabel
@@ -1658,7 +1561,7 @@ object MainForm: TMainForm
       Margins.Left = 2.000000000000000000
       Position.X = 8.000000000000000000
       Position.Y = 2.000000000000000000
-      Size.Width = 655.000000000000000000
+      Size.Width = 838.000000000000000000
       Size.Height = 17.000000000000000000
       Size.PlatformDefault = False
       Text = 'Paste JSON String here:'
@@ -1668,7 +1571,7 @@ object MainForm: TMainForm
     Align = Left
     Cursor = crHSplit
     MinSize = 20.000000000000000000
-    Position.X = 348.000000000000000000
+    Position.X = 165.000000000000000000
     Position.Y = 3.000000000000000000
     Size.Width = 4.000000000000000000
     Size.Height = 479.000000000000000000
@@ -1803,12 +1706,13 @@ object MainForm: TMainForm
     Padding.Top = 2.000000000000000000
     Padding.Right = 6.000000000000000000
     Padding.Bottom = 6.000000000000000000
-    Position.X = 3.000000000000000000
+    Position.X = 165.000000000000000000
     Position.Y = 3.000000000000000000
     Size.Width = 345.000000000000000000
     Size.Height = 479.000000000000000000
     Size.PlatformDefault = False
     StyleLookup = 'Panel2Style1'
+    Visible = False
     TabOrder = 7
     OnResize = Panel1Resize
     object TreeView: TTreeView
@@ -1841,6 +1745,30 @@ object MainForm: TMainForm
       Text = 'Button1'
       Visible = False
     end
+  end
+  object Splitter2: TSplitter
+    Align = Left
+    Cursor = crHSplit
+    MinSize = 20.000000000000000000
+    Position.X = 161.000000000000000000
+    Position.Y = 3.000000000000000000
+    Size.Width = 4.000000000000000000
+    Size.Height = 479.000000000000000000
+    Size.PlatformDefault = False
+  end
+  object ListView1: TListView
+    ItemAppearanceClassName = 'TListItemAppearance'
+    ItemEditAppearanceClassName = 'TListItemShowCheckAppearance'
+    HeaderAppearanceClassName = 'TListHeaderObjects'
+    FooterAppearanceClassName = 'TListHeaderObjects'
+    Align = Left
+    Position.X = 3.000000000000000000
+    Position.Y = 3.000000000000000000
+    Size.Width = 158.000000000000000000
+    Size.Height = 479.000000000000000000
+    Size.PlatformDefault = False
+    OnChange = ListView1Change
+    OnItemClick = ListView1ItemClick
   end
   object ActionList1: TActionList
     OnUpdate = ActionList1Update

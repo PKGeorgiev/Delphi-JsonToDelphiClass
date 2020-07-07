@@ -8,7 +8,9 @@ uses
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.DialogService, FMX.Dialogs, FMX.Layouts, FMX.TreeView, FMX.Edit, FMX.StdCtrls, FMX.ScrollBox, FMX.Memo,
   FMX.Menus, FMX.Controls.Presentation, FMX.Objects, System.Actions, FMX.ActnList, FMX.ConstrainedForm,
 
-  Pkg.Json.Mapper, uUpdate, uGitHub, uUpdateForm;
+  Pkg.Json.Mapper, uUpdate, uGitHub, uUpdateForm, FMX.Memo.Types,
+  FMX.ListView.Types, FMX.ListView.Appearances, FMX.ListView.Adapters.Base,
+  FMX.ListView;
 
 const
   JsonValidatorUrl = 'http://jsonlint.com';
@@ -50,6 +52,8 @@ type
     actValidateJSON: TAction;
     MenuItem4: TMenuItem;
     actRenameProperty: TAction;
+    Splitter2: TSplitter;
+    ListView1: TListView;
     procedure btnVisualizeClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -69,6 +73,8 @@ type
     procedure actRenamePropertyExecute(Sender: TObject);
     procedure ActionList1Update(Action: TBasicAction; var Handled: Boolean);
     procedure btnExitClick(Sender: TObject);
+    procedure ListView1ItemClick(const Sender: TObject; const AItem: TListViewItem);
+    procedure ListView1Change(Sender: TObject);
   private
     { Private declarations }
     FJsonMapper: TPkgJsonMapper;
@@ -94,13 +100,17 @@ implementation
 {$R *.fmx}
 
 uses
+  System.IoUtils,
   uSaveUnitForm, Pkg.Json.Visualizer, Pkg.Json.DTO,
 {$IFDEF MSWINDOWS}
   Winapi.ShellAPI, Winapi.Windows;
 {$ENDIF MSWINDOWS}
 {$IFDEF POSIX}
-  Posix.Stdlib;
+Posix.Stdlib;
 {$ENDIF POSIX}
+
+const
+  DemoDataRoot = '../../Demo Data/';
 
 procedure TMainForm.btnExitClick(Sender: TObject);
 begin
@@ -111,7 +121,7 @@ procedure TMainForm.btnVisualizeClick(Sender: TObject);
 begin
   if FChanged then
     TDialogService.MessageDialog('You made changes to the structure. Do you want to load original class?', TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbYes, 0,
-      procedure(const AResult: TModalResult)
+        procedure(const AResult: TModalResult)
       begin
         if AResult = mrYes then
           VisualizeClass;
@@ -164,6 +174,8 @@ var
   StubContainerField: TStubContainerField;
 begin
   actRenameProperty.Enabled := false;
+
+  Panel1.Visible := TreeView.Count > 0;
 
   if TreeView.Selected = nil then
     exit;
@@ -250,7 +262,7 @@ begin
 
               // We enqueue the handler
               TThread.Queue(nil,
-                procedure
+                  procedure
                 begin
                   Close;
                 end);
@@ -266,12 +278,14 @@ begin
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
+var
+  FileName: String;
 begin
   FApplicationStatus := 0;
   FUpdateCheckEvent := TEvent.Create(nil, True, false, '');
 
-  self.Constraints.MinWidth := 1024;
-  self.Constraints.MinHeight := 560;
+  Constraints.MinWidth := 1024;
+  Constraints.MinHeight := 560;
 
   Caption := 'JsonToDelphiClass - ' + FloatToStr(ProgramVersion, PointDsFormatSettings) + ' | By Jens Borrisholt';
 
@@ -304,6 +318,28 @@ begin
       FUpdateCheckEvent.SetEvent;
     end);
 
+  ListView1.BeginUpdate;
+  try
+    for FileName in TDirectory.GetFiles(DemoDataRoot, '*.json') do
+      ListView1.Items.Add.Text := TPath.GetFileName(FileName);
+  finally
+    ListView1.EndUpdate;
+  end;
+
+  TTask.Run(
+    procedure
+    begin
+      Sleep(50);
+      TThread.Queue(nil,
+          procedure
+        begin
+          if ListView1.Items.Count > 0 then
+          begin
+            ListView1.ItemIndex := 0;
+            ListView1.OnChange(nil);
+          end;
+        end);
+    end);
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
@@ -335,6 +371,42 @@ begin
     _system(PAnsiChar('open ' + AnsiString(ProgramUrl)));
 {$ENDIF POSIX}
   end;
+end;
+
+procedure TMainForm.ListView1Change(Sender: TObject);
+var
+  Item: TListViewItem;
+begin
+  TreeView.Clear;
+  Item := ListView1.Selected as TListViewItem;
+  if Item = nil then
+  begin
+    Memo1.Lines.Clear;
+    exit;
+  end;
+
+  with TStringList.Create do
+    try
+      LoadFromFile(DemoDataRoot + Item.Text);
+      Memo1.Lines.Text := TJsonDTO.PrettyPrintJSON(Text);
+    finally
+      Free;
+    end;
+
+end;
+
+procedure TMainForm.ListView1ItemClick(const Sender: TObject; const AItem: TListViewItem);
+begin
+  exit;
+  TreeView.Clear;
+
+  with TStringList.Create do
+    try
+      LoadFromFile(DemoDataRoot + AItem.Text);
+      Memo1.Lines.Text := TJsonDTO.PrettyPrintJSON(Text);
+    finally
+      Free;
+    end;
 end;
 
 procedure TMainForm.Memo1Change(Sender: TObject);
