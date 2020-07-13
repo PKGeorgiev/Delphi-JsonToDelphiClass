@@ -146,6 +146,7 @@
         </DCCReference>
         <DCCReference Include="Pkg.Json.Visualizer.pas"/>
         <DCCReference Include="Pkg.Json.DTO.pas"/>
+        <DCCReference Include="Pkg.Json.ReservedWords.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -960,6 +961,10 @@
                 </DeployClass>
                 <DeployClass Name="ProjectiOSLaunchScreen">
                     <Platform Name="iOSDevice64">
+                        <RemoteDir>..\$(PROJECTNAME).launchscreen</RemoteDir>
+                        <Operation>64</Operation>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
                         <RemoteDir>..\$(PROJECTNAME).launchscreen</RemoteDir>
                         <Operation>64</Operation>
                     </Platform>

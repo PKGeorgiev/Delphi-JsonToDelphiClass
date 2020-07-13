@@ -13,7 +13,8 @@ uses
   uUpdate in 'uUpdate.pas',
   uUpdateForm in 'uUpdateForm.pas' {UpdateForm},
   Pkg.Json.Visualizer in 'Pkg.Json.Visualizer.pas',
-  Pkg.Json.DTO in 'Pkg.Json.DTO.pas';
+  Pkg.Json.DTO in 'Pkg.Json.DTO.pas',
+  Pkg.Json.ReservedWords in 'Pkg.Json.ReservedWords.pas';
 
 {$R *.res}
 
