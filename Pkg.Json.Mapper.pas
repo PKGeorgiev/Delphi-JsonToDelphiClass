@@ -26,7 +26,7 @@ type
     FPureClassName: string;
   protected
     procedure SetName(const Value: string); virtual;
-    function CapitaiazeFirst(const Value: string): string;
+    function CapitalizeFirst(const Value: string): string;
   published
     property JsonName: string read FJsonName;
     property DelphiName: string read FDelphiName;
@@ -58,11 +58,9 @@ type
     property JsonFieldName: string read FJsonFieldName;
     property PropertyName: string read FPropertyName;
     property FieldType: TJsonType read FFieldType;
-
   public
     constructor Create(aParentClass: TStubClass; aItemName: string; aFieldType: TJsonType);
     property TypeAsString: string read GetTypeAsString;
-
   end;
 
   TStubContainerField = class(TStubField)
@@ -499,21 +497,30 @@ end;
 procedure TStubClass.SortFields;
 var
   StubFieldsNames: TStringList;
+  Item: TStubField;
   i: Integer;
 begin
   // remove dublicates
 
   FItems.Sort(FComparer);
   i := 0;
-exit;
   StubFieldsNames := TStringList.Create;
   while i < Items.Count do
   begin
-    if (StubFieldsNames.IndexOf(FItems[i].Name) >= 0) and (FComplexItems.IndexOf(FItems[i]) < 0) then
-      FItems.Delete(i)
+    Item := FItems[i];
+    if (StubFieldsNames.IndexOf(Item.Name) >= 0) then
+    begin
+      if FComplexItems.Contains(Item) then
+        FComplexItems.Remove(Item);
+
+      if FArrayItems.Contains(Item) then
+        FArrayItems.Remove(Item);
+
+      FItems.Delete(i);
+    end
     else
     begin
-      StubFieldsNames.Add(FItems[i].Name);
+      StubFieldsNames.Add(Item.Name);
       inc(i);
     end;
   end;
@@ -703,7 +710,7 @@ end;
 
 { TSOJName }
 
-function TSOJName.CapitaiazeFirst(const Value: string): string;
+function TSOJName.CapitalizeFirst(const Value: string): string;
 var
   List: TStringList;
   s: string;
@@ -754,7 +761,7 @@ begin
   if s.StartsWith('_') then
     s := s.Substring(1);
 
-  FDelphiName := CapitaiazeFirst(s);
+  FDelphiName := CapitalizeFirst(s);
   if not FDelphiName[1].IsLetter then
     FDelphiName := '_' + FDelphiName;
 end;
@@ -767,7 +774,7 @@ end;
 procedure TSOJName.SetName(const Value: string);
 begin
   FPureClassName := Value;
-  FName := FMapper.SuggestClassName('T' + FPureClassName + 'DTO');
+  FName := 'T' + FPureClassName + 'DTO';
 end;
 
 end.
