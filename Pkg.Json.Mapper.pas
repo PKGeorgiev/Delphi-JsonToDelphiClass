@@ -175,9 +175,10 @@ procedure TPkgJsonMapper.ProcessJsonObject(aJsonValue: TJsonValue; aParentClass:
 var
   JSONObject: TJSONObject;
   JsonPair: TJSONPair;
-  JSONValue, JsonValue2: TJsonValue;
-  JsonType, JsonType2: TJsonType;
+  JSONValue: TJsonValue;
+  JsonType: TJsonType;
   StubClass: TStubClass;
+  JsonArray: TJSONArray;
 begin
   if aJsonValue = nil then
     exit;
@@ -201,29 +202,15 @@ begin
 
       jtArray:
         begin
-          StubClass := nil;
-          JsonValue2 := GetFirstArrayItem(JSONValue);
-          if JsonValue2 <> nil then
-          begin
-            JsonType2 := GetJsonType(JsonValue2);
-            case JsonType2 of
-              jtObject:
-                begin
-                  StubClass := TStubClass.Create(aParentClass, JsonPair.JsonString.Value, Self);
-                  ProcessJsonObject(JsonValue2, StubClass);
-                end;
-              jtArray:
-                raise EJsonMapper.Create('Nested Arrays are not supported!');
-            end;
-          end
-          else
-          begin
-            // if we meet an empty array then
-            JsonType2 := jtObject;
-            StubClass := TStubClass.Create(aParentClass, JsonPair.JsonString.Value, Self);
-          end;
+          JsonArray := TJSONArray(JSONValue);
+          JsonValue := GetFirstArrayItem(JSONValue);
+          JsonType := GetJsonType(JsonValue);
 
-          TStubArrayField.Create(aParentClass, JsonPair.JsonString.Value, JsonType2, StubClass);
+          StubClass := TStubClass.Create(aParentClass, JsonPair.JsonString.Value, Self);
+          TStubArrayField.Create(aParentClass, JsonPair.JsonString.Value, JsonType, StubClass);
+
+          for JSONValue in JsonArray do
+            ProcessJsonObject(JSONValue, StubClass);
         end;
     else
       TStubField.Create(aParentClass, JsonPair.JsonString.Value, JsonType);
@@ -349,6 +336,9 @@ var
   j: Int64;
   b: Boolean;
 begin
+  if aJsonValue = nil then
+    exit(jtObject);
+
   if aJsonValue is TJSONObject then
     Result := jtObject
   else if aJsonValue is TJSONArray then
@@ -389,8 +379,8 @@ end;
 
 function TPkgJsonMapper.Parse(aJsonString: string): TPkgJsonMapper;
 var
-  JSONValue, JsonValue2: TJsonValue;
-  JsonType, JsonType2: TJsonType;
+  JSONValue: TJsonValue;
+  JsonType: TJsonType;
   StubClass: TStubClass;
   JsonArray: TJSONArray;
 begin
@@ -409,38 +399,14 @@ begin
 
         jtArray:
           begin
-            JsonType := jtUnknown;
-            StubClass := nil;
             JsonArray := TJSONArray(JSONValue);
-
-            if JsonArray.Count = 0 then
-            begin
-              JsonType := jtObject;
-              JsonValue2 := nil;
-              StubClass := TStubClass.Create(FRootClass, 'Item', Self);
-
-            end
-            else
-            begin
-
-
-// begin
-// // if we meet an empty array then
-// JsonType2 := jtObject;
-// StubClass := TStubClass.Create(aParentClass, JsonPair.JsonString.Value, Self);
-// end;
-
-              JsonValue2 := GetFirstArrayItem(JSONValue);
-              if JsonValue2 <> nil then
-              begin
-                JsonType := GetJsonType(JsonValue2);
-                StubClass := TStubClass.Create(FRootClass, 'Item', Self);
-              end;
-
-            end;
             FRootClass.ArrayProperty := 'Items';
-            TStubArrayField.Create(FRootClass, 'Items', JsonType, StubClass);
-            ProcessJsonObject(JsonValue2, StubClass);
+            StubClass := TStubClass.Create(FRootClass, FRootClass.ArrayProperty, Self);
+            JsonType := GetJsonType(GetFirstArrayItem(JSONValue));
+            TStubArrayField.Create(FRootClass, FRootClass.ArrayProperty, JsonType, StubClass);
+
+            for JSONValue in JsonArray do
+              ProcessJsonObject(JSONValue, StubClass);
           end;
       end;
     finally
