@@ -26,7 +26,7 @@ type
     FPureClassName: string;
   protected
     procedure SetName(const Value: string); virtual;
-    function CapitalizeFirst(const Value: string): string;
+    function CapitalizeFirst(Value: string): string;
   published
     property JsonName: string read FJsonName;
     property DelphiName: string read FDelphiName;
@@ -410,12 +410,7 @@ begin
 
   FComparison := function(const Left, Right: TStubField): Integer
     begin
-      if Left.Name > Right.Name then
-        Result := 1
-      else if Left.Name < Right.Name then
-        Result := -1
-      else
-        Result := 0;
+      Result := CompareStr(Left.Name, Right.Name);
     end;
 
   FComparer := TComparer<TStubField>.Construct(FComparison);
@@ -710,12 +705,17 @@ end;
 
 { TSOJName }
 
-function TSOJName.CapitalizeFirst(const Value: string): string;
+function TSOJName.CapitalizeFirst(Value: string): string;
 var
   List: TStringList;
   s: string;
   i: Integer;
 begin
+  Value := Value.ToLower;
+
+  if Value.Substring(1, 4) = 'name' then
+    Value := Value[1] + 'Name' + Value.Substring(4);
+
   List := TStringList.Create;
   try
     ExtractStrings(['_'], [], PChar(Value), List);
