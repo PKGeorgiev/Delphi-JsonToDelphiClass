@@ -96,8 +96,10 @@ type
     FParentClass: TStubClass;
     FMapper: TPkgJsonMapper;
     FArrayProperty: string;
-  public
+  strict protected
     constructor Create(aParentClass: TStubClass; aClassName: string; aMapper: TPkgJsonMapper; aArrayProperty: string = ''); virtual;
+  public
+    class function Construct(aParentClass: TStubClass; aClassName: string; aMapper: TPkgJsonMapper; aArrayProperty: string = ''): TStubClass;
     destructor Destroy; override;
     function GetDeclarationPart(const BaseClass: string = ''): string;
     function GetImplementationPart: string;
@@ -176,7 +178,7 @@ begin
         { do nothing };
       jtObject:
         begin
-          StubClass := TStubClass.Create(aParentClass, JsonPair.JsonString.Value, Self);
+          StubClass := TStubClass.Construct(aParentClass, JsonPair.JsonString.Value, Self);
           TStubObjectField.Create(aParentClass, JsonPair.JsonString.Value, StubClass);
           ProcessJsonObject(JSONValue, StubClass);
         end;
@@ -187,7 +189,7 @@ begin
           JSONValue := GetFirstArrayItem(JsonArray);
           JsonType := GetJsonType(JSONValue);
 
-          StubClass := TStubClass.Create(aParentClass, JsonPair.JsonString.Value, Self);
+          StubClass := TStubClass.Construct(aParentClass, JsonPair.JsonString.Value, Self);
           TStubArrayField.Create(aParentClass, JsonPair.JsonString.Value, JsonType, StubClass);
 
           for JSONValue in JsonArray do
@@ -368,7 +370,7 @@ begin
   if JSONValue <> nil then
   begin
     try
-      FRootClass := TStubClass.Create(nil, FClassName, Self);
+      FRootClass := TStubClass.Construct(nil, FClassName, Self);
 
       case GetJsonType(JSONValue) of
         jtObject:
@@ -378,7 +380,7 @@ begin
           begin
             JsonArray := TJSONArray(JSONValue);
             FRootClass.ArrayProperty := 'Items';
-            StubClass := TStubClass.Create(FRootClass, FRootClass.ArrayProperty, Self);
+            StubClass := TStubClass.Construct(FRootClass, FRootClass.ArrayProperty, Self);
             JsonType := GetJsonType(GetFirstArrayItem(JsonArray));
             TStubArrayField.Create(FRootClass, FRootClass.ArrayProperty, JsonType, StubClass);
 
@@ -392,6 +394,18 @@ begin
   end
   else
     raise EJsonMapper.Create('Unable to parse the JSON String!');
+end;
+
+class function TStubClass.Construct(aParentClass: TStubClass; aClassName: string; aMapper: TPkgJsonMapper; aArrayProperty: string): TStubClass;
+var
+  StubClass: TStubClass;
+begin
+  for StubClass in aMapper.StubClasses do
+    if SameText(StubClass.JsonName, aClassName) then
+      exit(StubClass);
+
+  Result := TStubClass.Create(aParentClass, aClassName, aMapper, aArrayProperty);
+
 end;
 
 constructor TStubClass.Create(aParentClass: TStubClass; aClassName: string; aMapper: TPkgJsonMapper; aArrayProperty: string);
