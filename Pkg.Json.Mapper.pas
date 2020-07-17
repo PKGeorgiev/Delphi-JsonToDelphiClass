@@ -63,7 +63,7 @@ type
     property TypeAsString: string read GetTypeAsString;
   end;
 
-  TStubContainerField = class(TStubField)
+  TStubContainerField = class abstract(TStubField)
   strict private
     FFieldClass: TStubClass;
     FContainedType: TJsonType;
@@ -405,7 +405,6 @@ begin
       exit(StubClass);
 
   Result := TStubClass.Create(aParentClass, aClassName, aMapper, aArrayProperty);
-
 end;
 
 constructor TStubClass.Create(aParentClass: TStubClass; aClassName: string; aMapper: TPkgJsonMapper; aArrayProperty: string);

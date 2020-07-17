@@ -130,7 +130,7 @@
             <Form>MainForm</Form>
             <FormType>fmx</FormType>
         </DCCReference>
-        <DCCReference Include="Pkg.Json.Mapper.pas"/>
+        <DCCReference Include="Mapper\Pkg.Json.Mapper.pas"/>
         <DCCReference Include="uSaveUnitForm.pas">
             <Form>SaveUnitForm</Form>
             <FormType>fmx</FormType>
@@ -147,6 +147,8 @@
         <DCCReference Include="Pkg.Json.Visualizer.pas"/>
         <DCCReference Include="Pkg.Json.DTO.pas"/>
         <DCCReference Include="Pkg.Json.ReservedWords.pas"/>
+        <DCCReference Include="Mapper\Pkg.Json.JSONName.pas"/>
+        <DCCReference Include="Mapper\Pkg.Json.StubField.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
