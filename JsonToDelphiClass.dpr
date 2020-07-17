@@ -16,7 +16,8 @@ uses
   Pkg.Json.DTO in 'Pkg.Json.DTO.pas',
   Pkg.Json.ReservedWords in 'Pkg.Json.ReservedWords.pas',
   Pkg.Json.JSONName in 'Mapper\Pkg.Json.JSONName.pas',
-  Pkg.Json.StubField in 'Mapper\Pkg.Json.StubField.pas';
+  Pkg.Json.StubField in 'Mapper\Pkg.Json.StubField.pas',
+  Pkg.Json.Lists in 'Pkg.Json.Lists.pas';
 
 {$R *.res}
 

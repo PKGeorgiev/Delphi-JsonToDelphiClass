@@ -4,18 +4,16 @@ interface
 
 uses
   System.SysUtils, System.Generics.Defaults, System.Generics.Collections,
-  Pkg.Json.JSONName;
+  Pkg.Json.JSONName, Pkg.Json.Lists;
 
 type
   EJsonMapper = class(Exception);
   TJsonType = (jtUnknown, jtObject, jtArray, jtString, jtTrue, jtFalse, jtNumber, jtDate, jtDateTime, jtBytes, jtInteger, jtInteger64);
 
   TStubClass = class;
+  TStubClassList = class;
 
-  TStubClassList = class(TObjectList<TStubClass>)
-  end;
-
-  TStubField = class(TJSONName)
+  TStubField = class(TJsonName)
   private
     FPropertyName: string;
     FFieldName: string;
@@ -63,11 +61,17 @@ type
     constructor Create(aClass: TStubClass; aItemName: string; aItemSubType: TJsonType; aItemClass: TStubClass);
   end;
 
-  TStubClass = class(TJSONName)
+  TStubFieldList = class(TJsonNameList<TStubField>)
+  end;
+
+  TStubFieldObjectList = class(TJsonNameObjectList<TStubField>)
+  end;
+
+  TStubClass = class(TJsonName)
   strict private
-    FArrayItems: TList<TStubField>;
-    FComplexItems: TList<TStubField>;
-    FItems: TObjectList<TStubField>;
+    FArrayItems: TStubFieldList;
+    FComplexItems: TStubFieldList;
+    FItems: TStubFieldObjectList;
     FComparison: TComparison<TStubField>;
     FComparer: IComparer<TStubField>;
     FParentClass: TStubClass;
@@ -82,10 +86,13 @@ type
     function GetImplementationPart: string;
     procedure SortFields;
   published
-    property Items: TObjectList<TStubField> read FItems write FItems;
+    property Items: TStubFieldObjectList read FItems write FItems;
     property ArrayProperty: string read FArrayProperty write FArrayProperty;
-    property ComplexItems: TList<TStubField> read FComplexItems;
-    property ArrayItems: TList<TStubField> read FArrayItems;
+    property ComplexItems: TStubFieldList read FComplexItems;
+    property ArrayItems: TStubFieldList read FArrayItems;
+  end;
+
+  TStubClassList = class(TJsonNameList<TStubClass>)
   end;
 
 implementation
@@ -97,13 +104,13 @@ uses
 
 class function TStubClass.Construct(aParentClass: TStubClass; aClassName: string; aStubClasses: TStubClassList; aArrayProperty: string): TStubClass;
 var
-  StubClass: TStubClass;
+  StubClass: TJsonName;
 begin
-  for StubClass in aStubClasses do
-    if SameText(StubClass.JSONName, aClassName) then
-      exit(StubClass);
-
-  Result := TStubClass.Create(aParentClass, aClassName, aStubClasses, aArrayProperty);
+  StubClass := aStubClasses.ItemByName(aClassName);
+  if StubClass = nil then
+    Result := TStubClass.Create(aParentClass, aClassName, aStubClasses, aArrayProperty)
+  else
+    Result := StubClass as TStubClass;
 end;
 
 constructor TStubClass.Create(aParentClass: TStubClass; aClassName: string; aStubClasses: TStubClassList; aArrayProperty: string);
@@ -112,9 +119,9 @@ begin
   FStubClasses := aStubClasses;
   SetName(DelphiName);
 
-  FItems := TObjectList<TStubField>.Create;
-  FComplexItems := TList<TStubField>.Create;
-  FArrayItems := TList<TStubField>.Create;
+  FItems := TStubFieldObjectList.Create;
+  FComplexItems := TStubFieldList.Create;
+  FArrayItems := TStubFieldList.Create;
   FStubClasses.Add(Self);
   FArrayProperty := aArrayProperty;
 
@@ -149,23 +156,20 @@ begin
       Lines.Add('');
       Lines.AddFormat('{ %s }', [Name]);
       Lines.Add('');
-    end;
 
-    if (FComplexItems.Count > 0) then
-    begin
       Lines.AddFormat('constructor %s.Create;', [Name]);
       Lines.Add('begin');
       Lines.Add('  inherited;');
+
+      for StubField in FArrayItems do
+        Lines.AddFormat('  %s := TObjectList<%s>.Create;', [StubField.FieldName, StubField.TypeAsString]);
 
       for StubField in FComplexItems do
         Lines.AddFormat('  %s := %s.Create;', [StubField.FieldName, StubField.TypeAsString]);
 
       Lines.Add('end;');
       Lines.Add('');
-    end;
 
-    if (FComplexItems.Count > 0) or (FArrayItems.Count > 0) then
-    begin
       Lines.Add(Format('destructor %s.Destroy;', [Name]));
       Lines.Add('begin');
 
@@ -215,14 +219,11 @@ begin
   while i < Items.Count do
   begin
     Item := FItems[i];
+
     if (StubFieldsNames.IndexOf(Item.Name) >= 0) then
     begin
-      if FComplexItems.Contains(Item) then
-        FComplexItems.Remove(Item);
-
-      if FArrayItems.Contains(Item) then
-        FArrayItems.Remove(Item);
-
+      FComplexItems.Remove(Item);
+      FArrayItems.Remove(Item);
       FItems.Delete(i);
     end
     else
@@ -289,17 +290,14 @@ begin
       end
       else
         Lines.AddFormat('  property %s: %s read %s write %s;', [StubField.PropertyName, StubField.TypeAsString, StubField.FieldName, StubField.FieldName]);
-
-    end;
-
-    if FComplexItems.Count > 0 then
-    begin
-      Lines.Add('public');
-      Lines.Add('  constructor Create;' + IfThen(BaseClass = '', '', ' override;'));
     end;
 
     if (FComplexItems.Count > 0) or (FArrayItems.Count > 0) then
+    begin
+      Lines.Add('public');
+      Lines.Add('  constructor Create;' + IfThen(BaseClass = '', '', ' override;'));
       Lines.Add('  destructor Destroy; override;');
+    end;
 
     Lines.Add('end;');
     Lines.Add('');
