@@ -5,7 +5,7 @@ interface
 uses
   FMX.TreeView,
 
-  Pkg.Json.Mapper;
+  Pkg.Json.Mapper, Pkg.Json.StubField;
 
 Type
   JsonVisualizer = class

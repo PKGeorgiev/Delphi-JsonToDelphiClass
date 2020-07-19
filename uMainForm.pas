@@ -101,7 +101,7 @@ implementation
 
 uses
   System.IoUtils,
-  uSaveUnitForm, Pkg.Json.Visualizer, Pkg.Json.DTO,
+  uSaveUnitForm, Pkg.Json.Visualizer, Pkg.Json.DTO, Pkg.Json.StubField,
 {$IFDEF MSWINDOWS}
   Winapi.ShellAPI, Winapi.Windows;
 {$ENDIF MSWINDOWS}

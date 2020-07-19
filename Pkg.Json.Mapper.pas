@@ -26,7 +26,7 @@ type
     FPureClassName: string;
   protected
     procedure SetName(const Value: string); virtual;
-    function CapitaiazeFirst(const Value: string): string;
+    function CapitalizeFirst(Value: string): string;
   published
     property JsonName: string read FJsonName;
     property DelphiName: string read FDelphiName;
@@ -58,14 +58,12 @@ type
     property JsonFieldName: string read FJsonFieldName;
     property PropertyName: string read FPropertyName;
     property FieldType: TJsonType read FFieldType;
-
   public
     constructor Create(aParentClass: TStubClass; aItemName: string; aFieldType: TJsonType);
     property TypeAsString: string read GetTypeAsString;
-
   end;
 
-  TStubContainerField = class(TStubField)
+  TStubContainerField = class abstract(TStubField)
   strict private
     FFieldClass: TStubClass;
     FContainedType: TJsonType;
@@ -98,8 +96,10 @@ type
     FParentClass: TStubClass;
     FMapper: TPkgJsonMapper;
     FArrayProperty: string;
-  public
+  strict protected
     constructor Create(aParentClass: TStubClass; aClassName: string; aMapper: TPkgJsonMapper; aArrayProperty: string = ''); virtual;
+  public
+    class function Construct(aParentClass: TStubClass; aClassName: string; aMapper: TPkgJsonMapper; aArrayProperty: string = ''): TStubClass;
     destructor Destroy; override;
     function GetDeclarationPart(const BaseClass: string = ''): string;
     function GetImplementationPart: string;
@@ -119,7 +119,7 @@ type
     FClassName: string;
   strict protected
     function GetJsonType(aJsonValue: TJsonValue): TJsonType;
-    function GetFirstArrayItem(aJsonValue: TJsonValue): TJsonValue;
+    function GetFirstArrayItem(aJSONArray: TJSONArray): TJsonValue;
     procedure ProcessJsonObject(aJsonValue: TJsonValue; aParentClass: TStubClass);
   public
     constructor Create;
@@ -141,33 +141,10 @@ implementation
 
 uses
   System.RegularExpressions, System.StrUtils, System.Character,
-  uUpdate;
-
-var
-  ReservedWords: TList<string>;
+  Pkg.Json.ReservedWords, uUpdate;
 
 const
   INDENT_SIZE = 2;
-
-type
-  TStringsHelper = class helper for TStrings
-  public
-    procedure AddFormat(const aFormat: string; const Args: array of const);
-    procedure AddIfNotEmpty(const s: string);
-  end;
-
-  { TStringsHelper }
-
-procedure TStringsHelper.AddIfNotEmpty(const s: string);
-begin
-  if s <> '' then
-    inherited Add(s);
-end;
-
-procedure TStringsHelper.AddFormat(const aFormat: string; const Args: array of const);
-begin
-  Add(Format(aFormat, Args));
-end;
 
 { TPkgJsonMapper }
 
@@ -175,12 +152,22 @@ procedure TPkgJsonMapper.ProcessJsonObject(aJsonValue: TJsonValue; aParentClass:
 var
   JSONObject: TJSONObject;
   JsonPair: TJSONPair;
-  JSONValue, JsonValue2: TJsonValue;
-  JsonType, JsonType2: TJsonType;
+  JSONValue: TJsonValue;
+  JsonType: TJsonType;
   StubClass: TStubClass;
+  JsonArray: TJSONArray;
 begin
-  JSONObject := aJsonValue as TJSONObject;
+  if aJsonValue = nil then
+    exit;
 
+  if not(aJsonValue is TJSONObject) then
+  begin
+    JsonType := GetJsonType(aJsonValue);
+    TStubField.Create(aParentClass, (aJsonValue as TJsonString).Value, JsonType);
+    exit;
+  end;
+
+  JSONObject := aJsonValue as TJSONObject;
   for JsonPair in JSONObject do
   begin
     JSONValue := JsonPair.JSONValue;
@@ -191,36 +178,22 @@ begin
         { do nothing };
       jtObject:
         begin
-          StubClass := TStubClass.Create(aParentClass, JsonPair.JsonString.Value, Self);
+          StubClass := TStubClass.Construct(aParentClass, JsonPair.JsonString.Value, Self);
           TStubObjectField.Create(aParentClass, JsonPair.JsonString.Value, StubClass);
           ProcessJsonObject(JSONValue, StubClass);
         end;
 
       jtArray:
         begin
-          StubClass := nil;
-          JsonValue2 := GetFirstArrayItem(JSONValue);
-          if JsonValue2 <> nil then
-          begin
-            JsonType2 := GetJsonType(JsonValue2);
-            case JsonType2 of
-              jtObject:
-                begin
-                  StubClass := TStubClass.Create(aParentClass, JsonPair.JsonString.Value, Self);
-                  ProcessJsonObject(JsonValue2, StubClass);
-                end;
-              jtArray:
-                raise EJsonMapper.Create('Nested Arrays are not supported!');
-            end;
-          end
-          else
-          begin
-            // if we meet an empty array then
-            JsonType2 := jtObject;
-            StubClass := TStubClass.Create(aParentClass, JsonPair.JsonString.Value, Self);
-          end;
+          JsonArray := TJSONArray(JSONValue);
+          JSONValue := GetFirstArrayItem(JsonArray);
+          JsonType := GetJsonType(JSONValue);
 
-          TStubArrayField.Create(aParentClass, JsonPair.JsonString.Value, JsonType2, StubClass);
+          StubClass := TStubClass.Construct(aParentClass, JsonPair.JsonString.Value, Self);
+          TStubArrayField.Create(aParentClass, JsonPair.JsonString.Value, JsonType, StubClass);
+
+          for JSONValue in JsonArray do
+            ProcessJsonObject(JSONValue, StubClass);
         end;
     else
       TStubField.Create(aParentClass, JsonPair.JsonString.Value, JsonType);
@@ -252,7 +225,6 @@ begin
 
     for i := FStubClasses.Count - 1 downto 1 do
       StringList.AddIfNotEmpty(FStubClasses[i].GetDeclarationPart);
-
     StringList.Add(FStubClasses.First.GetDeclarationPart('TJsonDTO'));
     StringList.Add('implementation');
 
@@ -268,15 +240,12 @@ begin
   end;
 end;
 
-function TPkgJsonMapper.GetFirstArrayItem(aJsonValue: TJsonValue): TJsonValue;
-var
-  JsonArray: TJSONArray;
+function TPkgJsonMapper.GetFirstArrayItem(aJSONArray: TJSONArray): TJsonValue;
 begin
-  JsonArray := aJsonValue as TJSONArray;
-  if JsonArray.Count = 0 then
-    exit(nil)
-  else
-    exit(JsonArray.Items[0]);
+  if (aJSONArray = nil) or (aJSONArray.Count = 0) then
+    exit(nil);
+
+  Result := aJSONArray.Items[0];
 end;
 
 constructor TPkgJsonMapper.Create;
@@ -341,11 +310,14 @@ end;
 
 function TPkgJsonMapper.GetJsonType(aJsonValue: TJsonValue): TJsonType;
 var
-  JsonString: TJSONString;
+  JsonString: TJsonString;
   i: Integer;
   j: Int64;
   b: Boolean;
 begin
+  if aJsonValue = nil then
+    exit(jtObject);
+
   if aJsonValue is TJSONObject then
     Result := jtObject
   else if aJsonValue is TJSONArray then
@@ -363,9 +335,9 @@ begin
     Result := jtTrue
   else if aJsonValue is TJSONFalse then
     Result := jtFalse
-  else if aJsonValue is TJSONString then
+  else if aJsonValue is TJsonString then
   begin
-    JsonString := (aJsonValue as TJSONString);
+    JsonString := (aJsonValue as TJsonString);
     if TRegEx.IsMatch(JsonString.Value, '^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*))(?:Z|(\+|-)([\d|:]*))?$') then
       Result := jtDateTime
     else if TRegEx.IsMatch(JsonString.Value, '^([0-9]{4})(-?)(1[0-2]|0[1-9])\2(3[01]|0[1-9]|[12][0-9])$') then
@@ -386,9 +358,10 @@ end;
 
 function TPkgJsonMapper.Parse(aJsonString: string): TPkgJsonMapper;
 var
-  JSONValue, JsonValue2: TJsonValue;
+  JSONValue: TJsonValue;
   JsonType: TJsonType;
   StubClass: TStubClass;
+  JsonArray: TJSONArray;
 begin
   Result := Self;
   FStubClasses.Clear;
@@ -397,7 +370,7 @@ begin
   if JSONValue <> nil then
   begin
     try
-      FRootClass := TStubClass.Create(nil, FClassName, Self);
+      FRootClass := TStubClass.Construct(nil, FClassName, Self);
 
       case GetJsonType(JSONValue) of
         jtObject:
@@ -405,19 +378,14 @@ begin
 
         jtArray:
           begin
-            JsonType := jtUnknown;
-            StubClass := nil;
-
-            JsonValue2 := GetFirstArrayItem(JSONValue);
-            if JsonValue2 <> nil then
-            begin
-              JsonType := GetJsonType(JsonValue2);
-              StubClass := TStubClass.Create(FRootClass, 'Item', Self);
-            end;
-
+            JsonArray := TJSONArray(JSONValue);
             FRootClass.ArrayProperty := 'Items';
-            TStubArrayField.Create(FRootClass, 'Items', JsonType, StubClass);
-            ProcessJsonObject(JsonValue2, StubClass);
+            StubClass := TStubClass.Construct(FRootClass, FRootClass.ArrayProperty, Self);
+            JsonType := GetJsonType(GetFirstArrayItem(JsonArray));
+            TStubArrayField.Create(FRootClass, FRootClass.ArrayProperty, JsonType, StubClass);
+
+            for JSONValue in JsonArray do
+              ProcessJsonObject(JSONValue, StubClass);
           end;
       end;
     finally
@@ -426,6 +394,17 @@ begin
   end
   else
     raise EJsonMapper.Create('Unable to parse the JSON String!');
+end;
+
+class function TStubClass.Construct(aParentClass: TStubClass; aClassName: string; aMapper: TPkgJsonMapper; aArrayProperty: string): TStubClass;
+var
+  StubClass: TStubClass;
+begin
+  for StubClass in aMapper.StubClasses do
+    if SameText(StubClass.JsonName, aClassName) then
+      exit(StubClass);
+
+  Result := TStubClass.Create(aParentClass, aClassName, aMapper, aArrayProperty);
 end;
 
 constructor TStubClass.Create(aParentClass: TStubClass; aClassName: string; aMapper: TPkgJsonMapper; aArrayProperty: string);
@@ -444,12 +423,7 @@ begin
 
   FComparison := function(const Left, Right: TStubField): Integer
     begin
-      if Left.Name > Right.Name then
-        Result := 1
-      else if Left.Name < Right.Name then
-        Result := -1
-      else
-        Result := 0;
+      Result := CompareStr(Left.Name, Right.Name);
     end;
 
   FComparer := TComparer<TStubField>.Construct(FComparison);
@@ -529,7 +503,37 @@ begin
 end;
 
 procedure TStubClass.SortFields;
+var
+  StubFieldsNames: TStringList;
+  Item: TStubField;
+  i: Integer;
 begin
+  // remove dublicates
+
+  FItems.Sort(FComparer);
+  i := 0;
+  StubFieldsNames := TStringList.Create;
+  while i < Items.Count do
+  begin
+    Item := FItems[i];
+    if (StubFieldsNames.IndexOf(Item.Name) >= 0) then
+    begin
+      if FComplexItems.Contains(Item) then
+        FComplexItems.Remove(Item);
+
+      if FArrayItems.Contains(Item) then
+        FArrayItems.Remove(Item);
+
+      FItems.Delete(i);
+    end
+    else
+    begin
+      StubFieldsNames.Add(Item.Name);
+      inc(i);
+    end;
+  end;
+
+  StubFieldsNames.Free;
   FItems.Sort(FComparer);
 end;
 
@@ -714,12 +718,17 @@ end;
 
 { TSOJName }
 
-function TSOJName.CapitaiazeFirst(const Value: string): string;
+function TSOJName.CapitalizeFirst(Value: string): string;
 var
   List: TStringList;
   s: string;
   i: Integer;
 begin
+  Value := Value.ToLower;
+
+  if Value.Substring(1, 4) = 'name' then
+    Value := Value[1] + 'Name' + Value.Substring(4);
+
   List := TStringList.Create;
   try
     ExtractStrings(['_'], [], PChar(Value), List);
@@ -765,7 +774,7 @@ begin
   if s.StartsWith('_') then
     s := s.Substring(1);
 
-  FDelphiName := CapitaiazeFirst(s);
+  FDelphiName := CapitalizeFirst(s);
   if not FDelphiName[1].IsLetter then
     FDelphiName := '_' + FDelphiName;
 end;
@@ -778,27 +787,7 @@ end;
 procedure TSOJName.SetName(const Value: string);
 begin
   FPureClassName := Value;
-  FName := FMapper.SuggestClassName('T' + FPureClassName + 'DTO');
+  FName := 'T' + FPureClassName + 'DTO';
 end;
-
-initialization
-
-ReservedWords := TList<string>.Create;
-ReservedWords.Add('type');
-ReservedWords.Add('for');
-ReservedWords.Add('var');
-ReservedWords.Add('begin');
-ReservedWords.Add('end');
-ReservedWords.Add('function');
-ReservedWords.Add('procedure');
-ReservedWords.Add('class');
-ReservedWords.Add('record');
-ReservedWords.Add('string');
-ReservedWords.Add('initialization');
-ReservedWords.Add('finalization');
-
-finalization
-
-FreeAndNil(ReservedWords);
 
 end.

@@ -45,6 +45,7 @@ end;
 
 const
   INDENT_SIZE = 2;
+
 class procedure TJsonDTO.PrettyPrintJSON(aJSONValue: TJsonValue; aOutputStrings: TStrings; Indent: Integer);
 var
   i: Integer;
@@ -176,10 +177,16 @@ function TGenericListFieldInterceptor.ObjectsConverter(Data: TObject; Field: str
 var
   ctx: TRttiContext;
   List: TList<TObject>;
+  ArrayValue: TValue;
+  i: Integer;
 begin
+  ArrayValue := ctx.GetType(Data.ClassInfo).GetField(Field + 'Array').GetValue(Data);
+  if not ArrayValue.IsArray then
+    Exit(nil);
+
   List := TList<TObject>(ctx.GetType(Data.ClassInfo).GetField(Field).GetValue(Data).AsObject);
-  Result := TListOfObjects(List.List);
-  SetLength(Result, List.Count);
+  for i := 0 to ArrayValue.GetArrayLength - 1 do
+    List.Add(ArrayValue.GetArrayElement(i).AsObject)
 end;
 
 constructor GenericListReflectAttribute.Create;
