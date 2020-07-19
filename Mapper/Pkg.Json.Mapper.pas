@@ -118,7 +118,7 @@ begin
     StringList.Add('uses');
     StringList.Add('  Pkg.Json.DTO, System.Generics.Collections, REST.Json.Types;');
     StringList.Add('');
-    StringList.Add('{$M+}');
+    StringList.Add('{$M+} {$HINTS OFF}');
     StringList.Add('');
     StringList.Add('type');
 

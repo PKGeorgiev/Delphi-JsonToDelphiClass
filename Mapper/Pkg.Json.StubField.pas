@@ -147,56 +147,40 @@ function TStubClass.GetImplementationPart: string;
 var
   Lines: TStringList;
   StubField: TStubField;
-  StubArrayField: TStubArrayField;
 begin
+  if FComplexItems.Count + FArrayItems.Count = 0 then
+    exit('');
+
   Lines := TStringList.Create;
   try
-    if (FComplexItems.Count > 0) or (FArrayItems.Count > 0) then
-    begin
-      Lines.Add('');
-      Lines.AddFormat('{ %s }', [Name]);
-      Lines.Add('');
+    Lines.Add('');
+    Lines.AddFormat('{ %s }', [Name]);
+    Lines.Add('');
 
-      Lines.AddFormat('constructor %s.Create;', [Name]);
-      Lines.Add('begin');
-      Lines.Add('  inherited;');
-
-      for StubField in FArrayItems do
-        Lines.AddFormat('  %s := TObjectList<%s>.Create;', [StubField.FieldName, StubField.TypeAsString]);
-
-      for StubField in FComplexItems do
-        Lines.AddFormat('  %s := %s.Create;', [StubField.FieldName, StubField.TypeAsString]);
-
-      Lines.Add('end;');
-      Lines.Add('');
-
-      Lines.Add(Format('destructor %s.Destroy;', [Name]));
-      Lines.Add('begin');
-
-      for StubField in FComplexItems do
-        Lines.AddFormat('  %s.Free;', [StubField.FieldName]);
-
-      for StubField in FArrayItems do
-        Lines.AddFormat('  Get%s.Free;', [StubField.Name]);
-
-      Lines.Add('  inherited;');
-      Lines.Add('end;');
-    end;
+    Lines.AddFormat('constructor %s.Create;', [Name]);
+    Lines.Add('begin');
+    Lines.Add('  inherited;');
 
     for StubField in FArrayItems do
-    begin
-      StubArrayField := StubField as TStubArrayField;
-      Lines.Add('');
-      Lines.AddFormat('function %s.Get%s: TObjectList<%s>;', [Name, StubArrayField.Name, StubArrayField.TypeAsString]);
-      Lines.Add('begin');
-      Lines.AddFormat('  if not Assigned(%s) then', [StubArrayField.FieldName]);
-      Lines.Add('  begin');
-      Lines.AddFormat('    %s := TObjectList<%s>.Create;', [StubArrayField.FieldName, StubArrayField.TypeAsString]);
-      Lines.AddFormat('    %s.AddRange(%sArray);', [StubArrayField.FieldName, StubArrayField.FieldName]);
-      Lines.Add('  end;');
-      Lines.AddFormat('  Result := %s;', [StubArrayField.FieldName]);
-      Lines.Add('end;');
-    end;
+      Lines.AddFormat('  %s := TObjectList<%s>.Create;', [StubField.FieldName, StubField.TypeAsString]);
+
+    for StubField in FComplexItems do
+      Lines.AddFormat('  %s := %s.Create;', [StubField.FieldName, StubField.TypeAsString]);
+
+    Lines.Add('end;');
+    Lines.Add('');
+
+    Lines.Add(Format('destructor %s.Destroy;', [Name]));
+    Lines.Add('begin');
+
+    for StubField in FComplexItems do
+      Lines.AddFormat('  %s.Free;', [StubField.FieldName]);
+
+    for StubField in FArrayItems do
+      Lines.AddFormat('  %s.Free;', [StubField.FieldName]);
+
+    Lines.Add('  inherited;');
+    Lines.Add('end;');
 
     Lines.TrailingLineBreak := False;
     Result := Lines.Text;
@@ -269,12 +253,6 @@ begin
       end;
     end;
 
-    for StubField in FArrayItems do
-    begin
-      StubArrayField := StubField as TStubArrayField;
-      Lines.AddFormat('  function Get%s: TObjectList<%s>;', [StubField.Name, StubArrayField.TypeAsString]);
-    end;
-
     if FItems.Count > 0 then
       Lines.Add('published');
 
@@ -286,7 +264,7 @@ begin
       if StubField.IsObjectArrayField then
       begin
         StubArrayField := StubField as TStubArrayField;
-        Lines.AddFormat('  property %s: TObjectList<%s> read Get%s;', [StubField.Name, StubArrayField.TypeAsString, StubArrayField.Name]);
+        Lines.AddFormat('  property %s: TObjectList<%s> read F%s;', [StubField.Name, StubArrayField.TypeAsString, StubArrayField.Name]);
       end
       else
         Lines.AddFormat('  property %s: %s read %s write %s;', [StubField.PropertyName, StubField.TypeAsString, StubField.FieldName, StubField.FieldName]);
