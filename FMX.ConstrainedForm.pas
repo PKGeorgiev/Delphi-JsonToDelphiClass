@@ -52,14 +52,10 @@ type
     property ClientWidth;
     property Left;
     property Top;
-//    property Margins;
     property Position default TFormPosition.DefaultPosOnly;
     property Width;
     property Height;
-//    property ShowActivated default True;
-//    property StaysOpen default True;
     property Transparency;
-//    property TopMost default False;
     property Visible;
     property WindowState default TWindowState.wsNormal;
     property OnCreate;

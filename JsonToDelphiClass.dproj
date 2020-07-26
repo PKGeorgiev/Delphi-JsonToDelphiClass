@@ -62,6 +62,8 @@
         <DCC_S>false</DCC_S>
         <DCC_F>false</DCC_F>
         <DCC_K>false</DCC_K>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <VerInfo_Keys>CompanyName=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
@@ -126,30 +128,34 @@
         <RcCompile Include="JSON_PAS.rc">
             <Form>JSON_PAS.res</Form>
         </RcCompile>
+        <RcCompile Include="Demo Generator\DemoProject.rc">
+            <Form>DemoProject.res</Form>
+        </RcCompile>
         <DCCReference Include="uMainForm.pas">
             <Form>MainForm</Form>
             <FormType>fmx</FormType>
         </DCCReference>
-        <DCCReference Include="Mapper\Pkg.Json.Mapper.pas"/>
         <DCCReference Include="uSaveUnitForm.pas">
             <Form>SaveUnitForm</Form>
             <FormType>fmx</FormType>
         </DCCReference>
-        <DCCReference Include="uGitHub.pas"/>
         <DCCReference Include="FMX.ConstrainedForm.pas">
-            <Form>/  IdSSLOpenSSLHeaders,</Form>
+            <Form>TFormConstraints</Form>
         </DCCReference>
-        <DCCReference Include="uUpdate.pas"/>
         <DCCReference Include="uUpdateForm.pas">
             <Form>UpdateForm</Form>
             <FormType>fmx</FormType>
         </DCCReference>
+        <DCCReference Include="uGitHub.pas"/>
+        <DCCReference Include="uUpdate.pas"/>
+        <DCCReference Include="Mapper\Pkg.Json.Mapper.pas"/>
         <DCCReference Include="Pkg.Json.Visualizer.pas"/>
         <DCCReference Include="Pkg.Json.DTO.pas"/>
         <DCCReference Include="Pkg.Json.ReservedWords.pas"/>
         <DCCReference Include="Mapper\Pkg.Json.JSONName.pas"/>
         <DCCReference Include="Mapper\Pkg.Json.StubField.pas"/>
         <DCCReference Include="Pkg.Json.Lists.pas"/>
+        <DCCReference Include="Demo Generator\Pkg.Json.DemoGenerator.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -171,8 +177,8 @@
                     <Source Name="MainSource">JsonToDelphiClass.dpr</Source>
                 </Source>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k210.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp210.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k270.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp270.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">

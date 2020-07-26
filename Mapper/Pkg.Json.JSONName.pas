@@ -1,6 +1,7 @@
 unit Pkg.Json.JSONName;
 
 interface
+
 {$M+}
 
 type
@@ -42,6 +43,11 @@ begin
 
   if Value.Substring(1, 4) = 'name' then
     Value := Value[1] + 'Name' + Value.Substring(4);
+  if Value.EndsWith('Test', True) then
+  begin
+    i := Value.Length - 4;
+    Value := Value.Substring(0, i) + 'Test';
+  end;
 
   List := TStringList.Create;
   try
@@ -102,6 +108,5 @@ begin
   FPureClassName := Value;
   FName := 'T' + FPureClassName + 'DTO';
 end;
-
 
 end.

@@ -54,6 +54,8 @@ type
     actRenameProperty: TAction;
     Splitter2: TSplitter;
     ListView1: TListView;
+    actFMXDemo: TAction;
+    Button3: TButton;
     procedure btnVisualizeClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -68,13 +70,12 @@ type
     procedure Panel1Resize(Sender: TObject);
     procedure Edit1Change(Sender: TObject);
     procedure actPrettyPrintJSONExecute(Sender: TObject);
-    procedure Memo1Change(Sender: TObject);
     procedure actValidateJSONExecute(Sender: TObject);
     procedure actRenamePropertyExecute(Sender: TObject);
     procedure ActionList1Update(Action: TBasicAction; var Handled: Boolean);
     procedure btnExitClick(Sender: TObject);
-    procedure ListView1ItemClick(const Sender: TObject; const AItem: TListViewItem);
     procedure ListView1Change(Sender: TObject);
+    procedure ActDemoExecute(Sender: TObject);
   private
     { Private declarations }
     FJsonMapper: TPkgJsonMapper;
@@ -101,7 +102,7 @@ implementation
 
 uses
   System.IoUtils,
-  uSaveUnitForm, Pkg.Json.Visualizer, Pkg.Json.DTO, Pkg.Json.StubField,
+  uSaveUnitForm, Pkg.Json.Visualizer, Pkg.Json.DTO, Pkg.Json.StubField, Pkg.Json.DemoGenerator,
 {$IFDEF MSWINDOWS}
   Winapi.ShellAPI, Winapi.Windows;
 {$ENDIF MSWINDOWS}
@@ -228,10 +229,45 @@ procedure TMainForm.actValidateJSONExecute(Sender: TObject);
 begin
 {$IFDEF MSWINDOWS}
   ShellExecute(0, 'OPEN', PChar(JsonValidatorUrl), '', '', SW_SHOWNORMAL);
-{$ENDIF MSWINDOWS}
+{$ENDIF}
 {$IFDEF POSIX}
   _system(PAnsiChar('open ' + AnsiString(JsonValidatorUrl)));
-{$ENDIF POSIX}
+{$ENDIF}
+end;
+
+procedure TMainForm.ActDemoExecute(Sender: TObject);
+var
+  Destination: string;
+begin
+  if not SelectDirectory('Select a directory', Destination, Destination) then
+    exit;
+
+  FJsonMapper.DestinationClassName := Edit1.Text;
+  FJsonMapper.DestinationUnitName := Edit2.Text;
+  FJsonMapper.Parse(Memo1.Lines.Text);
+
+  with TDemoGenerator.Create(FJsonMapper) do
+    try
+      DestinationDirectory := Destination;
+      Execute;
+    finally
+      free;
+    end;
+
+  TDialogService.MessageDialog('Demo project sucessfull genereted. Do you want to open the destination folder?', TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbYes, 0,
+    procedure(const AResult: TModalResult)
+    begin
+      if AResult <> mrYes then
+        exit;
+
+{$IFDEF MSWINDOWS}
+      ShellExecute(0, 'OPEN', PChar(Destination), '', '', SW_SHOWNORMAL);
+{$ENDIF}
+{$IFDEF POSIX}
+      _system(PAnsiChar('open ' + AnsiString(Destination)));
+{$ENDIF}
+    end)
+
 end;
 
 procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -390,29 +426,9 @@ begin
       LoadFromFile(DemoDataRoot + Item.Text);
       Memo1.Lines.Text := TJsonDTO.PrettyPrintJSON(Text);
     finally
-      Free;
+      free;
     end;
 
-end;
-
-procedure TMainForm.ListView1ItemClick(const Sender: TObject; const AItem: TListViewItem);
-begin
-  exit;
-  TreeView.Clear;
-
-  with TStringList.Create do
-    try
-      LoadFromFile(DemoDataRoot + AItem.Text);
-      Memo1.Lines.Text := TJsonDTO.PrettyPrintJSON(Text);
-    finally
-      Free;
-    end;
-end;
-
-procedure TMainForm.Memo1Change(Sender: TObject);
-begin
-  exit;
-  actPrettyPrintJSON.Execute;
 end;
 
 procedure TMainForm.MenuItem5Click(Sender: TObject);
