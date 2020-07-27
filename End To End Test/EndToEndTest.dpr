@@ -39,9 +39,9 @@ begin
       OutputDirectory := TPath.GetDocumentsPath + TPath.DirectorySeparatorChar + 'JsonToDelphiClass E2E Test\' + 'Test Run ' + s + TPath.DirectorySeparatorChar;
       TDirectory.CreateDirectory(OutputDirectory);
 
-      FileName := TPath.GetFileName(FullFileName);
-      Console.Write('** Building E2E Test for %s ... ', [FileName]);
-      JsonMapper.DestinationClassName := ChangeFileExt(FileName, '').Replace(#32, '');
+      FileName := TPath.GetFileName(FullFileName).Replace('.json', '');
+      Console.Write('* Building E2E Test for %s ... ', [FileName]);
+      JsonMapper.DestinationClassName := string(FileName).Replace(#32, '');
       JsonMapper.DestinationUnitName := JsonMapper.DestinationClassName;
       JsonMapper.LoadFormFile(FullFileName);
 
@@ -65,21 +65,38 @@ begin
       if Sucess then
       begin
         Console.ForegroundColor := TConsoleColor.Green;
-        Console.Write('Sucess!');
+        Console.WriteLine('Sucess!');
       end
       else
       begin
         Console.ForegroundColor := TConsoleColor.Red;
-        Console.Write('Failed!');
+        Console.WriteLine('Failed!');
+      end;
+
+      if Sucess then
+      begin
+        Console.ForegroundColor := TConsoleColor.Blue;
+        Console.Write('   Launching [%s] demo ... ', [TPath.GetFileName(FullFileName).Replace('.json', '')]);
+
+        Sucess := ShellExecute(0, 'OPEN', Pchar(FileName), '', Pchar(TPath.GetDirectoryName(FileName)), SW_SHOWNORMAL) > 32;
+        if Sucess then
+        begin
+          Console.ForegroundColor := TConsoleColor.Green;
+          Console.WriteLine('Sucess!');
+        end
+        else
+        begin
+          Console.ForegroundColor := TConsoleColor.Red;
+          Console.WriteLine('Failed!');
+        end;
       end;
 
       Console.ForegroundColor := TConsoleColor.White;
-      Console.WriteLine(' **');
       Console.WriteLine('');
     end;
 
     Console.ForegroundColor := TConsoleColor.White;
-    Console.WriteLine('Press anykey to continue ...');
+    Console.WriteLine('Press any key to continue ...');
     Console.ReadLine;
     OutputDirectory := TPath.GetDocumentsPath + TPath.DirectorySeparatorChar + 'JsonToDelphiClass E2E Test\' + 'Test Run ' + s + TPath.DirectorySeparatorChar;
 
