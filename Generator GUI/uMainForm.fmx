@@ -1544,7 +1544,6 @@ object MainForm: TMainForm
         '}')
       StyledSettings = [Size, Style, FontColor]
       TextSettings.Font.Family = 'Consolas'
-      OnChange = Memo1Change
       Align = Client
       Margins.Bottom = 6.000000000000000000
       PopupMenu = MemoPopupMenu
@@ -1606,9 +1605,9 @@ object MainForm: TMainForm
     object btnVisualize: TButton
       Align = Right
       Margins.Right = 9.000000000000000000
-      Position.X = 843.000000000000000000
+      Position.X = 875.000000000000000000
       Position.Y = 6.000000000000000000
-      Size.Width = 80.000000000000000000
+      Size.Width = 67.000000000000000000
       Size.Height = 41.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 0
@@ -1621,9 +1620,9 @@ object MainForm: TMainForm
       Enabled = True
       ImageIndex = -1
       Margins.Right = 9.000000000000000000
-      Position.X = 552.000000000000000000
+      Position.X = 672.000000000000000000
       Position.Y = 6.000000000000000000
-      Size.Width = 169.000000000000000000
+      Size.Width = 104.000000000000000000
       Size.Height = 41.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 2
@@ -1631,9 +1630,9 @@ object MainForm: TMainForm
     object btnExit: TButton
       Align = Right
       ModalResult = 1
-      Position.X = 932.000000000000000000
+      Position.X = 951.000000000000000000
       Position.Y = 6.000000000000000000
-      Size.Width = 80.000000000000000000
+      Size.Width = 61.000000000000000000
       Size.Height = 41.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 3
@@ -1641,9 +1640,11 @@ object MainForm: TMainForm
       OnClick = btnExitClick
     end
     object Panel4: TPanel
-      Align = Client
+      Align = Left
       Margins.Right = 6.000000000000000000
-      Size.Width = 540.000000000000000000
+      Position.X = 6.000000000000000000
+      Position.Y = 6.000000000000000000
+      Size.Width = 491.000000000000000000
       Size.Height = 41.000000000000000000
       Size.PlatformDefault = False
       StyleLookup = 'Panel4Style1'
@@ -1690,14 +1691,26 @@ object MainForm: TMainForm
     object btnGenerateUnit: TButton
       Align = Right
       Margins.Right = 9.000000000000000000
-      Position.X = 730.000000000000000000
+      Position.X = 785.000000000000000000
       Position.Y = 6.000000000000000000
-      Size.Width = 104.000000000000000000
+      Size.Width = 81.000000000000000000
       Size.Height = 41.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 1
       Text = 'Preview Unit'
       OnClick = PreviewUnitClick
+    end
+    object Button3: TButton
+      Action = actFMXDemo
+      Align = Right
+      Enabled = True
+      ImageIndex = -1
+      Margins.Right = 9.000000000000000000
+      Position.X = 528.000000000000000000
+      Position.Y = 6.000000000000000000
+      Size.Width = 135.000000000000000000
+      Size.Height = 41.000000000000000000
+      Size.PlatformDefault = False
     end
   end
   object Panel1: TPanel
@@ -1768,7 +1781,6 @@ object MainForm: TMainForm
     Size.Height = 479.000000000000000000
     Size.PlatformDefault = False
     OnChange = ListView1Change
-    OnItemClick = ListView1ItemClick
   end
   object ActionList1: TActionList
     OnUpdate = ActionList1Update
@@ -1781,13 +1793,18 @@ object MainForm: TMainForm
     end
     object actValidateJSON: TAction
       Category = 'Memo Actions'
-      Text = 'Validate JSON string Online'
+      Text = 'Online validation'
       OnExecute = actValidateJSONExecute
     end
     object actRenameProperty: TAction
       Category = 'Main Actions'
       Text = 'Rename Property'
       OnExecute = actRenamePropertyExecute
+    end
+    object actFMXDemo: TAction
+      Category = 'Demo Actions'
+      Text = 'Create Demo project'
+      OnExecute = ActDemoExecute
     end
   end
 end

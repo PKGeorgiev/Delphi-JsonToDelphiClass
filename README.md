@@ -33,7 +33,7 @@ Generates the following DTO:
 ```
 
 Lots of changes in this version:
-* Only floating poiunt numbers are mapped to Double
+* Only floating point numbers are mapped to Double
 * Numbers are mapped to Integer or Int64 depending on their size
 * Generated code restructored, and simplified
 * Generated classes inheriteds from TJsonDTO
@@ -52,9 +52,9 @@ Main features:
 - Visualizes the structure of the JSON objects in a treeview;
 - Generates complete delphi unit (declaration and implementation), based on the JSON string input;
 - Automatically prefixes reserved Delphi words with "&" (ampersand);
-- * Blocks unit generation if the JSON string contains empty Array;
+- ** Support for JSON string that contains empty Array;
 - Adds support code to automatically destroy complex sub types. So you don't have to manage subobject's lifetime manually;
-- ** Uses TArray<T> to represent lists;
+- ** Uses TObjectList<T> to represent lists;
 - Adds helper serialization/deserialization functions;
 - Serialization and deserialization results in the same JSON structure!
 - Automatically detects date/datetime parts and maps them to TDate/TDateTime (as long as dates are ISO8601 compliant);

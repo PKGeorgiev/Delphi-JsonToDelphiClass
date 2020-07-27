@@ -162,7 +162,7 @@ begin
     Lines.Add('  inherited;');
 
     for StubField in FArrayItems do
-      Lines.AddFormat('  %s := TObjectList<%s>.Create;', [StubField.FieldName, StubField.TypeAsString]);
+      Lines.AddFormat('  %s := ObjectList<%s>(%s);', [StubField.FieldName, StubField.TypeAsString, StubField.FieldName + 'Array']);
 
     for StubField in FComplexItems do
       Lines.AddFormat('  %s := %s.Create;', [StubField.FieldName, StubField.TypeAsString]);
@@ -241,7 +241,7 @@ begin
         StubArrayField := StubField as TStubArrayField;
         Lines.Add('  ' + StubField.NameAttribute);
         Lines.AddFormat('  %sArray: TArray<%s>;', [StubField.FieldName, StubField.TypeAsString]);
-        Lines.Add('  [GenericListReflect]');
+        Lines.Add('  [JSONMarshalled(False)]');
         Lines.AddFormat('  %s: TObjectList<%s>;', [StubField.FieldName, StubArrayField.TypeAsString]);
       end
       else

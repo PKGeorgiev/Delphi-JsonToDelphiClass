@@ -1,6 +1,7 @@
 unit Pkg.Json.JSONName;
 
 interface
+
 {$M+}
 
 type
@@ -13,7 +14,6 @@ type
     FPureClassName: string;
   protected
     procedure SetName(const Value: string); virtual;
-    function CapitalizeFirst(Value: string): string;
   published
     property JSONName: string read FJsonName;
     property DelphiName: string read FDelphiName;
@@ -23,6 +23,7 @@ type
   public
     constructor Create(aItemName: string); reintroduce;
     function NameAttribute: string;
+    class function CapitalizeFirst(Value: string): string;
   end;
 
 implementation
@@ -32,7 +33,7 @@ uses
 
 { TJSONName }
 
-function TJSONName.CapitalizeFirst(Value: string): string;
+class function TJSONName.CapitalizeFirst(Value: string): string;
 var
   List: TStringList;
   s: string;
@@ -42,6 +43,11 @@ begin
 
   if Value.Substring(1, 4) = 'name' then
     Value := Value[1] + 'Name' + Value.Substring(4);
+  if Value.EndsWith('Test', True) then
+  begin
+    i := Value.Length - 4;
+    Value := Value.Substring(0, i) + 'Test';
+  end;
 
   List := TStringList.Create;
   try
@@ -102,6 +108,5 @@ begin
   FPureClassName := Value;
   FName := 'T' + FPureClassName + 'DTO';
 end;
-
 
 end.

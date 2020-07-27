@@ -1,0 +1,20 @@
+{
+   "Category":{
+      "name":"Categoria Teste",
+      "description":"Categoria de Teste da Loja",
+      "slug":"categoria-teste",
+      "order":"2",
+      "title":"Categoria de Teste",
+      "small_description":"Categoria de Teste da Loja",
+      "has_acceptance_term":"1",
+      "acceptance_term":"Eu aceito os termos de uso ...",
+      "metatag":{
+         "keywords":"categoria teste 123",
+         "description":"categoria teste da loja 123"
+      },
+      "property":[
+         "Característica Teste 1 123",
+         "Característica Teste 2 123"
+      ]
+   }
+}

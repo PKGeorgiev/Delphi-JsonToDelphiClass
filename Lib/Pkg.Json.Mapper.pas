@@ -16,7 +16,9 @@ type
     FRootClass: TStubClass;
     FUnitName: string;
     FClassName: string;
-  strict protected
+  strict private
+    FJsonString: string;
+  protected
     function GetJsonType(aJsonValue: TJsonValue): TJsonType;
     function GetFirstArrayItem(aJSONArray: TJSONArray): TJsonValue;
     procedure ProcessJsonObject(aJsonValue: TJsonValue; aParentClass: TStubClass);
@@ -25,22 +27,25 @@ type
     destructor Destroy; override;
     // Parses a JSON string and creates internal stub class structure
     function Parse(aJsonString: string): TPkgJsonMapper;
+    function LoadFormFile(aJsonFile: string): TPkgJsonMapper;
     // Generates result unit
     function GenerateUnit: string;
     function SuggestClassName(aSuggestedClassName: string): string;
     procedure Debug(aLines: TStrings);
+    procedure SaveToFile(aFileName: string);
   published
     property DestinationClassName: string read FClassName write FClassName;
     property DestinationUnitName: string read FUnitName write FUnitName;
     property RootClass: TStubClass read FRootClass;
     property StubClasses: TStubClassList read FStubClasses;
+    property JsonString: string read FJsonString;
   end;
 
 implementation
 
 uses
-  System.RegularExpressions, System.StrUtils, System.Character,
-  Pkg.Json.ReservedWords, uUpdate;
+  System.RegularExpressions, System.StrUtils, System.Character, System.IOUtils,
+  Pkg.Json.ReservedWords;
 
 const
   INDENT_SIZE = 2;
@@ -105,6 +110,7 @@ end;
 function TPkgJsonMapper.GenerateUnit: string;
 var
   StringList: TStringList;
+  Tmp: string;
   i: Integer;
 begin
   StringList := TStringList.Create;
@@ -118,12 +124,16 @@ begin
     StringList.Add('uses');
     StringList.Add('  Pkg.Json.DTO, System.Generics.Collections, REST.Json.Types;');
     StringList.Add('');
-    StringList.Add('{$M+} {$HINTS OFF}');
+    StringList.Add('{$M+}');
     StringList.Add('');
     StringList.Add('type');
 
     for i := FStubClasses.Count - 1 downto 1 do
-      StringList.AddIfNotEmpty(FStubClasses[i].GetDeclarationPart);
+    begin
+      Tmp := IfThen(FStubClasses[i].ArrayItems.Count > 0, 'TArrayMapper');
+      StringList.AddIfNotEmpty(FStubClasses[i].GetDeclarationPart(Tmp));
+    end;
+
     StringList.Add(FStubClasses.First.GetDeclarationPart('TJsonDTO'));
     StringList.Add('implementation');
 
@@ -174,6 +184,31 @@ destructor TPkgJsonMapper.Destroy;
 begin
   FreeAndNil(FStubClasses);
   inherited;
+end;
+
+procedure TPkgJsonMapper.SaveToFile(aFileName: string);
+var
+  ResourceStream: TResourceStream;
+  Buffer: TStringList;
+begin
+  with TStringList.Create do
+    try
+      Text := GenerateUnit;
+      SaveToFile(aFileName);
+    finally
+      Free;
+    end;
+
+  Buffer := TStringList.Create;
+  ResourceStream := TResourceStream.Create(HInstance, 'JsonDTO', 'PAS');
+  try
+    ResourceStream.Position := 0;
+    Buffer.LoadFromStream(ResourceStream);
+    Buffer.SaveToFile(TPath.GetDirectoryName(aFileName) + TPath.DirectorySeparatorChar + 'Pkg.Json.DTO.pas');
+  finally
+    ResourceStream.Free;
+    Buffer.Free;
+  end;
 end;
 
 function TPkgJsonMapper.SuggestClassName(aSuggestedClassName: string): string;
@@ -255,6 +290,16 @@ begin
     Result := jtUnknown;
 end;
 
+function TPkgJsonMapper.LoadFormFile(aJsonFile: string): TPkgJsonMapper;
+var
+  StringList: TStringList;
+begin
+  StringList := TStringList.Create;
+  StringList.LoadFromFile(aJsonFile);
+  Result := Parse(StringList.Text);
+  StringList.Free;
+end;
+
 function TPkgJsonMapper.Parse(aJsonString: string): TPkgJsonMapper;
 var
   JSONValue: TJsonValue;
@@ -264,6 +309,7 @@ var
 begin
   Result := Self;
   FStubClasses.Clear;
+  FJsonString := aJsonString;
 
   JSONValue := TJSONObject.ParseJSONValue(aJsonString);
   if JSONValue <> nil then
@@ -294,6 +340,5 @@ begin
   else
     raise EJsonMapper.Create('Unable to parse the JSON String!');
 end;
-
 
 end.

@@ -1,12 +1,19 @@
 unit Pkg.Json.DTO;
-
+
 interface
 
 uses
-  System.Classes, System.Json, Rest.Json, Rest.JsonReflect;
+  System.Classes, System.Json, Rest.Json, System.Generics.Collections, Rest.JsonReflect;
 
 type
-  TJsonDTO = class
+  TArrayMapper = class
+  protected
+    function ObjectList<T: class>(aSource: TArray<T>): TObjectList<T>;
+  public
+    constructor Create; virtual;
+  end;
+
+  TJsonDTO = class(TArrayMapper)
   private
     FOptions: TJsonOptions;
     function GetAsJson: string;
@@ -15,7 +22,7 @@ type
     class procedure PrettyPrintJSON(aJSONValue: TJsonValue; aOutputStrings: TStrings; Indent: Integer = 0); overload;
     class procedure PrettyPrintArray(aJSONValue: TJSONArray; aOutputStrings: TStrings; Last: Boolean; Indent: Integer);
   public
-    constructor Create; virtual;
+    constructor Create; override;
     class function PrettyPrintJSON(aJson: string): string; overload;
     property AsJson: string read GetAsJson write SetAsJson;
   end;
@@ -28,7 +35,7 @@ type
 implementation
 
 uses
-  System.Sysutils, System.JSONConsts, System.Rtti, System.Generics.Collections;
+  System.Sysutils, System.JSONConsts, System.Rtti;
 
 { TJsonDTO }
 
@@ -177,16 +184,10 @@ function TGenericListFieldInterceptor.ObjectsConverter(Data: TObject; Field: str
 var
   ctx: TRttiContext;
   List: TList<TObject>;
-  ArrayValue: TValue;
-  i: Integer;
 begin
-  ArrayValue := ctx.GetType(Data.ClassInfo).GetField(Field + 'Array').GetValue(Data);
-  if not ArrayValue.IsArray then
-    Exit(nil);
-
   List := TList<TObject>(ctx.GetType(Data.ClassInfo).GetField(Field).GetValue(Data).AsObject);
-  for i := 0 to ArrayValue.GetArrayLength - 1 do
-    List.Add(ArrayValue.GetArrayElement(i).AsObject)
+  Result := TListOfObjects(List.List);
+  SetLength(Result, List.Count);
 end;
 
 constructor GenericListReflectAttribute.Create;
@@ -194,4 +195,23 @@ begin
   inherited Create(ctObjects, rtObjects, TGenericListFieldInterceptor, nil, false);
 end;
 
+{ TArrayMapper }
+
+constructor TArrayMapper.Create;
+begin
+  inherited;
+end;
+
+function TArrayMapper.ObjectList<T>(aSource: TArray<T>): TObjectList<T>;
+var
+  Element: T;
+begin
+  Result := TObjectList<T>.Create;
+  for Element in aSource do
+    Result.Add(Element);
+end;
+
 end.
+
+
+

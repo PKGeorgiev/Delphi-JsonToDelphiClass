@@ -38,7 +38,6 @@ begin
   finally
     JsonMapper.Free;
   end;
-
 end;
 
 class procedure JsonVisualizer.FormatFields(aTreeView: TTreeView);
