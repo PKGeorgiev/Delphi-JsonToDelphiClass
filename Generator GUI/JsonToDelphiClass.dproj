@@ -125,11 +125,11 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <RcCompile Include="JSON_PAS.rc">
-            <Form>JSON_PAS.res</Form>
-        </RcCompile>
-        <RcCompile Include="Demo Generator\DemoProject.rc">
+        <RcCompile Include="..\Demo Generator\DemoProject.rc">
             <Form>DemoProject.res</Form>
+        </RcCompile>
+        <RcCompile Include="..\Lib\JSON_PAS.rc">
+            <Form>JSON_PAS.res</Form>
         </RcCompile>
         <DCCReference Include="uMainForm.pas">
             <Form>MainForm</Form>
@@ -146,16 +146,16 @@
             <Form>UpdateForm</Form>
             <FormType>fmx</FormType>
         </DCCReference>
-        <DCCReference Include="uGitHub.pas"/>
-        <DCCReference Include="uUpdate.pas"/>
-        <DCCReference Include="Mapper\Pkg.Json.Mapper.pas"/>
-        <DCCReference Include="Pkg.Json.Visualizer.pas"/>
-        <DCCReference Include="Pkg.Json.DTO.pas"/>
-        <DCCReference Include="Pkg.Json.ReservedWords.pas"/>
-        <DCCReference Include="Mapper\Pkg.Json.JSONName.pas"/>
-        <DCCReference Include="Mapper\Pkg.Json.StubField.pas"/>
-        <DCCReference Include="Pkg.Json.Lists.pas"/>
-        <DCCReference Include="Demo Generator\Pkg.Json.DemoGenerator.pas"/>
+        <DCCReference Include="..\Components\uGitHub.pas"/>
+        <DCCReference Include="..\Components\uUpdate.pas"/>
+        <DCCReference Include="..\Components\Pkg.Json.Visualizer.pas"/>
+        <DCCReference Include="..\Demo Generator\Pkg.Json.DemoGenerator.pas"/>
+        <DCCReference Include="..\Lib\Pkg.Json.Lists.pas"/>
+        <DCCReference Include="..\Lib\Pkg.Json.Mapper.pas"/>
+        <DCCReference Include="..\Lib\Pkg.Json.ReservedWords.pas"/>
+        <DCCReference Include="..\Lib\Pkg.Json.DTO.pas"/>
+        <DCCReference Include="..\Lib\Pkg.Json.StubField.pas"/>
+        <DCCReference Include="..\Lib\Pkg.Json.JSONName.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

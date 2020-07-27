@@ -111,7 +111,7 @@ Posix.Stdlib;
 {$ENDIF POSIX}
 
 const
-  DemoDataRoot = '../../Demo Data/';
+  DemoDataRoot = '../../../Demo Data/';
 
 procedure TMainForm.btnExitClick(Sender: TObject);
 begin
