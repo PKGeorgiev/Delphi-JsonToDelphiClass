@@ -8,10 +8,13 @@ uses
 {$M+}
 
 type
+  TDestinationFrameWork = (dfBoth, dfVCL, dfFMX);
+
   TDemoGenerator = class
   private
     FDestinationDirectory: string;
     FJsonMapper: TPkgJsonMapper;
+    FTDestinationFrameWork: TDestinationFrameWork;
     procedure Validate;
     procedure ExtractZipFile;
     procedure GenerateFrameWorkINC;
@@ -20,6 +23,7 @@ type
     procedure SetDestinationDirectory(const Value: string);
   published
     property DestinationDirectory: string read FDestinationDirectory write SetDestinationDirectory;
+    property DestinationFrameWork: TDestinationFrameWork read FTDestinationFrameWork write FTDestinationFrameWork;
   public
     constructor Create(aJsonMapper: TPkgJsonMapper); reintroduce;
     procedure Execute;
@@ -37,6 +41,7 @@ begin
   inherited Create;
   FJsonMapper := aJsonMapper;
   FDestinationDirectory := '';
+  FTDestinationFrameWork := TDestinationFrameWork.dfBoth;
 end;
 
 procedure TDemoGenerator.Execute;
@@ -63,8 +68,23 @@ procedure TDemoGenerator.GenerateFrameWorkINC;
 begin
   with TStringList.Create do
     try
-      Add('{.$DEFINE FMX}');
-      Add('{.$DEFINE VCL}');
+      case FTDestinationFrameWork of
+        dfBoth:
+          begin
+            Add('{.$DEFINE FMX}');
+            Add('{.$DEFINE VCL}');
+          end;
+        dfVCL:
+          begin
+            Add('{.$DEFINE FMX}');
+            Add('{$DEFINE VCL}');
+          end;
+        dfFMX:
+          begin
+            Add('{$DEFINE FMX}');
+            Add('{.$DEFINE VCL}');
+          end;
+      end;
       Add('');
       Add('{$IF not Defined(VCL) and not Defined(FMX)}');
       Add('  Please define framework, above.');

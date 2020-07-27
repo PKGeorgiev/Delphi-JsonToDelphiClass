@@ -27,6 +27,7 @@ type
     destructor Destroy; override;
     // Parses a JSON string and creates internal stub class structure
     function Parse(aJsonString: string): TPkgJsonMapper;
+    function LoadFormFile(aJsonFile: string): TPkgJsonMapper;
     // Generates result unit
     function GenerateUnit: string;
     function SuggestClassName(aSuggestedClassName: string): string;
@@ -44,7 +45,7 @@ implementation
 
 uses
   System.RegularExpressions, System.StrUtils, System.Character, System.IOUtils,
-  Pkg.Json.ReservedWords, uUpdate;
+  Pkg.Json.ReservedWords;
 
 const
   INDENT_SIZE = 2;
@@ -109,7 +110,7 @@ end;
 function TPkgJsonMapper.GenerateUnit: string;
 var
   StringList: TStringList;
-  Tmp : string;
+  Tmp: string;
   i: Integer;
 begin
   StringList := TStringList.Create;
@@ -287,6 +288,16 @@ begin
   end
   else
     Result := jtUnknown;
+end;
+
+function TPkgJsonMapper.LoadFormFile(aJsonFile: string): TPkgJsonMapper;
+var
+  StringList: TStringList;
+begin
+  StringList := TStringList.Create;
+  StringList.LoadFromFile(aJsonFile);
+  Result := Parse(StringList.Text);
+  StringList.Free;
 end;
 
 function TPkgJsonMapper.Parse(aJsonString: string): TPkgJsonMapper;
