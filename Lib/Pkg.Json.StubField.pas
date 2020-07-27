@@ -266,6 +266,8 @@ begin
         StubArrayField := StubField as TStubArrayField;
         Lines.AddFormat('  property %s: TObjectList<%s> read F%s;', [StubField.Name, StubArrayField.TypeAsString, StubArrayField.Name]);
       end
+      else if StubField.FieldType = jtObject then
+        Lines.AddFormat('  property %s: %s read %s;', [StubField.PropertyName, StubField.TypeAsString, StubField.FieldName])
       else
         Lines.AddFormat('  property %s: %s read %s write %s;', [StubField.PropertyName, StubField.TypeAsString, StubField.FieldName, StubField.FieldName]);
     end;
