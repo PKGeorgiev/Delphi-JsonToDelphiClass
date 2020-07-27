@@ -40,20 +40,21 @@ begin
       TDirectory.CreateDirectory(OutputDirectory);
 
       FileName := TPath.GetFileName(FullFileName);
-      Console.Write('** Generating E2E test for %s ... ', [FileName]);
+      Console.Write('** Building E2E Test for %s ... ', [FileName]);
       JsonMapper.DestinationClassName := ChangeFileExt(FileName, '').Replace(#32, '');
       JsonMapper.DestinationUnitName := JsonMapper.DestinationClassName;
       JsonMapper.LoadFormFile(FullFileName);
 
+      OutputDirectory := OutputDirectory + JsonMapper.DestinationClassName + TPath.DirectorySeparatorChar;
+      TDirectory.CreateDirectory(OutputDirectory);
+
       with TDemoGenerator.Create(JsonMapper) do
         try
-          OutputDirectory := OutputDirectory + JsonMapper.DestinationClassName + TPath.DirectorySeparatorChar;
           DestinationDirectory := OutputDirectory;
-          TDirectory.CreateDirectory(DestinationDirectory);
           DestinationFrameWork := TDestinationFrameWork.dfVCL;
           Execute;
         finally
-          free;
+          Free;
         end;
 
       OutputBuffer.Clear;
@@ -75,16 +76,15 @@ begin
       Console.ForegroundColor := TConsoleColor.White;
       Console.WriteLine(' **');
       Console.WriteLine('');
-
-// if Sucess then
-// ShellExecute(0, 'OPEN', Pchar(FileName), '', Pchar(TPath.GetDirectoryName(FileName)), SW_SHOWNORMAL);
     end;
 
     Console.ForegroundColor := TConsoleColor.White;
     Console.WriteLine('Press anykey to continue ...');
     Console.ReadLine;
+    OutputDirectory := TPath.GetDocumentsPath + TPath.DirectorySeparatorChar + 'JsonToDelphiClass E2E Test\' + 'Test Run ' + s + TPath.DirectorySeparatorChar;
+
     ShellExecute(0, 'OPEN', Pchar(OutputDirectory), '', '', SW_SHOWNORMAL);
-    OutputBuffer.free;
+    OutputBuffer.Free;
   except
     on E: Exception do
       Writeln(E.ClassName, ': ', E.Message);
