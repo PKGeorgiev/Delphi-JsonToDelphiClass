@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<test-results name="C:\Users\Jens Borrisholt\Documents\GitHUB\Delphi-JsonToDelphiClass\Unit Test\Win32\Debug\JsonToDelphiClassTests.exe" total="1" errors="0" failures="0" ignored="0" inconclusive="0" not-run="0" skipped="0" invalid="0" date="2020-07-28" time="17.193">
+  <culture-info current-culture="en" current-uiculture="en" />
+  <test-suite type="Assembly" name="JsonToDelphiClassTests.exe" executed="true" result="Success" success="True" time="17.193" asserts="0">
+    <results>
+        <test-suite type="Namespace" name="Test" executed="true" result="Success" success="True" time="17.193" asserts="0" >
+          <results>
+              <test-suite type="Fixture" name="TAnonymousArrayTest" executed="True" result="Success" success="True" time="17.193" >
+                <results>
+                  <test-case name="ItemAssigned" executed="True" result="Success" success="True" time="5.027" asserts="0" />
+                </results>
+              </test-suite>
+          </results>
+        </test-suite>
+    </results>
+  </test-suite>
+</test-results>
