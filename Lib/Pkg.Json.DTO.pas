@@ -8,7 +8,7 @@ uses
 type
   TArrayMapper = class
   protected
-    function ObjectList<T: class>(aSource: TArray<T>): TObjectList<T>;
+    function ObjectList<T: class>(var aList: TObjectList<T>; aSource: TArray<T>): TObjectList<T>;
   public
     constructor Create; virtual;
   end;
@@ -25,11 +25,6 @@ type
     constructor Create; override;
     class function PrettyPrintJSON(aJson: string): string; overload;
     property AsJson: string read GetAsJson write SetAsJson;
-  end;
-
-  GenericListReflectAttribute = class(JsonReflectAttribute)
-  public
-    constructor Create;
   end;
 
 implementation
@@ -172,29 +167,6 @@ begin
   end;
 end;
 
-type
-  TGenericListFieldInterceptor = class(TJSONInterceptor)
-  public
-    function ObjectsConverter(Data: TObject; Field: string): TListOfObjects; override;
-  end;
-
-  { TListFieldInterceptor }
-
-function TGenericListFieldInterceptor.ObjectsConverter(Data: TObject; Field: string): TListOfObjects;
-var
-  ctx: TRttiContext;
-  List: TList<TObject>;
-begin
-  List := TList<TObject>(ctx.GetType(Data.ClassInfo).GetField(Field).GetValue(Data).AsObject);
-  Result := TListOfObjects(List.List);
-  SetLength(Result, List.Count);
-end;
-
-constructor GenericListReflectAttribute.Create;
-begin
-  inherited Create(ctObjects, rtObjects, TGenericListFieldInterceptor, nil, false);
-end;
-
 { TArrayMapper }
 
 constructor TArrayMapper.Create;
@@ -202,16 +174,19 @@ begin
   inherited;
 end;
 
-function TArrayMapper.ObjectList<T>(aSource: TArray<T>): TObjectList<T>;
+function TArrayMapper.ObjectList<T>(var aList: TObjectList<T>; aSource: TArray<T>): TObjectList<T>;
 var
   Element: T;
 begin
-  Result := TObjectList<T>.Create;
-  for Element in aSource do
-    Result.Add(Element);
+  if aList = nil then
+  begin
+    aList := TObjectList<T>.Create;
+    for Element in aSource do
+      aList.Add(Element);
+  end;
+
+  Exit(aList);
 end;
 
 end.
-
-
 
