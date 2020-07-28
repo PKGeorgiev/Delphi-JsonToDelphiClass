@@ -88,6 +88,9 @@
         </DelphiCompile>
         <DCCReference Include="Helper\Test.Helper.Helper.pas"/>
         <DCCReference Include="Test.AnonymousArrayTest.pas"/>
+        <DCCReference Include="Test.ArrayTest1.pas"/>
+        <DCCReference Include="Test.TestBase.pas"/>
+        <DCCReference Include="Test.ArrayTestBase.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

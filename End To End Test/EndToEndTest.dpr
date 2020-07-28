@@ -14,7 +14,8 @@ uses
   System.Console in 'System.Console.pas',
   Pkg.Json.Mapper,
   Pkg.Json.DemoGenerator,
-  DelphiBuilderU in 'DelphiBuilderU.pas';
+  DelphiBuilderU in 'DelphiBuilderU.pas',
+  Test.ArrayTest1 in 'Test.ArrayTest1.pas';
 
 const
   DemoDataRoot = '../../../Demo Data/';

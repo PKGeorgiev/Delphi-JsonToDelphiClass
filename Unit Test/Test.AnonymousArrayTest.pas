@@ -9,7 +9,6 @@ uses
 {$SCOPEDENUMS ON}
 
 type
-
   [TestFixture]
   TAnonymousArrayTest = class
   strict private
@@ -21,27 +20,59 @@ type
     procedure TearDown;
 
     [Test]
-    procedure ItemAssigned;
+    procedure ItemsAssigned;
 
     [Test]
-    procedure ItemElements;
+    procedure PropertyCheck;
+
+    [Test]
+    procedure ElementPropertyCheck;
+
+    [Test]
+    procedure ItemsElements;
   end;
 
 implementation
 
 { TAnonymousArrayTest }
 
-procedure TAnonymousArrayTest.ItemAssigned;
+procedure TAnonymousArrayTest.ElementPropertyCheck;
+var
+  Properties: TArray<string>;
+begin
+  Properties := TTestHelper.GetProperties(DTO.Items.First);
+  Assert.AreEqual(2, Length(Properties));
+  Assert.AreEqual('S1', Properties[0]);
+  Assert.AreEqual('S2', Properties[1]);
+end;
+
+procedure TAnonymousArrayTest.ItemsAssigned;
 begin
   Assert.IsNotNull(DTO.Items);
   Assert.AreEqual(2, DTO.Items.Count);
 end;
 
-procedure TAnonymousArrayTest.ItemElements;
+procedure TAnonymousArrayTest.ItemsElements;
 var
-  Element : TItemsDTO;
+  Element: TItemsDTO;
 begin
-  Element = DTO.Items[0];
+  Element := DTO.Items[0];
+  Assert.AreEqual('5102', Element.S1);
+  Assert.AreEqual(default (boolean), Element.S2);
+
+  Element := DTO.Items[1];
+  Assert.AreEqual('5102', Element.S1);
+  Assert.AreEqual(True, Element.S2);
+end;
+
+procedure TAnonymousArrayTest.PropertyCheck;
+var
+  Properties: TArray<string>;
+begin
+  Properties := TTestHelper.GetProperties(DTO);
+  Assert.AreEqual(2, Length(Properties));
+  Assert.AreEqual('Items', Properties[0]);
+  Assert.AreEqual('AsJson', Properties[1]);
 end;
 
 procedure TAnonymousArrayTest.Setup;

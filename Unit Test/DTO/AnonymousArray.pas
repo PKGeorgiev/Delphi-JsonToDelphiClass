@@ -10,10 +10,10 @@ uses
 type
   TItemsDTO = class
   private
-    FS1: Boolean;
+    FS1: string;
     FS2: Boolean;
   published
-    property S1: Boolean read FS1 write FS1;
+    property S1: string read FS1 write FS1;
     property S2: Boolean read FS2 write FS2;
   end;
   
