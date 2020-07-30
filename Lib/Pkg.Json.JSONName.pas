@@ -5,7 +5,7 @@ interface
 {$M+}
 
 type
-  TJSONName = class abstract
+  TJSONName = class
   strict private
     FJsonName: string;
     FDelphiName: string;
@@ -88,14 +88,14 @@ begin
     else
       s := s + '_';
 
-  FNeedsAttribute := (s <> FJsonName) or (aItemName.StartsWith('_'));
-
   if s.StartsWith('_') then
     s := s.Substring(1);
 
   FDelphiName := CapitalizeFirst(s);
   if not FDelphiName[1].IsLetter then
     FDelphiName := '_' + FDelphiName;
+
+  FNeedsAttribute := not SameText(FDelphiName, FJsonName);
 end;
 
 function TJSONName.NameAttribute: string;

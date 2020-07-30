@@ -4,11 +4,11 @@ interface
 
 uses
   System.SysUtils, System.Generics.Defaults, System.Generics.Collections,
-  Pkg.Json.JSONName, Pkg.Json.Lists;
+  Pkg.Json.JSONName, Pkg.Json.Lists, Pkg.Json.JsonValueHelper;
 
 type
   EJsonMapper = class(Exception);
-  TJsonType = (jtUnknown, jtObject, jtArray, jtString, jtTrue, jtFalse, jtNumber, jtDate, jtDateTime, jtBytes, jtInteger, jtInteger64);
+  TJsonType = Pkg.Json.JsonValueHelper.TJsonType;
 
   TStubClass = class;
   TStubClassList = class;
