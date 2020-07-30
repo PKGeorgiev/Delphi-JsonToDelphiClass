@@ -100,7 +100,6 @@
         </RcCompile>
         <DCCReference Include="System.Console.pas"/>
         <DCCReference Include="DelphiBuilderU.pas"/>
-        <DCCReference Include="Test.ArrayTest1.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

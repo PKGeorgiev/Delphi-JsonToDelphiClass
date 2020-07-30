@@ -52,9 +52,17 @@
 # Delphi history and backups
 __history/
 __recover/
+__recovery/
+Win32/
+Win64/
 *.~*
+
 __recovery/uMainForm.pas
 __recovery/uMainForm.fmx
 __recovery/__recovery.ini
 
-Win32/Debug/
+
+
+Unit Test/__recovery/
+
+Unit Test/Win32/Debug/

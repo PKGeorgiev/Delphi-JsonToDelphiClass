@@ -25,11 +25,10 @@ uses
   DUnitX.Loggers.Console,
   DUnitX.Loggers.Xml.NUnit,
   DUnitX.TestFramework,
-  Test.Helper.Helper in 'Helper\Test.Helper.Helper.pas',
-  Test.AnonymousArrayTest in 'Test.AnonymousArrayTest.pas',
-  Test.ArrayTest1 in 'Test.ArrayTest1.pas',
-  Test.TestBase in 'Test.TestBase.pas',
-  Test.ArrayTestBase in 'Test.ArrayTestBase.pas';
+  TestPkg.TestTJSONName in 'TestPkg.TestTJSONName.pas',
+  Pkg.Json.JSONName in '..\Lib\Pkg.Json.JSONName.pas',
+  Pkg.Json.JsonValueHelper in '..\Lib\Pkg.Json.JsonValueHelper.pas',
+  TeskPkg.TestJsonValueHelper in 'TeskPkg.TestJsonValueHelper.pas';
 
 {$R *.RES}
 
