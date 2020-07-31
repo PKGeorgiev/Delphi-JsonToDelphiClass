@@ -187,7 +187,7 @@ begin
         Lines.Add('');
         Lines.AddFormat('function %s.Get%s: TObjectList<%s>;', [Name, StubField.PropertyName, StubArrayField.TypeAsString]);
         Lines.Add('begin');
-        Lines.AddFormat('  Result := ObjectList<%s>(%s, %sArray);', [StubArrayField.TypeAsString, StubField.FieldName,  StubField.FieldName]);
+        Lines.AddFormat('  Result := ObjectList<%s>(%s, %sArray);', [StubArrayField.TypeAsString, StubField.FieldName, StubField.FieldName]);
         Lines.Add('end;');
       end;
 
@@ -249,8 +249,9 @@ begin
       begin
         StubArrayField := StubField as TStubArrayField;
         Lines.Add('  ' + StubField.NameAttribute);
-        Lines.AddFormat('  %sArray: TArray<%s>;', [StubField.FieldName, StubField.TypeAsString]);
         Lines.Add('  [JSONMarshalled(False)]');
+        Lines.AddFormat('  %sArray: TArray<%s>;', [StubField.FieldName, StubField.TypeAsString]);
+        Lines.Add('  [GenericListReflect]');
         Lines.AddFormat('  %s: TObjectList<%s>;', [StubField.FieldName, StubArrayField.TypeAsString]);
       end
       else
