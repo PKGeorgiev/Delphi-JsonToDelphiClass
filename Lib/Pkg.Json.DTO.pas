@@ -27,6 +27,11 @@ type
     property AsJson: string read GetAsJson write SetAsJson;
   end;
 
+  GenericListReflectAttribute = class(JsonReflectAttribute)
+  public
+    constructor Create;
+  end;
+
 implementation
 
 uses
@@ -186,6 +191,31 @@ begin
   end;
 
   Exit(aList);
+end;
+
+type
+  TGenericListFieldInterceptor = class(TJSONInterceptor)
+  public
+    function ObjectsConverter(Data: TObject; Field: string): TListOfObjects; override;
+  end;
+
+  { TListFieldInterceptor }
+
+function TGenericListFieldInterceptor.ObjectsConverter(Data: TObject; Field: string): TListOfObjects;
+var
+  ctx: TRttiContext;
+  List: TList<TObject>;
+  RttiProperty: TRttiProperty;
+begin
+  RttiProperty := ctx.GetType(Data.ClassInfo).GetProperty(Copy(Field, 2, MAXINT));
+  List := TList<TObject>(RttiProperty.GetValue(Data).AsObject);
+  Result := TListOfObjects(List.List);
+  SetLength(Result, List.Count);
+end;
+
+constructor GenericListReflectAttribute.Create;
+begin
+  inherited Create(ctObjects, rtObjects, TGenericListFieldInterceptor, nil, false);
 end;
 
 end.
