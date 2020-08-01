@@ -41,18 +41,16 @@ begin
 
       FileName := TPath.GetFileName(FullFileName).Replace('.json', '');
       Console.Write('* Building E2E Test for %s ... ', [FileName]);
-      JsonMapper.DestinationClassName := string(FileName).Replace(#32, '');
-      JsonMapper.DestinationUnitName := JsonMapper.DestinationClassName;
-      JsonMapper.LoadFormFile(FullFileName);
 
-      OutputDirectory := OutputDirectory + JsonMapper.DestinationClassName + TPath.DirectorySeparatorChar;
-      TDirectory.CreateDirectory(OutputDirectory);
-
-      with TDemoGenerator.Create(JsonMapper) do
+      with TDemoGenerator.Create(FullFileName) do
         try
-          DestinationDirectory := OutputDirectory;
+          DestinationClassName := string(FileName).Replace(#32, '');
+          DestinationUnitName := JsonMapper.DestinationClassName;
+
+          RootDirectory := OutputDirectory;
           DestinationFrameWork := TDestinationFrameWork.dfVCL;
           Execute;
+          OutputDirectory := DestinationDirectory;
         finally
           Free;
         end;

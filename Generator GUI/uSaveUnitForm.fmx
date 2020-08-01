@@ -30,8 +30,8 @@ object SaveUnitForm: TSaveUnitForm
     Size.PlatformDefault = False
     StyleLookup = 'Memo1Style1'
     TabOrder = 1
-    Viewport.Width = 917.000000000000000000
-    Viewport.Height = 551.000000000000000000
+    Viewport.Width = 913.000000000000000000
+    Viewport.Height = 547.000000000000000000
   end
   object Panel1: TPanel
     Align = Bottom

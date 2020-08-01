@@ -230,8 +230,10 @@ begin
   FJsonMapper.DestinationUnitName := Edit2.Text;
   FJsonMapper.Parse(Memo1.Lines.Text);
 
-  with TDemoGenerator.Create(FJsonMapper) do
+  with TDemoGenerator.Create do
     try
+      DestinationClassName := Edit1.Text;
+      DestinationUnitName := Edit2.Text;
       DestinationDirectory := Destination;
       Execute;
     finally
