@@ -21,15 +21,17 @@ type
     procedure btnSaveClick(Sender: TObject);
     procedure Memo1KeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
     procedure FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
-    procedure FormShow(Sender: TObject);
   private
+    FJson: string;
+    function GetFileName: string;
+    procedure SetFileName(const Value: string);
+    procedure SetJson(const Value: string);
     { Private declarations }
   public
     { Public declarations }
+    property FileName: string read GetFileName write SetFileName;
+    property Json : string read FJson write SetJson;
   end;
-
-var
-  SaveUnitForm: TSaveUnitForm;
 
 implementation
 
@@ -71,18 +73,27 @@ begin
     ModalResult := mrCancel;
 end;
 
-procedure TSaveUnitForm.FormShow(Sender: TObject);
+function TSaveUnitForm.GetFileName: string;
 begin
-  SaveUnitForm.width := MainForm.width - 50;
-  SaveUnitForm.height := MainForm.height - 50;
-  SaveUnitForm.left := MainForm.left + 25;
-  SaveUnitForm.top := MainForm.top + 25;
+  Result := sd.FileName;
 end;
 
 procedure TSaveUnitForm.Memo1KeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = 27 then
     ModalResult := mrCancel;
+end;
+
+procedure TSaveUnitForm.SetFileName(const Value: string);
+begin
+  sd.FileName := Value;
+  Caption := 'Preview Delphi Unit - ' + Value;
+end;
+
+procedure TSaveUnitForm.SetJson(const Value: string);
+begin
+  FJson := Value;
+  Memo1.Lines.Text := FJson;
 end;
 
 end.

@@ -6,11 +6,10 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, System.Threading, System.SyncObjs, System.NetEncoding,
 
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.DialogService, FMX.Dialogs, FMX.Layouts, FMX.TreeView, FMX.Edit, FMX.StdCtrls, FMX.ScrollBox, FMX.Memo,
-  FMX.Menus, FMX.Controls.Presentation, FMX.Objects, System.Actions, FMX.ActnList, FMX.ConstrainedForm,
+  FMX.Menus, FMX.Controls.Presentation, FMX.Objects, System.Actions, FMX.ActnList, FMX.ConstrainedForm, FMX.ListView.Types, FMX.ListView.Appearances, FMX.ListView.Adapters.Base,
+  FMX.ListView, FMX.Memo.Types,
 
-  Pkg.Json.Mapper, uUpdate, uGitHub, uUpdateForm, FMX.Memo.Types,
-  FMX.ListView.Types, FMX.ListView.Appearances, FMX.ListView.Adapters.Base,
-  FMX.ListView;
+  Pkg.Json.Mapper, uUpdate, uUpdateForm, DTO.GitHUB.Release;
 
 const
   JsonValidatorUrl = 'http://jsonlint.com';
@@ -79,7 +78,7 @@ type
   private
     { Private declarations }
     FJsonMapper: TPkgJsonMapper;
-    FCheckVersionResponse: TObject;
+    FCheckVersionResponse: TRelease;
     FChanged: Boolean;
     // 0: Active
     // 1: Terminating
@@ -101,14 +100,8 @@ implementation
 {$R *.fmx}
 
 uses
-  System.IoUtils,
-  uSaveUnitForm, Pkg.Json.Visualizer, Pkg.Json.DTO, Pkg.Json.StubField, Pkg.Json.DemoGenerator,
-{$IFDEF MSWINDOWS}
-  Winapi.ShellAPI, Winapi.Windows;
-{$ENDIF MSWINDOWS}
-{$IFDEF POSIX}
-Posix.Stdlib;
-{$ENDIF POSIX}
+  System.IoUtils, System.Json,
+  uSaveUnitForm, Pkg.Json.Visualizer, Pkg.Json.DTO, Pkg.Json.StubField, Pkg.Json.DemoGenerator, Pkg.Json.Utils;
 
 const
   DemoDataRoot = '../../../Demo Data/';
@@ -155,19 +148,15 @@ begin
   FJsonMapper.DestinationClassName := Edit1.Text;
   FJsonMapper.DestinationUnitName := Edit2.Text;
   FJsonMapper.Parse(Memo1.Lines.Text);
-  SaveUnitForm.sd.FileName := FJsonMapper.DestinationUnitName + '.pas';
 
-  SaveUnitForm.Memo1.Text := FJsonMapper.GenerateUnit;
-  SaveUnitForm.Caption := 'Preview Delphi Unit - ' + SaveUnitForm.sd.FileName;
-
-  // ShowModal bug - QC129552
-  // The same is declared in the SaveUnitForm's OnShow event
-  SaveUnitForm.Width := MainForm.Width - 50;
-  SaveUnitForm.Height := MainForm.Height - 50;
-  SaveUnitForm.Left := MainForm.Left + 25;
-  SaveUnitForm.Top := MainForm.Top + 25;
-
-  SaveUnitForm.ShowModal;
+  with TSaveUnitForm.Create(nil) do
+    try
+      FileName := FJsonMapper.DestinationUnitName + '.pas';
+      Json := FJsonMapper.GenerateUnit;
+      ShowModal;
+    finally
+      free;
+    end;
 end;
 
 procedure TMainForm.ActionList1Update(Action: TBasicAction; var Handled: Boolean);
@@ -227,12 +216,7 @@ end;
 
 procedure TMainForm.actValidateJSONExecute(Sender: TObject);
 begin
-{$IFDEF MSWINDOWS}
-  ShellExecute(0, 'OPEN', PChar(JsonValidatorUrl), '', '', SW_SHOWNORMAL);
-{$ENDIF}
-{$IFDEF POSIX}
-  _system(PAnsiChar('open ' + AnsiString(JsonValidatorUrl)));
-{$ENDIF}
+  ShellExecute(JsonValidatorUrl);
 end;
 
 procedure TMainForm.ActDemoExecute(Sender: TObject);
@@ -260,12 +244,7 @@ begin
       if AResult <> mrYes then
         exit;
 
-{$IFDEF MSWINDOWS}
-      ShellExecute(0, 'OPEN', PChar(Destination), '', '', SW_SHOWNORMAL);
-{$ENDIF}
-{$IFDEF POSIX}
-      _system(PAnsiChar('open ' + AnsiString(Destination)));
-{$ENDIF}
+      ShellExecute(Destination);
     end)
 
 end;
@@ -323,33 +302,34 @@ begin
   Constraints.MinWidth := 1024;
   Constraints.MinHeight := 560;
 
-  Caption := 'JsonToDelphiClass - ' + FloatToStr(ProgramVersion, PointDsFormatSettings) + ' | By Jens Borrisholt';
+  Caption := 'JsonToDelphiClass - ' + FloatToJson(ProgramVersion) + ' | By Jens Borrisholt';
 
   FJsonMapper := TPkgJsonMapper.Create;
 
   Label1.Text := 'Checking for update...';
 
-  NewCheckForUpdateTask(
-    procedure(ARelease: TObject)
+  CheckForUpdate(
+    procedure(aRelease: TRelease; aErrorMessage: string)
     begin
-      FCheckVersionResponse := ARelease;
-      if FCheckVersionResponse is TReleaseClass then
+      FCheckVersionResponse := aRelease;
+
+      if (aRelease = nil) and (aErrorMessage = '') then
+      begin
+        Label1.StyleLookup := 'LabelGreenStyle';
+        Label1.Text := 'Your version ' + FloatToJson(uUpdate.ProgramVersion) + ' is up to date! For more information about JsonToDelphiClass click here!';
+        (Label1.FindStyleResource('text') as TText).OnClick := Label1Click;
+      end
+      else if aErrorMessage = '' then
       begin
         Label1.StyleLookup := 'LabelLinkStyle';
-        Label1.Text := 'Version ' + (FCheckVersionResponse as TReleaseClass).tag_name + ' is available! Click here to download!';
+        Label1.Text := 'Version ' + aRelease.Tag_Name + ' is available! Click here to download!';
         (Label1.FindStyleResource('text') as TText).OnClick := Label1Click;
         Label1.HitTest := True;
       end
-      else if FCheckVersionResponse is TErrorClass then
-      begin
-        Label1.StyleLookup := 'LabelErrorStyle';
-        Label1.Text := 'Error checking for new version: ' + (FCheckVersionResponse as TErrorClass).message;
-      end
       else
       begin
-        Label1.StyleLookup := 'LabelGreenStyle';
-        Label1.Text := 'Your version ' + FloatToStr(uUpdate.ProgramVersion, PointDsFormatSettings) + ' is up to date! For more information about JsonToDelphiClass click here!';
-        (Label1.FindStyleResource('text') as TText).OnClick := Label1Click;
+        Label1.StyleLookup := 'LabelErrorStyle';
+        Label1.Text := 'Error checking for new version: ' + aErrorMessage;
       end;
       FUpdateCheckEvent.SetEvent;
     end);
@@ -393,20 +373,16 @@ end;
 
 procedure TMainForm.Label1Click(Sender: TObject);
 begin
-  if FCheckVersionResponse <> nil then
-  begin
-    UpdateForm.FRelease := FCheckVersionResponse as TReleaseClass;
-    UpdateForm.ShowModal;
-  end
+  if FCheckVersionResponse = nil then
+    ShellExecute(ProgramUrl)
   else
-  begin
-{$IFDEF MSWINDOWS}
-    ShellExecute(0, 'OPEN', PChar(ProgramUrl), '', '', SW_SHOWNORMAL);
-{$ENDIF MSWINDOWS}
-{$IFDEF POSIX}
-    _system(PAnsiChar('open ' + AnsiString(ProgramUrl)));
-{$ENDIF POSIX}
-  end;
+    with TUpdateForm.Create(nil) do
+      try
+        NewRelease := FCheckVersionResponse;
+        ShowModal;
+      finally
+        free;
+      end;
 end;
 
 procedure TMainForm.ListView1Change(Sender: TObject);

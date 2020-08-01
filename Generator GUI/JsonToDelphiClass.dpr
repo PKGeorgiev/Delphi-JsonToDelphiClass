@@ -10,7 +10,6 @@ uses
   uSaveUnitForm in 'uSaveUnitForm.pas' {SaveUnitForm},
   FMX.ConstrainedForm in 'FMX.ConstrainedForm.pas' {TFormConstraints},
   uUpdateForm in 'uUpdateForm.pas' {UpdateForm},
-  uGitHub in '..\Components\uGitHub.pas',
   uUpdate in '..\Components\uUpdate.pas',
   Pkg.Json.Visualizer in '..\Components\Pkg.Json.Visualizer.pas',
   Pkg.Json.DemoGenerator in '..\Demo Generator\Pkg.Json.DemoGenerator.pas',
@@ -20,7 +19,11 @@ uses
   Pkg.Json.Mapper in '..\Lib\Pkg.Json.Mapper.pas',
   Pkg.Json.ReservedWords in '..\Lib\Pkg.Json.ReservedWords.pas',
   Pkg.Json.StubField in '..\Lib\Pkg.Json.StubField.pas',
-  Pkg.Json.JsonValueHelper in '..\Lib\Pkg.Json.JsonValueHelper.pas';
+  Pkg.Json.JsonValueHelper in '..\Lib\Pkg.Json.JsonValueHelper.pas',
+  DTO.GitHUB.ReleaseDTO in '..\DTO\GitHUB\DTO.GitHUB.ReleaseDTO.pas',
+  DTO.GitHUB.Release in '..\DTO\GitHUB\DTO.GitHUB.Release.pas',
+  Pkg.Json.SerializableObject in '..\Lib\Pkg.Json.SerializableObject.pas',
+  Pkg.Json.Utils in '..\Lib\Pkg.Json.Utils.pas';
 
 {$R *.res}
 
@@ -29,7 +32,5 @@ uses
 begin
   Application.Initialize;
   Application.CreateForm(TMainForm, MainForm);
-  Application.CreateForm(TSaveUnitForm, SaveUnitForm);
-  Application.CreateForm(TUpdateForm, UpdateForm);
   Application.Run;
 end.

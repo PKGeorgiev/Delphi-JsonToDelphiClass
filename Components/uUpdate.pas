@@ -2,120 +2,61 @@ unit uUpdate;
 
 interface
 
-uses REST.Client, uGitHub, REST.JSON, JSON,
-  IPPeerClient, SysUtils, System.Threading, Classes, Pkg.JSON.Mapper;
+uses
+  System.JSON, System.SysUtils, System.Threading, System.Classes, IPPeerClient,
+
+  DTO.GitHUB.Release;
 
 const
   ProgramVersion: double = 2.2;
   UpdateUrl = 'https://api.github.com/repos/JensBorrisholt/Delphi-JsonToDelphiClass/releases';
   ProgramUrl = 'https://github.com/JensBorrisholt/Delphi-JsonToDelphiClass';
 
-function InternalCheckForUpdate: TObject;
-procedure NewCheckForUpdateTask(AOnFinish: TProc<TObject>);
-
-var
-  PointDsFormatSettings: TFormatSettings;
+procedure CheckForUpdate(AOnFinish: TProc<TRelease, string>);
 
 implementation
 
 uses
-  Math;
+  System.Generics.Collections,
 
-function InternalCheckForUpdate: TObject;
-var
-  LRestClient: TRESTClient;
-  LRestRequest: TRESTRequest;
-  LRestResponse: TRESTResponse;
-  LRelease, LResult: TObject;
-  LJsonArray: TJsonArray;
-  LJsonValue: TJsonValue;
-  LTag: double;
-begin
-  LResult := nil;
-  try
-    LRestClient := TRESTClient.Create('');
-    try
-      LRestClient.BaseURL := UpdateUrl;
-      LRestResponse := TRESTResponse.Create(nil);
-      try
-        LRestRequest := TRESTRequest.Create(nil);
-        try
-          LRestRequest.Client := LRestClient;
-          LRestRequest.Response := LRestResponse;
-          LRestRequest.Timeout := 10000;
+  Pkg.JSON.SerializableObject;
 
-          LRestRequest.Execute;
-
-          if LRestResponse.StatusCode = 200 then
-          begin
-            LJsonArray := TJSONObject.ParseJSONValue(LRestResponse.Content) as TJsonArray;
-            try
-              for LJsonValue in LJsonArray do
-              begin
-                LRelease := TReleaseClass.FromJsonString(LJsonValue.ToJSON);
-                LTag := StrToFloat((LRelease as TReleaseClass).tag_name, PointDsFormatSettings);
-                if Math.CompareValue(LTag, ProgramVersion) = 1 then
-                begin
-                  LResult := LRelease;
-                  break;
-                end
-                else
-                  LRelease.Free;
-              end;
-            finally
-              LJsonArray.Free;
-            end;
-          end
-          else
-            LResult := TErrorClass.FromJsonString(LRestResponse.Content);
-
-        finally
-          LRestRequest.Free;
-        end;
-
-      finally
-        LRestResponse.Free;
-      end;
-
-    finally
-      LRestClient.Free;
-    end;
-
-  except
-    on e: Exception do
-    begin
-      LResult := TErrorClass.Create;
-      (LResult as TErrorClass).message := e.message;
-    end;
-  end;
-
-  result := LResult;
-end;
-
-procedure NewCheckForUpdateTask(AOnFinish: TProc<TObject>);
+procedure CheckForUpdate(AOnFinish: TProc<TRelease, string>);
 begin
   TTask.Run(
-    procedure
+      procedure
     var
-      LResult: TObject;
+      LResult: TRelease;
+      LErrorMessage: string;
+      Releases: TObjectList<TRelease>;
     begin
-      // Asynchronously check for update
-      LResult := InternalCheckForUpdate();
+      try
+        Releases := TUGitHubSerializableObject.RestRequest<TReleasesDTO>(UpdateUrl).Releases;
+        if Releases.Count >= 0 then
+          LResult := Releases.Last;
+
+        if JsonToFloat(LResult.Tag_Name) <= ProgramVersion then
+          FreeAndNil(LResult);
+
+        LErrorMessage := '';
+      except
+        on e: Exception do
+          LErrorMessage := e.message;
+      end;
+
       try
         // Execute AOnFinish in the context of the Main Thread
         TThread.Synchronize(nil,
-          procedure
+            procedure
           begin
-            AOnFinish(LResult);
+            AOnFinish(LResult, LErrorMessage);
           end);
       except
       end;
     end);
+
 end;
 
 initialization
-
-PointDsFormatSettings := TFormatSettings.Create();
-PointDsFormatSettings.DecimalSeparator := '.';
 
 end.
