@@ -3,6 +3,7 @@ unit Pkg.Json.DemoGenerator;
 interface
 
 uses
+  System.SysUtils,
   Pkg.Json.Mapper;
 
 {$M+}
@@ -12,41 +13,87 @@ type
 
   TDemoGenerator = class
   private
-    FDestinationDirectory: string;
+    FRootDirectory: string;
     FJsonMapper: TPkgJsonMapper;
     FTDestinationFrameWork: TDestinationFrameWork;
+    FDestinationClassName: string;
+    FDestinationUnitName: string;
+    FJson: string;
+    FFileName: TFilename;
+    FDestinationDirectory: string;
     procedure Validate;
     procedure ExtractZipFile;
     procedure GenerateFrameWorkINC;
     procedure UpdateDemoProject;
     procedure ModifyDemoHelper;
-    procedure SetDestinationDirectory(const Value: string);
+    procedure SetRootDirectory(const Value: string);
   published
-    property DestinationDirectory: string read FDestinationDirectory write SetDestinationDirectory;
+    property RootDirectory: string read FRootDirectory write SetRootDirectory;
+    property DestinationDirectory : string read FDestinationDirectory;
     property DestinationFrameWork: TDestinationFrameWork read FTDestinationFrameWork write FTDestinationFrameWork;
+    property DestinationClassName: string read FDestinationClassName write FDestinationClassName;
+    property DestinationUnitName: string read FDestinationUnitName write FDestinationUnitName;
+    property Json: string read FJson write FJson;
   public
-    constructor Create(aJsonMapper: TPkgJsonMapper); reintroduce;
+    constructor Create; overload;
+    constructor Create(aFileName: TFilename); overload;
+    destructor Destroy; override;
     procedure Execute;
   end;
 
 implementation
 
 uses
-  System.Classes, System.Zip, System.SysUtils, System.IOUtils, System.RTLConsts;
+  System.Classes, System.Zip, System.IOUtils, System.RTLConsts;
 
 { TDemoGenerator }
 
-constructor TDemoGenerator.Create(aJsonMapper: TPkgJsonMapper);
+constructor TDemoGenerator.Create;
 begin
   inherited Create;
-  FJsonMapper := aJsonMapper;
-  FDestinationDirectory := '';
+
+  FJsonMapper := TPkgJsonMapper.Create;;
+  FDestinationClassName := '';
+  FDestinationUnitName := '';
+  FJson := '';
+  FRootDirectory := '';
   FTDestinationFrameWork := TDestinationFrameWork.dfBoth;
+  FFileName := '';
+end;
+
+constructor TDemoGenerator.Create(aFileName: TFilename);
+begin
+  inherited Create;
+
+  FJsonMapper := TPkgJsonMapper.Create;;
+  FFileName := aFileName;
+  FDestinationClassName := '';
+  FDestinationUnitName := '';
+  FJson := '';
+  FRootDirectory := '';
+  FTDestinationFrameWork := TDestinationFrameWork.dfBoth;
+end;
+
+destructor TDemoGenerator.Destroy;
+begin
+  FreeAndNil(FJsonMapper);
+  inherited;
 end;
 
 procedure TDemoGenerator.Execute;
 begin
   Validate;
+
+  FJsonMapper.DestinationClassName := FDestinationClassName;
+  FJsonMapper.DestinationUnitName := FDestinationUnitName;
+  FDestinationDirectory := FRootDirectory + FJsonMapper.DestinationClassName + TPath.DirectorySeparatorChar;
+  TDirectory.CreateDirectory(FDestinationDirectory);
+
+  if FFileName = '' then
+    FJsonMapper.Parse(FJson)
+  else
+    FJsonMapper.LoadFormFile(FFileName);
+
   ExtractZipFile;
   UpdateDemoProject;
 end;
@@ -115,6 +162,7 @@ var
         Free
       end;
   end;
+
   procedure LoadText;
   begin
     with TStringList.Create do
@@ -136,9 +184,9 @@ begin
   SaveText;
 end;
 
-procedure TDemoGenerator.SetDestinationDirectory(const Value: string);
+procedure TDemoGenerator.SetRootDirectory(const Value: string);
 begin
-  FDestinationDirectory := IncludeTrailingPathDelimiter(Value);
+  FRootDirectory := IncludeTrailingPathDelimiter(Value);
 end;
 
 procedure TDemoGenerator.UpdateDemoProject;
@@ -158,11 +206,21 @@ end;
 
 procedure TDemoGenerator.Validate;
 begin
-  if FDestinationDirectory.Trim = string.empty then
-    raise EIntError.Create('DestinationDirectory can not be empty');
+  if FRootDirectory.Trim = string.empty then
+    raise EPathNotFoundException.Create('RootDirectory can not be empty');
 
-  if not TDirectory.Exists(FDestinationDirectory) then
-    raise EInOutError.CreateRes(@SDirectoryInvalid);
+  if not TDirectory.Exists(FRootDirectory) then
+    raise EPathNotFoundException.CreateRes(@SDirectoryInvalid);
+
+  if FDestinationClassName = '' then
+    raise EArgumentException.Create('DestinationClassName must be provided');
+
+  if FDestinationUnitName = '' then
+    raise EArgumentException.Create('DestinationUnitName must be provided');
+
+  if FFileName + FJson = '' then
+    raise EArgumentException.Create('Json must be provided');
+
 end;
 
 end.
