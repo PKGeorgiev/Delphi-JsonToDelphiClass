@@ -5,7 +5,7 @@ interface
 uses
   System.Json, Rest.Json, System.SysUtils, System.Classes, System.Generics.Collections, System.Generics.Defaults,
 
-  Pkg.Json.JSONName, Pkg.Json.StubField;
+  Pkg.Json.JSONName, Pkg.Json.StubField, Pkg.Json.JsonValueHelper;
 
 {$M+}
 
@@ -44,7 +44,7 @@ type
 implementation
 
 uses
-  System.RegularExpressions, System.StrUtils, System.Character, System.IOUtils,
+  System.StrUtils, System.Character, System.IOUtils,
   Pkg.Json.ReservedWords;
 
 const
@@ -243,54 +243,8 @@ begin
 end;
 
 function TPkgJsonMapper.GetJsonType(aJsonValue: TJsonValue): TJsonType;
-var
-  JsonString: TJsonString;
-  i: Integer;
-  j: Int64;
-  b: Boolean;
 begin
-  if aJsonValue = nil then
-    exit(jtObject);
-
-  if aJsonValue is TJSONObject then
-    Result := jtObject
-  else if aJsonValue is TJSONArray then
-    Result := jtArray
-  else if (aJsonValue is TJSONNumber) then
-  begin
-    if TryStrToInt(aJsonValue.Value, i) then
-      Result := jtInteger
-    else if TryStrToInt64(aJsonValue.Value, j) then
-      Result := jtInteger64
-    else
-      Result := jtNumber
-  end
-  else if aJsonValue is TJSONTrue then
-    Result := jtTrue
-  else if aJsonValue is TJSONFalse then
-    Result := jtFalse
-  else if aJsonValue is TJsonString then
-  begin
-    JsonString := (aJsonValue as TJsonString);
-    if TRegEx.IsMatch(JsonString.Value, '^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*))(?:Z|(\+|-)([\d|:]*))?$') then
-      Result := jtDateTime
-    else if TRegEx.IsMatch(JsonString.Value, '^([0-9]{4})(-?)(1[0-2]|0[1-9])\2(3[01]|0[1-9]|[12][0-9])$') then
-      Result := jtDate
-    else if TRegEx.IsMatch(JsonString.Value,
-      '^(-?(?:[1-9][0-9]*)?[0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|[+-](?:2[0-3]|[01][0-9]):[0-5][0-9])?$') then
-      Result := jtDateTime
-    else if TryStrToBool(JsonString.Value, b) then
-    begin
-      if b then
-        Result := jtTrue
-      else
-        Result := jtFalse
-    end
-    else
-      Result := jtString
-  end
-  else
-    Result := jtUnknown;
+  exit(TJsonValueHelper.GetJsonType(aJsonValue))
 end;
 
 function TPkgJsonMapper.LoadFormFile(aJsonFile: string): TPkgJsonMapper;

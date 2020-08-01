@@ -8,7 +8,7 @@ uses
 type
   TArrayMapper = class
   protected
-    function ObjectList<T: class>(aSource: TArray<T>): TObjectList<T>;
+    function ObjectList<T: class>(var aList: TObjectList<T>; aSource: TArray<T>): TObjectList<T>;
   public
     constructor Create; virtual;
   end;
@@ -172,6 +172,27 @@ begin
   end;
 end;
 
+{ TArrayMapper }
+
+constructor TArrayMapper.Create;
+begin
+  inherited;
+end;
+
+function TArrayMapper.ObjectList<T>(var aList: TObjectList<T>; aSource: TArray<T>): TObjectList<T>;
+var
+  Element: T;
+begin
+  if aList = nil then
+  begin
+    aList := TObjectList<T>.Create;
+    for Element in aSource do
+      aList.Add(Element);
+  end;
+
+  Exit(aList);
+end;
+
 type
   TGenericListFieldInterceptor = class(TJSONInterceptor)
   public
@@ -184,8 +205,10 @@ function TGenericListFieldInterceptor.ObjectsConverter(Data: TObject; Field: str
 var
   ctx: TRttiContext;
   List: TList<TObject>;
+  RttiProperty: TRttiProperty;
 begin
-  List := TList<TObject>(ctx.GetType(Data.ClassInfo).GetField(Field).GetValue(Data).AsObject);
+  RttiProperty := ctx.GetType(Data.ClassInfo).GetProperty(Copy(Field, 2, MAXINT));
+  List := TList<TObject>(RttiProperty.GetValue(Data).AsObject);
   Result := TListOfObjects(List.List);
   SetLength(Result, List.Count);
 end;
@@ -195,23 +218,5 @@ begin
   inherited Create(ctObjects, rtObjects, TGenericListFieldInterceptor, nil, false);
 end;
 
-{ TArrayMapper }
-
-constructor TArrayMapper.Create;
-begin
-  inherited;
-end;
-
-function TArrayMapper.ObjectList<T>(aSource: TArray<T>): TObjectList<T>;
-var
-  Element: T;
-begin
-  Result := TObjectList<T>.Create;
-  for Element in aSource do
-    Result.Add(Element);
-end;
-
 end.
-
-
 

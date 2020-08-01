@@ -9,6 +9,9 @@
         <Projects Include="End To End Test\EndToEndTest.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="Unit Test\JsonToDelphiClassTests.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -35,14 +38,23 @@
     <Target Name="EndToEndTest:Make">
         <MSBuild Projects="End To End Test\EndToEndTest.dproj" Targets="Make"/>
     </Target>
+    <Target Name="JsonToDelphiClassTests">
+        <MSBuild Projects="Unit Test\JsonToDelphiClassTests.dproj"/>
+    </Target>
+    <Target Name="JsonToDelphiClassTests:Clean">
+        <MSBuild Projects="Unit Test\JsonToDelphiClassTests.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="JsonToDelphiClassTests:Make">
+        <MSBuild Projects="Unit Test\JsonToDelphiClassTests.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="JsonToDelphiClass;EndToEndTest"/>
+        <CallTarget Targets="JsonToDelphiClass;EndToEndTest;JsonToDelphiClassTests"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="JsonToDelphiClass:Clean;EndToEndTest:Clean"/>
+        <CallTarget Targets="JsonToDelphiClass:Clean;EndToEndTest:Clean;JsonToDelphiClassTests:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="JsonToDelphiClass:Make;EndToEndTest:Make"/>
+        <CallTarget Targets="JsonToDelphiClass:Make;EndToEndTest:Make;JsonToDelphiClassTests:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

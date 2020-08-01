@@ -150,12 +150,13 @@
         <DCCReference Include="..\Components\uUpdate.pas"/>
         <DCCReference Include="..\Components\Pkg.Json.Visualizer.pas"/>
         <DCCReference Include="..\Demo Generator\Pkg.Json.DemoGenerator.pas"/>
+        <DCCReference Include="..\Lib\Pkg.Json.DTO.pas"/>
+        <DCCReference Include="..\Lib\Pkg.Json.JSONName.pas"/>
         <DCCReference Include="..\Lib\Pkg.Json.Lists.pas"/>
         <DCCReference Include="..\Lib\Pkg.Json.Mapper.pas"/>
         <DCCReference Include="..\Lib\Pkg.Json.ReservedWords.pas"/>
-        <DCCReference Include="..\Lib\Pkg.Json.DTO.pas"/>
         <DCCReference Include="..\Lib\Pkg.Json.StubField.pas"/>
-        <DCCReference Include="..\Lib\Pkg.Json.JSONName.pas"/>
+        <DCCReference Include="..\Lib\Pkg.Json.JsonValueHelper.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -1107,6 +1108,9 @@
                 <Platform value="Win32">True</Platform>
                 <Platform value="Win64">True</Platform>
             </Platforms>
+            <UnitTesting>
+                <TestProjectName>C:\Users\Jens Borrisholt\Documents\GitHUB\Delphi-JsonToDelphiClass\Generator GUI\Test\JsonToDelphiClassTests.dproj</TestProjectName>
+            </UnitTesting>
         </BorlandProject>
         <ProjectFileVersion>12</ProjectFileVersion>
     </ProjectExtensions>

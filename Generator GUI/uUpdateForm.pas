@@ -5,7 +5,8 @@ interface
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.StdCtrls,
-  FMX.Layouts, FMX.Memo, uGitHub, FMX.Objects;
+  FMX.Layouts, FMX.Memo, uGitHub, FMX.Objects, FMX.Memo.Types, FMX.ScrollBox,
+  FMX.Controls.Presentation;
 
 type
   TUpdateForm = class(TForm)

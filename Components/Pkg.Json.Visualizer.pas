@@ -23,7 +23,7 @@ Type
 implementation
 
 uses
-  System.Sysutils;
+  System.Sysutils, Pkg.Json.JsonValueHelper;
 
 { TJsonVisualizer }
 

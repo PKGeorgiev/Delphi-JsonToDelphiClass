@@ -14,12 +14,13 @@ uses
   uUpdate in '..\Components\uUpdate.pas',
   Pkg.Json.Visualizer in '..\Components\Pkg.Json.Visualizer.pas',
   Pkg.Json.DemoGenerator in '..\Demo Generator\Pkg.Json.DemoGenerator.pas',
+  Pkg.Json.DTO in '..\Lib\Pkg.Json.DTO.pas',
+  Pkg.Json.JSONName in '..\Lib\Pkg.Json.JSONName.pas',
   Pkg.Json.Lists in '..\Lib\Pkg.Json.Lists.pas',
   Pkg.Json.Mapper in '..\Lib\Pkg.Json.Mapper.pas',
   Pkg.Json.ReservedWords in '..\Lib\Pkg.Json.ReservedWords.pas',
-  Pkg.Json.DTO in '..\Lib\Pkg.Json.DTO.pas',
   Pkg.Json.StubField in '..\Lib\Pkg.Json.StubField.pas',
-  Pkg.Json.JSONName in '..\Lib\Pkg.Json.JSONName.pas';
+  Pkg.Json.JsonValueHelper in '..\Lib\Pkg.Json.JsonValueHelper.pas';
 
 {$R *.res}
 
