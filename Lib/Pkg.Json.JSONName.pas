@@ -100,7 +100,7 @@ end;
 
 function TJSONName.NameAttribute: string;
 begin
-  exit('[JSONName(' + AnsiQuotedStr(FJsonName, #39) + ')]');
+  exit('JSONName(' + AnsiQuotedStr(FJsonName, #39) + ')');
 end;
 
 procedure TJSONName.SetName(const Value: string);
