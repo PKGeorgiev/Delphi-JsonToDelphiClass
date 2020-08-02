@@ -778,6 +778,7 @@
                 <SourceProjectName>C:\Users\Jens Borrisholt\Documents\GitHUB\Delphi-JsonToDelphiClass\Generator GUI\JsonToDelphiClass.dproj</SourceProjectName>
                 <TestProjectName/>
             </UnitTesting>
+            <ModelSupport>False</ModelSupport>
         </BorlandProject>
         <ProjectFileVersion>12</ProjectFileVersion>
     </ProjectExtensions>

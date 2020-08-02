@@ -142,7 +142,6 @@ end;
 procedure TConstrainedForm.StartWindowDrag;
 begin
   inherited;
-
 end;
 
 procedure TConstrainedForm.StartWindowResize;

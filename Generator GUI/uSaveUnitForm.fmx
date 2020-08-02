@@ -9,12 +9,12 @@ object SaveUnitForm: TSaveUnitForm
   Padding.Top = 4.000000000000000000
   Padding.Right = 4.000000000000000000
   Padding.Bottom = 4.000000000000000000
+  Position = MainFormCenter
   StyleBook = StyleBook1
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
   OnKeyDown = FormKeyDown
-  OnShow = FormShow
   DesignerMasterStyle = 0
   object Memo1: TMemo
     Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]

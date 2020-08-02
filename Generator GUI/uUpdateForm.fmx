@@ -151,8 +151,8 @@ object UpdateForm: TUpdateForm
       Size.Height = 101.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 1
-      Viewport.Width = 650.000000000000000000
-      Viewport.Height = 97.000000000000000000
+      Viewport.Width = 654.000000000000000000
+      Viewport.Height = 101.000000000000000000
     end
   end
   object StyleBook1: TStyleBook

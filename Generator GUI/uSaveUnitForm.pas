@@ -3,10 +3,8 @@ unit uSaveUnitForm;
 interface
 
 uses
-  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
-  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.StdCtrls,
-  FMX.Layouts, FMX.Memo, FMX.Controls.Presentation, FMX.ScrollBox,
-  FMX.Memo.Types;
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs,
+  FMX.StdCtrls, FMX.Layouts, FMX.Memo, FMX.Controls.Presentation, FMX.ScrollBox, FMX.Memo.Types;
 
 type
   TSaveUnitForm = class(TForm)
@@ -21,15 +19,17 @@ type
     procedure btnSaveClick(Sender: TObject);
     procedure Memo1KeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
     procedure FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
-    procedure FormShow(Sender: TObject);
   private
+    FJson: string;
+    function GetFileName: string;
+    procedure SetFileName(const Value: string);
+    procedure SetJson(const Value: string);
     { Private declarations }
   public
     { Public declarations }
+    property FileName: string read GetFileName write SetFileName;
+    property Json: string read FJson write SetJson;
   end;
-
-var
-  SaveUnitForm: TSaveUnitForm;
 
 implementation
 
@@ -51,14 +51,14 @@ begin
   if not sd.Execute then
     exit;
 
-  Memo1.Lines.SaveToFile(sd.FileName);
+  Memo1.Lines.SaveToFile(FileName);
 
   Buffer := TStringList.Create;
   ResourceStream := TResourceStream.Create(HInstance, 'JsonDTO', 'PAS');
   try
     ResourceStream.Position := 0;
     Buffer.LoadFromStream(ResourceStream);
-    Buffer.SaveToFile(TPath.GetDirectoryName(sd.FileName) + TPath.DirectorySeparatorChar + 'Pkg.Json.DTO.pas');
+    Buffer.SaveToFile(TPath.GetDirectoryName(FileName) + TPath.DirectorySeparatorChar + 'Pkg.Json.DTO.pas');
   finally
     ResourceStream.Free;
     Buffer.Free;
@@ -71,18 +71,27 @@ begin
     ModalResult := mrCancel;
 end;
 
-procedure TSaveUnitForm.FormShow(Sender: TObject);
+function TSaveUnitForm.GetFileName: string;
 begin
-  SaveUnitForm.width := MainForm.width - 50;
-  SaveUnitForm.height := MainForm.height - 50;
-  SaveUnitForm.left := MainForm.left + 25;
-  SaveUnitForm.top := MainForm.top + 25;
+  Result := sd.FileName;
 end;
 
 procedure TSaveUnitForm.Memo1KeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = 27 then
     ModalResult := mrCancel;
+end;
+
+procedure TSaveUnitForm.SetFileName(const Value: string);
+begin
+  sd.FileName := Value;
+  Caption := 'Preview Delphi Unit - ' + Value;
+end;
+
+procedure TSaveUnitForm.SetJson(const Value: string);
+begin
+  FJson := Value;
+  Memo1.Lines.Text := FJson;
 end;
 
 end.
