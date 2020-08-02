@@ -27,9 +27,10 @@ type
     procedure UpdateDemoProject;
     procedure ModifyDemoHelper;
     procedure SetRootDirectory(const Value: string);
+    procedure SetDestinationDirectory(const Value: string);
   published
     property RootDirectory: string read FRootDirectory write SetRootDirectory;
-    property DestinationDirectory : string read FDestinationDirectory;
+    property DestinationDirectory: string read FDestinationDirectory write SetDestinationDirectory;
     property DestinationFrameWork: TDestinationFrameWork read FTDestinationFrameWork write FTDestinationFrameWork;
     property DestinationClassName: string read FDestinationClassName write FDestinationClassName;
     property DestinationUnitName: string read FDestinationUnitName write FDestinationUnitName;
@@ -86,7 +87,9 @@ begin
 
   FJsonMapper.DestinationClassName := FDestinationClassName;
   FJsonMapper.DestinationUnitName := FDestinationUnitName;
-  FDestinationDirectory := FRootDirectory + FJsonMapper.DestinationClassName + TPath.DirectorySeparatorChar;
+
+  if FDestinationDirectory = '' then
+    FDestinationDirectory := FRootDirectory + FJsonMapper.DestinationClassName + TPath.DirectorySeparatorChar;
   TDirectory.CreateDirectory(FDestinationDirectory);
 
   if FFileName = '' then
@@ -182,6 +185,12 @@ begin
   ReplaceAll('@@UnitName@@', FJsonMapper.DestinationUnitName);
   ReplaceAll('@@ClassName@@', FJsonMapper.DestinationClassName + 'DTO');
   SaveText;
+end;
+
+procedure TDemoGenerator.SetDestinationDirectory(const Value: string);
+begin
+  FDestinationDirectory := IncludeTrailingPathDelimiter(Value);
+  FRootDirectory := FDestinationDirectory;
 end;
 
 procedure TDemoGenerator.SetRootDirectory(const Value: string);

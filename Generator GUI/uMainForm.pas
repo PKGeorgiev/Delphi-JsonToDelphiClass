@@ -226,15 +226,13 @@ begin
   if not SelectDirectory('Select a directory', Destination, Destination) then
     exit;
 
-  FJsonMapper.DestinationClassName := Edit1.Text;
-  FJsonMapper.DestinationUnitName := Edit2.Text;
-  FJsonMapper.Parse(Memo1.Lines.Text);
-
   with TDemoGenerator.Create do
     try
       DestinationClassName := Edit1.Text;
       DestinationUnitName := Edit2.Text;
       DestinationDirectory := Destination;
+      DestinationFrameWork := TDestinationFrameWork.dfBoth;
+      Json := Memo1.Text;
       Execute;
     finally
       free;

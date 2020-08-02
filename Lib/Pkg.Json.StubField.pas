@@ -175,7 +175,7 @@ begin
       Lines.AddFormat('  %s.Free;', [StubField.FieldName]);
 
     for StubField in FArrayItems do
-      Lines.AddFormat('  %s.Free;', [StubField.FieldName]);
+      Lines.AddFormat('  Get%s.Free;', [StubField.PropertyName]);
 
     Lines.Add('  inherited;');
     Lines.Add('end;');
@@ -248,8 +248,7 @@ begin
       if StubField.IsObjectArrayField then
       begin
         StubArrayField := StubField as TStubArrayField;
-        Lines.Add('  ' + StubField.NameAttribute);
-        Lines.Add('  [JSONMarshalled(False)]');
+        Lines.AddFormat('  [%s, JSONMarshalled(False)]', [StubField.NameAttribute]);
         Lines.AddFormat('  %sArray: TArray<%s>;', [StubField.FieldName, StubField.TypeAsString]);
         Lines.Add('  [GenericListReflect]');
         Lines.AddFormat('  %s: TObjectList<%s>;', [StubField.FieldName, StubArrayField.TypeAsString]);
@@ -257,7 +256,7 @@ begin
       else
       begin
         if StubField.NeedsAttribute then
-          Lines.Add('  ' + StubField.NameAttribute);
+          Lines.AddFormat('  [%s]', [StubField.NameAttribute]);
 
         Lines.AddFormat('  %s: %s;', [StubField.FieldName, StubField.TypeAsString]);
       end;
