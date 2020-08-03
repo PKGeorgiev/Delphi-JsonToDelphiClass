@@ -336,8 +336,10 @@ begin
 
   ListView1.BeginUpdate;
   try
-    for FileName in TDirectory.GetFiles(DemoDataRoot, '*.json') do
-      ListView1.Items.Add.Text := TPath.GetFileName(FileName);
+    if TDirectory.Exists(DemoDataRoot) then
+
+      for FileName in TDirectory.GetFiles(DemoDataRoot, '*.json') do
+        ListView1.Items.Add.Text := TPath.GetFileName(FileName);
   finally
     ListView1.EndUpdate;
   end;
