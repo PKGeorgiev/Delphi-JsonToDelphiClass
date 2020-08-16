@@ -92,6 +92,9 @@ begin
     s := s.Substring(1);
 
   FDelphiName := CapitalizeFirst(s);
+  if FDelphiName = '' then
+    FDelphiName := 'Property';
+
   if not FDelphiName[1].IsLetter then
     FDelphiName := '_' + FDelphiName;
 

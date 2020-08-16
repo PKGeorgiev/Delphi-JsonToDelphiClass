@@ -233,11 +233,12 @@ end;
 function TStubClass.GetDeclarationPart(const BaseClass: string): string;
 var
   Lines: TStringList;
-  StubField: TStubField;
   StubArrayField: TStubArrayField;
+  StubField: TStubField;
   i: Integer;
 begin
   Lines := TStringList.Create;
+
   try
     Lines.Add(Name + ' = class' + IfThen(BaseClass = '', '', '(' + BaseClass + ')'));
     if FItems.Count > 0 then

@@ -159,6 +159,7 @@
         <DCCReference Include="..\DTO\GitHUB\DTO.GitHUB.Release.pas"/>
         <DCCReference Include="..\Lib\Pkg.Json.SerializableObject.pas"/>
         <DCCReference Include="..\Lib\Pkg.Json.Utils.pas"/>
+        <DCCReference Include="..\Lib\Pkg.JSON.SubTypes.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -23,7 +23,8 @@ uses
   DTO.GitHUB.ReleaseDTO in '..\DTO\GitHUB\DTO.GitHUB.ReleaseDTO.pas',
   DTO.GitHUB.Release in '..\DTO\GitHUB\DTO.GitHUB.Release.pas',
   Pkg.Json.SerializableObject in '..\Lib\Pkg.Json.SerializableObject.pas',
-  Pkg.Json.Utils in '..\Lib\Pkg.Json.Utils.pas';
+  Pkg.Json.Utils in '..\Lib\Pkg.Json.Utils.pas',
+  Pkg.JSON.SubTypes in '..\Lib\Pkg.JSON.SubTypes.pas';
 
 {$R *.res}
 
