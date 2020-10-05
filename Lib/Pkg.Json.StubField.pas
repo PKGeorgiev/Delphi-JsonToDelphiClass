@@ -105,12 +105,18 @@ uses
 class function TStubClass.Construct(aParentClass: TStubClass; aClassName: string; aStubClasses: TStubClassList; aArrayProperty: string): TStubClass;
 var
   StubClass: TJsonName;
+  lIndex: Integer;
 begin
   StubClass := aStubClasses.ItemByName(aClassName);
+
   if StubClass = nil then
     Result := TStubClass.Create(aParentClass, aClassName, aStubClasses, aArrayProperty)
   else
+  begin
+    lIndex := aStubClasses.IndexOf(StubClass as TStubClass);
+    aStubClasses.Move(lIndex, aStubClasses.Count - 1);
     Result := StubClass as TStubClass;
+  end;
 end;
 
 constructor TStubClass.Create(aParentClass: TStubClass; aClassName: string; aStubClasses: TStubClassList; aArrayProperty: string);
