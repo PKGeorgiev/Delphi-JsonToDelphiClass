@@ -1,0 +1,46 @@
+object SettingsForm: TSettingsForm
+  Left = 0
+  Top = 0
+  BorderStyle = ToolWindow
+  Caption = 'Settings'
+  ClientHeight = 123
+  ClientWidth = 246
+  Position = MainFormCenter
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  DesignerMasterStyle = 0
+  object chbAddJsonPropertyAttributes: TCheckBox
+    Position.X = 16.000000000000000000
+    Position.Y = 49.000000000000000000
+    Size.Width = 233.000000000000000000
+    Size.Height = 19.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Add JsonProperty Attributes'
+    OnChange = CheckBoxChange
+  end
+  object Label1: TLabel
+    StyledSettings = [Family, FontColor]
+    Position.X = 16.000000000000000000
+    Position.Y = 8.000000000000000000
+    Size.Width = 129.000000000000000000
+    Size.Height = 33.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.Font.Size = 20.000000000000000000
+    TextSettings.Font.StyleExt = {00070000000000000004000000}
+    Text = 'Settings'
+  end
+  object chbUsePascalCase: TCheckBox
+    Position.X = 16.000000000000000000
+    Position.Y = 73.000000000000000000
+    Text = 'Use Pascal Case'
+    OnChange = CheckBoxChange
+  end
+  object btnOk: TButton
+    ModalResult = 1
+    Position.X = 160.000000000000000000
+    Position.Y = 96.000000000000000000
+    Text = '&Ok'
+  end
+end
