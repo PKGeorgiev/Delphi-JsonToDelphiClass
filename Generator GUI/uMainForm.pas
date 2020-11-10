@@ -55,6 +55,8 @@ type
     ListView1: TListView;
     actFMXDemo: TAction;
     Button3: TButton;
+    Button2: TButton;
+    actSettings: TAction;
     procedure btnVisualizeClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -75,6 +77,7 @@ type
     procedure btnExitClick(Sender: TObject);
     procedure ListView1Change(Sender: TObject);
     procedure ActDemoExecute(Sender: TObject);
+    procedure actSettingsExecute(Sender: TObject);
   private
     { Private declarations }
     FJsonMapper: TPkgJsonMapper;
@@ -101,7 +104,7 @@ implementation
 
 uses
   System.IoUtils, System.Json,
-  uSaveUnitForm, Pkg.Json.Visualizer, Pkg.Json.DTO, Pkg.Json.StubField, Pkg.Json.DemoGenerator, Pkg.Json.Utils;
+  uSaveUnitForm, uSettingsForm, Pkg.Json.Visualizer, Pkg.Json.DTO, Pkg.Json.StubField, Pkg.Json.DemoGenerator, Pkg.Json.Utils;
 
 const
   DemoDataRoot = '../../../Demo Data/';
@@ -212,6 +215,16 @@ begin
         JsonVisualizer.Visualize(TreeView, 'TreeViewItem1Style1', FJsonMapper);
       end;
     end);
+end;
+
+procedure TMainForm.actSettingsExecute(Sender: TObject);
+begin
+  with TSettingsForm.Create(nil) do
+    try
+      ShowModal;
+    finally
+      Free;
+    end;
 end;
 
 procedure TMainForm.actValidateJSONExecute(Sender: TObject);

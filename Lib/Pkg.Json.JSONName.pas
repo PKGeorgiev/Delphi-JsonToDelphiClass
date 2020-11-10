@@ -2,6 +2,9 @@ unit Pkg.Json.JSONName;
 
 interface
 
+uses
+  Pkg.Json.Settings;
+
 {$M+}
 
 type
@@ -12,6 +15,7 @@ type
     FNeedsAttribute: Boolean;
     FName: string;
     FPureClassName: string;
+    FSettings: TSettings;
   protected
     procedure SetName(const Value: string); virtual;
   published
@@ -36,6 +40,7 @@ uses
 class function TJSONName.CapitalizeFirst(Value: string): string;
 var
   List: TStringList;
+
   s: string;
   i: Integer;
 begin
@@ -43,15 +48,27 @@ begin
 
   if Value.Substring(1, 4) = 'name' then
     Value := Value[1] + 'Name' + Value.Substring(4);
+
   if Value.EndsWith('Test', True) then
   begin
     i := Value.Length - 4;
     Value := Value.Substring(0, i) + 'Test';
   end;
 
+  if Value.EndsWith('Id', True) then
+  begin
+    i := Value.Length - 2;
+    Value := Value.Substring(0, i) + 'Id';
+  end;
+
   List := TStringList.Create;
   try
     ExtractStrings(['_'], [], PChar(Value), List);
+
+    if List.Count = 0 then
+      Exit('');
+
+
     for i := 0 to List.Count - 1 do
     begin
       s := List[i];
@@ -62,10 +79,25 @@ begin
       List[i] := s;
     end;
 
-    List.Delimiter := '_';
-    Result := List.DelimitedText;
+    if not TSettings.Instance.UsePascalCase then
+    begin
+      List.Delimiter := '_';
+      Exit(List.DelimitedText);
+    end;
+
+    with TStringBuilder.Create do
+      try
+        for s in List do
+          Append(s);
+
+      //  Length := Length - 1;
+        Result := ToString(True);
+      finally
+        free;
+      end;
+
   finally
-    List.Free;
+    List.free;
   end;
 end;
 
@@ -75,7 +107,7 @@ var
   ch: Char;
 begin
   inherited Create;
-
+  FSettings := TSettings.Instance;
   if aItemName.IsEmpty then
     raise Exception.Create('aItemName can not be empty');
 
@@ -92,6 +124,9 @@ begin
     s := s.Substring(1);
 
   FDelphiName := CapitalizeFirst(s);
+  if FDelphiName = '' then
+    FDelphiName := 'Property';
+
   if not FDelphiName[1].IsLetter then
     FDelphiName := '_' + FDelphiName;
 

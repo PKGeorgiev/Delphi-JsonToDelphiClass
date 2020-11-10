@@ -45,7 +45,7 @@ implementation
 
 uses
   System.StrUtils, System.Character, System.IOUtils,
-  Pkg.Json.ReservedWords;
+  Pkg.Json.ReservedWords, Pkg.Json.SubTypes;
 
 const
   INDENT_SIZE = 2;
@@ -110,10 +110,15 @@ end;
 function TPkgJsonMapper.GenerateUnit: string;
 var
   StringList: TStringList;
+  StubClass: TStubClass;
   Tmp: string;
   i: Integer;
+  SubClasslist: TStringList;
 begin
   StringList := TStringList.Create;
+  SubClasslist := TStringList.Create;;
+  SubClasslist.Duplicates := TDuplicates.dupIgnore;
+  SubClasslist.Sorted := True;
   try
     StringList.TrailingLineBreak := False;
 
@@ -129,9 +134,21 @@ begin
     StringList.Add('type');
 
     for i := FStubClasses.Count - 1 downto 1 do
+      SubTypes.AddSubTypes(FStubClasses[i], SubClasslist);
+
+    for Tmp in SubClasslist do
+      StringList.Addformat('  %s = class;', [Tmp]);
+
+    if SubClasslist.Count > 0 then
+      StringList.Add('');
+
+    SubClasslist.Free;
+
+    for i := FStubClasses.Count - 1 downto 1 do
     begin
-      Tmp := IfThen(FStubClasses[i].ArrayItems.Count > 0, 'TArrayMapper');
-      StringList.AddIfNotEmpty(FStubClasses[i].GetDeclarationPart(Tmp));
+      StubClass := FStubClasses[i];
+      Tmp := IfThen(StubClass.ArrayItems.Count > 0, 'TArrayMapper');
+      StringList.AddIfNotEmpty(StubClass.GetDeclarationPart(Tmp));
     end;
 
     StringList.Add(FStubClasses.First.GetDeclarationPart('TJsonDTO'));
@@ -176,7 +193,7 @@ begin
     aLines.Add('-------');
     aLines.Add(StubClass.Name);
     for StubField in StubClass.Items do
-      aLines.AddFormat('%-15s | %s', [StubField.FieldName, StubField.TypeAsString]);
+      aLines.Addformat('%-15s | %s', [StubField.FieldName, StubField.TypeAsString]);
   end;
 end;
 
