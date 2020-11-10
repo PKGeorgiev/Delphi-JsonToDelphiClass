@@ -1495,8 +1495,8 @@ object MainForm: TMainForm
   end
   object MainPopupMenu: TPopupMenu
     OnPopup = MainPopupMenuPopup
-    Left = 144
-    Top = 32
+    Left = 616
+    Top = 56
     object MenuItem1: TMenuItem
       Enabled = False
       Text = 'MenuItem1'
@@ -1577,8 +1577,8 @@ object MainForm: TMainForm
     Size.PlatformDefault = False
   end
   object MemoPopupMenu: TPopupMenu
-    Left = 272
-    Top = 32
+    Left = 520
+    Top = 64
     object MenuItem8: TMenuItem
       Action = actPrettyPrintJSON
       Enabled = True
@@ -1644,7 +1644,7 @@ object MainForm: TMainForm
       Margins.Right = 6.000000000000000000
       Position.X = 6.000000000000000000
       Position.Y = 6.000000000000000000
-      Size.Width = 491.000000000000000000
+      Size.Width = 395.000000000000000000
       Size.Height = 41.000000000000000000
       Size.PlatformDefault = False
       StyleLookup = 'Panel4Style1'
@@ -1709,6 +1709,18 @@ object MainForm: TMainForm
       Position.X = 528.000000000000000000
       Position.Y = 6.000000000000000000
       Size.Width = 135.000000000000000000
+      Size.Height = 41.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object Button2: TButton
+      Action = actSettings
+      Align = Right
+      Enabled = True
+      ImageIndex = -1
+      Margins.Right = 9.000000000000000000
+      Position.X = 439.000000000000000000
+      Position.Y = 6.000000000000000000
+      Size.Width = 80.000000000000000000
       Size.Height = 41.000000000000000000
       Size.PlatformDefault = False
     end
@@ -1784,8 +1796,8 @@ object MainForm: TMainForm
   end
   object ActionList1: TActionList
     OnUpdate = ActionList1Update
-    Left = 168
-    Top = 248
+    Left = 728
+    Top = 80
     object actPrettyPrintJSON: TAction
       Category = 'Memo Actions'
       Text = 'Pretty Print JSON string'
@@ -1805,6 +1817,11 @@ object MainForm: TMainForm
       Category = 'Demo Actions'
       Text = 'Create Demo project'
       OnExecute = ActDemoExecute
+    end
+    object actSettings: TAction
+      Category = 'Main Actions'
+      Text = 'Settings'
+      OnExecute = actSettingsExecute
     end
   end
 end

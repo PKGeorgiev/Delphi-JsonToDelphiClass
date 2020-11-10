@@ -100,6 +100,10 @@
         <DCC_DebugInformation>1</DCC_DebugInformation>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <BT_BuildType>Debug</BT_BuildType>
+        <VerInfo_MajorVer>2</VerInfo_MajorVer>
+        <VerInfo_MinorVer>3</VerInfo_MinorVer>
+        <VerInfo_Release>1</VerInfo_Release>
+        <VerInfo_Keys>CompanyName=;FileVersion=2.3.1.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <BT_BuildType>Debug</BT_BuildType>
@@ -159,7 +163,12 @@
         <DCCReference Include="..\DTO\GitHUB\DTO.GitHUB.Release.pas"/>
         <DCCReference Include="..\Lib\Pkg.Json.SerializableObject.pas"/>
         <DCCReference Include="..\Lib\Pkg.Json.Utils.pas"/>
-        <DCCReference Include="..\Lib\Pkg.JSON.SubTypes.pas"/>
+        <DCCReference Include="..\Lib\Pkg.Json.Settings.pas"/>
+        <DCCReference Include="uSettingsForm.pas">
+            <Form>SettingsForm</Form>
+            <FormType>fmx</FormType>
+        </DCCReference>
+        <DCCReference Include="..\Lib\Pkg.Json.BoundObject.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
