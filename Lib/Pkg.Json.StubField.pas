@@ -190,7 +190,7 @@ begin
       Lines.AddFormat('  %s.Free;', [StubField.FieldName]);
 
     for StubField in FArrayItems do
-      Lines.AddFormat('  Get%s.Free;', [StubField.PropertyName]);
+      Lines.AddFormat('  Get%s.Free;', [StubField.Name]);
 
     Lines.Add('  inherited;');
     Lines.Add('end;');
@@ -206,7 +206,7 @@ begin
           Prefix := 'Object';
 
         Lines.Add('');
-        Lines.AddFormat('function %s.Get%s: T%sList<%s>;', [Name, StubField.PropertyName, Prefix, StubArrayField.TypeAsString]);
+        Lines.AddFormat('function %s.Get%s: T%sList<%s>;', [Name, StubField.Name, Prefix, StubArrayField.TypeAsString]);
         Lines.Add('begin');
         Lines.AddFormat('  Result := %sList<%s>(%s, %sArray);', [Prefix, StubArrayField.TypeAsString, StubField.FieldName, StubField.FieldName]);
         Lines.Add('end;');
@@ -273,7 +273,7 @@ var
   ListType: String;
 begin
   if not FNeedsSourceCode then
-    Exit('');
+    exit('');
 
   Lines := TStringList.Create;
 
@@ -319,7 +319,7 @@ begin
         else
           ListType := 'TList';
 
-        Lines.AddFormat('  function Get%s: %s<%s>;', [StubField.PropertyName, ListType, StubArrayField.TypeAsString]);
+        Lines.AddFormat('  function Get%s: %s<%s>;', [StubField.Name, ListType, StubArrayField.TypeAsString]);
       end;
 
     if FHasSimpleArray then
@@ -344,7 +344,7 @@ begin
         else
           ListType := 'TList';
 
-        Lines.AddFormat('  property %s: %s<%s> read Get%s;', [StubField.Name, ListType, StubArrayField.TypeAsString, StubArrayField.Name]);
+        Lines.AddFormat('  property %s: %s<%s> read Get%s;', [StubField.PropertyName, ListType, StubArrayField.TypeAsString, StubArrayField.Name]);
 
       end
       else if StubField.FieldType = jtObject then
