@@ -93,7 +93,7 @@ begin
           JSONValue := GetFirstArrayItem(JsonArray);
           JsonType := GetJsonType(JSONValue);
 
-          StubClass := TStubClass.Construct(aParentClass, JsonPair.JsonString.Value, Self.FStubClasses);
+          StubClass := TStubClass.Construct(aParentClass, JsonPair.JsonString.Value, Self.FStubClasses, '', JsonType = jtObject);
           TStubArrayField.Create(aParentClass, JsonPair.JsonString.Value, JsonType, StubClass);
 
           for JSONValue in JsonArray do
@@ -147,7 +147,7 @@ begin
     for i := FStubClasses.Count - 1 downto 1 do
     begin
       StubClass := FStubClasses[i];
-      Tmp := IfThen(StubClass.ArrayItems.Count > 0, 'TArrayMapper');
+      Tmp := IfThen(StubClass.ArrayItems.Count > 0, 'TJsonDTO');
       StringList.AddIfNotEmpty(StubClass.GetDeclarationPart(Tmp));
     end;
 

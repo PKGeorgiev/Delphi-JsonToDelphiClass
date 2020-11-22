@@ -79,10 +79,11 @@ type
     FStubClasses: TStubClassList;
     FArrayProperty: string;
     FHasSimpleArray: Boolean;
+    FNeedsSourceCode: Boolean;
   strict protected
-    constructor Create(aParentClass: TStubClass; aClassName: string; aStubClasses: TStubClassList; aArrayProperty: string = ''); virtual;
+    constructor Create(aParentClass: TStubClass; aClassName: string; aStubClasses: TStubClassList; aArrayProperty: string = ''; aNeedsSourceCode: Boolean = True); virtual;
   public
-    class function Construct(aParentClass: TStubClass; aClassName: string; aStubClasses: TStubClassList; aArrayProperty: string = ''): TStubClass;
+    class function Construct(aParentClass: TStubClass; aClassName: string; aStubClasses: TStubClassList; aArrayProperty: string = ''; aNeedsSourceCode: Boolean = True): TStubClass;
     destructor Destroy; override;
     function GetDeclarationPart(const BaseClass: string = ''): string;
     function GetImplementationPart: string;
@@ -104,7 +105,7 @@ uses
 
   Pkg.Json.ReservedWords;
 
-class function TStubClass.Construct(aParentClass: TStubClass; aClassName: string; aStubClasses: TStubClassList; aArrayProperty: string): TStubClass;
+class function TStubClass.Construct(aParentClass: TStubClass; aClassName: string; aStubClasses: TStubClassList; aArrayProperty: string; aNeedsSourceCode: Boolean): TStubClass;
 var
   StubClass: TJsonName;
   lIndex: Integer;
@@ -112,7 +113,7 @@ begin
   StubClass := aStubClasses.ItemByName(aClassName);
 
   if StubClass = nil then
-    Result := TStubClass.Create(aParentClass, aClassName, aStubClasses, aArrayProperty)
+    Result := TStubClass.Create(aParentClass, aClassName, aStubClasses, aArrayProperty, aNeedsSourceCode)
   else
   begin
     lIndex := aStubClasses.IndexOf(StubClass as TStubClass);
@@ -121,7 +122,7 @@ begin
   end;
 end;
 
-constructor TStubClass.Create(aParentClass: TStubClass; aClassName: string; aStubClasses: TStubClassList; aArrayProperty: string);
+constructor TStubClass.Create(aParentClass: TStubClass; aClassName: string; aStubClasses: TStubClassList; aArrayProperty: string; aNeedsSourceCode: Boolean);
 begin
   inherited Create(aClassName);
   FStubClasses := aStubClasses;
@@ -133,6 +134,7 @@ begin
   FStubClasses.Add(Self);
   FArrayProperty := aArrayProperty;
   FHasSimpleArray := False;
+  FNeedsSourceCode := aNeedsSourceCode;
 
   FParentClass := aParentClass;
 
@@ -270,6 +272,9 @@ var
   i: Integer;
   ListType: String;
 begin
+  if not FNeedsSourceCode then
+    Exit('');
+
   Lines := TStringList.Create;
 
   try
