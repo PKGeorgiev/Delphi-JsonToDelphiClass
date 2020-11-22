@@ -78,6 +78,7 @@ type
     FParentClass: TStubClass;
     FStubClasses: TStubClassList;
     FArrayProperty: string;
+    FHasSimpleArray: Boolean;
   strict protected
     constructor Create(aParentClass: TStubClass; aClassName: string; aStubClasses: TStubClassList; aArrayProperty: string = ''); virtual;
   public
@@ -131,6 +132,7 @@ begin
   FArrayItems := TStubFieldList.Create;
   FStubClasses.Add(Self);
   FArrayProperty := aArrayProperty;
+  FHasSimpleArray := False;
 
   FParentClass := aParentClass;
 
@@ -155,6 +157,7 @@ var
   Lines: TStringList;
   StubField: TStubField;
   StubArrayField: TStubArrayField;
+  Prefix: string;
 begin
   if FComplexItems.Count + FArrayItems.Count = 0 then
     exit('');
@@ -191,15 +194,34 @@ begin
     Lines.Add('end;');
 
     for StubField in FItems do
-      if StubField.IsObjectArrayField then
+      if StubField.IsArrayField then
       begin
+
         StubArrayField := StubField as TStubArrayField;
+
+        Prefix := '';
+        if StubField.IsObjectArrayField then
+          Prefix := 'Object';
+
         Lines.Add('');
-        Lines.AddFormat('function %s.Get%s: TObjectList<%s>;', [Name, StubField.PropertyName, StubArrayField.TypeAsString]);
+        Lines.AddFormat('function %s.Get%s: T%sList<%s>;', [Name, StubField.PropertyName, Prefix, StubArrayField.TypeAsString]);
         Lines.Add('begin');
-        Lines.AddFormat('  Result := ObjectList<%s>(%s, %sArray);', [StubArrayField.TypeAsString, StubField.FieldName, StubField.FieldName]);
+        Lines.AddFormat('  Result := %sList<%s>(%s, %sArray);', [Prefix, StubArrayField.TypeAsString, StubField.FieldName, StubField.FieldName]);
         Lines.Add('end;');
       end;
+
+    if FHasSimpleArray then
+    begin
+      Lines.Add('');
+      Lines.AddFormat('function %s.GetAsJson: string;', [Name]);
+      Lines.Add('begin');
+      for StubField in FItems do
+        if (StubField.IsArrayField) and (not StubField.IsObjectArrayField) then
+          Lines.AddFormat('  RefreshArray<%s>(%s, %sArray);', [(StubField as TStubArrayField).TypeAsString, StubField.FieldName, StubField.FieldName]);
+
+      Lines.Add('  Result := inherited;');
+      Lines.Add('end;');
+    end;
 
     Lines.TrailingLineBreak := False;
     Result := Lines.Text;
@@ -267,13 +289,13 @@ begin
       end
       else if StubField.IsArrayField then
       begin
+        FHasSimpleArray := True;
         StubArrayField := StubField as TStubArrayField;
         Lines.AddFormat('  [%s]', [StubField.NameAttribute]);
         Lines.AddFormat('  %sArray: TArray<%s>;', [StubField.FieldName, StubField.TypeAsString]);
         Lines.Add('  [JSONMarshalled(False)]');
         Lines.AddFormat('  %s: TList<%s>;', [StubField.FieldName, StubArrayField.TypeAsString]);
       end
-
       else
       begin
         if StubField.NeedsAttribute then
@@ -294,6 +316,12 @@ begin
 
         Lines.AddFormat('  function Get%s: %s<%s>;', [StubField.PropertyName, ListType, StubArrayField.TypeAsString]);
       end;
+
+    if FHasSimpleArray then
+    begin
+      Lines.Add('protected');
+      Lines.Add('  function GetAsJson: string; override;');
+    end;
 
     if FItems.Count > 0 then
       Lines.Add('published');
@@ -416,7 +444,6 @@ begin
   inherited Create(aClass, aItemName, jtArray);
   ContainedType := aItemSubType;
   FieldClass := aItemClass;
-// if ContainedType = TJsonType.jtObject then
   aClass.ArrayItems.Add(Self);
 end;
 
@@ -429,7 +456,6 @@ begin
       raise EJsonMapper.Create('Nested arrays are not supported!');
   else
     Result := GetTypeAsString(ContainedType);
-    // Format('TArray<%s>', [GetTypeAsString(ContainedType)]);
   end;
 end;
 
