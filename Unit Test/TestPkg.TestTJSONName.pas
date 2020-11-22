@@ -69,7 +69,7 @@ end;
 
 procedure TestTJSONName.TestCapitalizeFirst_SpaceTest;
 const
-  TestResult = '"Test string"';
+  TestResult = 'Test string';
 begin
   Assert.AreEqual(TestResult, TJSONName.CapitalizeFirst('Test String'));
   Assert.AreEqual(TestResult, TJSONName.CapitalizeFirst('Test StriNg'));
@@ -96,7 +96,7 @@ end;
 
 procedure TestTJSONName.TestCapitalizeFirst_UnderscoreTest;
 const
-  TestResult = 'Test_String';
+  TestResult = 'TestString';
 begin
   Assert.AreEqual(TestResult, TJSONName.CapitalizeFirst('Test_string'));
   Assert.AreEqual(TestResult, TJSONName.CapitalizeFirst('Test_striNg'));
@@ -129,7 +129,7 @@ const
 begin
   JSONName(TestValue);
   Assert.AreEqual(TestValue, FJsonName.JSONName);
-  Assert.AreEqual('_1_Test', FJsonName.DelphiName);
+  Assert.AreEqual('_1Test', FJsonName.DelphiName);
   Assert.IsTrue(FJsonName.NeedsAttribute)
 end;
 
