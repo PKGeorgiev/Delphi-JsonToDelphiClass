@@ -32,6 +32,14 @@ Generates the following DTO:
   end;
 ```
 
+Fixes & Features: 22th November 2020
+* Fixed Bug in Demo generator - It wasn't allways valid code
+* Added support for non object arrays. They are now mapped into at TList
+* Stopred the generastor from generating surplus classes. 
+* Added a settings dialog and settings class
+* New feature: Properties in PascalCase
+
+
 Lots of changes in this version:
 * Only floating point numbers are mapped to Double
 * Numbers are mapped to Integer or Int64 depending on their size
