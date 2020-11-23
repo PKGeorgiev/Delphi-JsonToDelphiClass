@@ -1,12 +1,10 @@
 Delphi-JsonToDelphiClass
 ========================
 
-## This is a fork of Petar Georgiev original work  ##
-
-Fixes & Features: 22th November 2020
+## Fixes & Features: 22th November 2020 ##
 * Fixed Bug in Demo generator - It wasn't allways valid code
 * Added support for non object arrays. They are now mapped into at TList
-* Stopred the generastor from generating surplus classes. 
+* Stopped the generator from generating surplus classes. 
 * Added a settings dialog and settings class
 * New feature: Properties in PascalCase
 
