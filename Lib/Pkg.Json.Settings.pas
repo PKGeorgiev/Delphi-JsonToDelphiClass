@@ -2,37 +2,42 @@ unit Pkg.Json.Settings;
 
 interface
 
-uses
-  Pkg.Json.BoundObject;
-
 Type
-  TSettings = class(TBoundObject)
+  TSettings = class
   private
     class var FInstance: TSettings;
 
   var
-    FUsePascalCase: Boolean;
     FAddJsonPropertyAttributes: Boolean;
+    FPostFix: string;
+    FPostFixClassNames: Boolean;
+    FUsePascalCase: Boolean;
     constructor MakeSingleton;
-    procedure SetUsePascalCase(const Value: Boolean);
-    procedure SetAddJsonPropertyAttributes(const Value: Boolean);
   public
     constructor Create; reintroduce; deprecated 'Don''t use this!';
     class function Instance: TSettings;
-    property UsePascalCase: Boolean read FUsePascalCase write SetUsePascalCase;
-    property AddJsonPropertyAttributes: Boolean read FAddJsonPropertyAttributes write SetAddJsonPropertyAttributes;
+    class function GetPostFix: string;
+    property AddJsonPropertyAttributes: Boolean read FAddJsonPropertyAttributes write FAddJsonPropertyAttributes;
+    property PostFixClassNames: Boolean read FPostFixClassNames write FPostFixClassNames;
+    property PostFix: string read FPostFix write FPostFix;
+    property UsePascalCase: Boolean read FUsePascalCase write FUsePascalCase;
   end;
 
 implementation
 
 uses
-  System.SysUtils;
+  System.SysUtils, System.Strutils;
 
 { TSettings }
 
 constructor TSettings.Create;
 begin
   raise Exception.Create('Don''t call the constructor directly!');
+end;
+
+class function TSettings.GetPostFix: string;
+begin
+  Result := IfThen(Instance.PostFixClassNames, Instance.PostFix, string.empty);
 end;
 
 class function TSettings.Instance: TSettings;
@@ -47,24 +52,8 @@ begin
   inherited Create;
   FUsePascalCase := True;
   FAddJsonPropertyAttributes := False;
-end;
-
-procedure TSettings.SetAddJsonPropertyAttributes(const Value: Boolean);
-begin
-  if FAddJsonPropertyAttributes <> Value then
-  begin
-    Notify('AddJsonPropertyAttributes');
-    FAddJsonPropertyAttributes := Value;
-  end;
-end;
-
-procedure TSettings.SetUsePascalCase(const Value: Boolean);
-begin
-  if FUsePascalCase <> Value then
-  begin
-    Notify('UsePascalCase');
-    FUsePascalCase := Value;
-  end;
+  FPostFixClassNames := False;
+  FPostFix := 'DTO';
 end;
 
 initialization
