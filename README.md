@@ -1,9 +1,17 @@
 Delphi-JsonToDelphiClass
 ========================
 
-## This is a fork of Petar Georgiev original work  ##
+## Fixes & Features: 22th November 2020 ##
 
-New feature:
+### Bugs: ###
+* Demo generator didn't allways generate valid code
+* Stopped the generator from generating surplus classes. 
+
+### Features ###
+* Non object arrays are now mapped into a TList<T> instead of TArray<T>
+* Added a settings dialog and settings class
+* Properties in PascalCase (Setting)
+* Allways use JsonName property annotation  (Setting)
 * Support for objects with diffrents properties in an Array
 
 Eg this JSON 
@@ -32,7 +40,9 @@ Generates the following DTO:
   end;
 ```
 
-Lots of changes in this version:
+
+## Previous changes ##
+
 * Only floating point numbers are mapped to Double
 * Numbers are mapped to Integer or Int64 depending on their size
 * Generated code restructored, and simplified
@@ -45,7 +55,7 @@ Lots of changes in this version:
   
 Generates Delphi Classes based on JSON string. Just like XML Data Binding, but for JSON.
 
-Main features:
+## Main features ##
 
 - Build entirely on the RTL (no external dependencies) so it's cross-platform;
 - Accepts any valid JSON string, no matter how complex the object is;
