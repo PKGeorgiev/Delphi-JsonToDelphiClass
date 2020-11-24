@@ -1,5 +1,6 @@
 unit Pkg.Json.DTO;
 
+
 interface
 
 uses
@@ -8,6 +9,8 @@ uses
 type
   TArrayMapper = class
   protected
+    procedure RefreshArray<T>(aSource: TList<T>; var aDestination: TArray<T>);
+    function List<T>(var aList: TList<T>; aSource: TArray<T>): TList<T>;
     function ObjectList<T: class>(var aList: TObjectList<T>; aSource: TArray<T>): TObjectList<T>;
   public
     constructor Create; virtual;
@@ -16,11 +19,12 @@ type
   TJsonDTO = class(TArrayMapper)
   private
     FOptions: TJsonOptions;
-    function GetAsJson: string;
-    procedure SetAsJson(aValue: string);
     class procedure PrettyPrintPair(aJSONValue: TJSONPair; aOutputStrings: TStrings; Last: Boolean; Indent: Integer);
     class procedure PrettyPrintJSON(aJSONValue: TJsonValue; aOutputStrings: TStrings; Indent: Integer = 0); overload;
     class procedure PrettyPrintArray(aJSONValue: TJSONArray; aOutputStrings: TStrings; Last: Boolean; Indent: Integer);
+  protected
+    function GetAsJson: string; virtual;
+    procedure SetAsJson(aValue: string); virtual;
   public
     constructor Create; override;
     class function PrettyPrintJSON(aJson: string): string; overload;
@@ -179,6 +183,17 @@ begin
   inherited;
 end;
 
+function TArrayMapper.List<T>(var aList: TList<T>; aSource: TArray<T>): TList<T>;
+begin
+  if aList = nil then
+  begin
+    aList := TList<T>.Create;
+    aList.AddRange(aSource);
+  end;
+
+  Exit(aList);
+end;
+
 function TArrayMapper.ObjectList<T>(var aList: TObjectList<T>; aSource: TArray<T>): TObjectList<T>;
 var
   Element: T;
@@ -191,6 +206,12 @@ begin
   end;
 
   Exit(aList);
+end;
+
+procedure TArrayMapper.RefreshArray<T>(aSource: TList<T>; var aDestination: TArray<T>);
+begin
+  if aSource <> nil then
+    aDestination := aSource.ToArray;
 end;
 
 type
@@ -219,4 +240,5 @@ begin
 end;
 
 end.
+
 

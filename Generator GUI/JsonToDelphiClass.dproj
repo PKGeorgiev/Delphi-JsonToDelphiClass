@@ -64,6 +64,7 @@
         <DCC_K>false</DCC_K>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <DCC_DUPLICATE_CTOR_DTOR>false</DCC_DUPLICATE_CTOR_DTOR>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
@@ -163,12 +164,9 @@
         <DCCReference Include="..\DTO\GitHUB\DTO.GitHUB.Release.pas"/>
         <DCCReference Include="..\Lib\Pkg.Json.SerializableObject.pas"/>
         <DCCReference Include="..\Lib\Pkg.Json.Utils.pas"/>
-        <DCCReference Include="..\Lib\Pkg.Json.Settings.pas"/>
-        <DCCReference Include="uSettingsForm.pas">
-            <Form>SettingsForm</Form>
-            <FormType>fmx</FormType>
-        </DCCReference>
+        <DCCReference Include="..\Lib\Pkg.JSON.SubTypes.pas"/>
         <DCCReference Include="..\Lib\Pkg.Json.BoundObject.pas"/>
+        <DCCReference Include="..\Lib\Pkg.Json.Settings.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
