@@ -141,7 +141,7 @@ end;
 procedure TJSONName.SetName(const Value: string);
 begin
   FPureClassName := Value;
-  FName := 'T' + FPureClassName + 'DTO';
+  FName := 'T' + FPureClassName +  TSettings.GetPostFix;
 end;
 
 end.
