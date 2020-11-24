@@ -3,8 +3,7 @@ unit Pkg.Json.DemoGenerator;
 interface
 
 uses
-  System.SysUtils,
-  Pkg.Json.Mapper;
+  System.SysUtils, Pkg.Json.Mapper, Pkg.Json.Settings;
 
 {$M+}
 
@@ -183,7 +182,7 @@ begin
   FileName := FileName + 'Demo.DemoHelper.pas';
   LoadText;
   ReplaceAll('@@UnitName@@', FJsonMapper.DestinationUnitName);
-  ReplaceAll('@@ClassName@@', FJsonMapper.DestinationClassName + 'DTO');
+  ReplaceAll('@@ClassName@@', FJsonMapper.DestinationClassName + TSettings.GetPostFix);
   SaveText;
 end;
 

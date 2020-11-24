@@ -165,7 +165,6 @@
         <DCCReference Include="..\Lib\Pkg.Json.SerializableObject.pas"/>
         <DCCReference Include="..\Lib\Pkg.Json.Utils.pas"/>
         <DCCReference Include="..\Lib\Pkg.JSON.SubTypes.pas"/>
-        <DCCReference Include="..\Lib\Pkg.Json.BoundObject.pas"/>
         <DCCReference Include="..\Lib\Pkg.Json.Settings.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
