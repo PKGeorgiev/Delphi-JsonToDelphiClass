@@ -1,6 +1,19 @@
 Delphi-JsonToDelphiClass
 ========================
 
+## Fixes & Features: 11th December 2020 ##
+
+### Bugs: ###
+
+* "id": "01010101" faulty generated a TDateTime property not string. 
+* Settings.AddJsonPropertyAttributes didn't generate a Property Attribute 
+
+### Features ###
+
+* JSON are now posted directly to the validator
+* Better property name generator
+* More unit tests
+
 ## Fixes & Features: 24th November 2020 ##
 
 ### Bugs: ###
