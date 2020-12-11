@@ -48,6 +48,7 @@ object SaveUnitForm: TSaveUnitForm
     TabOrder = 2
     object btnClose: TButton
       Align = Right
+      ModalResult = 2
       Position.X = 828.000000000000000000
       Position.Y = 9.000000000000000000
       Size.Width = 80.000000000000000000
@@ -55,7 +56,6 @@ object SaveUnitForm: TSaveUnitForm
       Size.PlatformDefault = False
       TabOrder = 1
       Text = 'Close'
-      OnClick = btnCloseClick
     end
     object btnSave: TButton
       Align = Right

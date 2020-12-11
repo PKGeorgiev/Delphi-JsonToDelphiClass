@@ -399,8 +399,6 @@ begin
       Result := 'Boolean';
     jtNumber:
       Result := 'Double';
-    jtDate:
-      Result := 'TDate';
     jtDateTime:
       Result := 'TDateTime';
     jtBytes:

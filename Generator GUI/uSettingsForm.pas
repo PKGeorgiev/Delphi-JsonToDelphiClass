@@ -3,11 +3,13 @@ unit uSettingsForm;
 interface
 
 uses
-  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
-  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs,
-  Pkg.Json.Settings, FMX.StdCtrls, FMX.Controls.Presentation, FMX.Edit,
-  Data.Bind.Components, Data.Bind.ObjectScope, Data.Bind.GenData, System.Rtti,
-  System.Bindings.Outputs, FMX.Bind.Editors, Data.Bind.EngExt, FMX.Bind.DBEngExt;
+  System.SysUtils, System.Types, System.Rtti, System.UITypes, System.Classes, System.Variants, System.Bindings.Outputs,
+
+  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.StdCtrls, FMX.Controls.Presentation, FMX.Edit, FMX.Bind.Editors,
+
+  Data.Bind.Components, Data.Bind.ObjectScope, Data.Bind.GenData, Data.Bind.EngExt, FMX.Bind.DBEngExt,
+
+  Pkg.Json.Settings;
 
 type
   TSettingsForm = class(TForm)
@@ -31,13 +33,7 @@ type
     { Public declarations }
   end;
 
-var
-  SettingsForm: TSettingsForm;
-
 implementation
-
-uses
-  System.Bindings.Helper;
 
 {$R *.fmx}
 

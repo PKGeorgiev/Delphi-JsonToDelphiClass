@@ -3,8 +3,9 @@ unit uSaveUnitForm;
 interface
 
 uses
-  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs,
-  FMX.StdCtrls, FMX.Layouts, FMX.Memo, FMX.Controls.Presentation, FMX.ScrollBox, FMX.Memo.Types;
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+
+  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.StdCtrls, FMX.Layouts, FMX.Memo, FMX.Controls.Presentation, FMX.ScrollBox, FMX.Memo.Types;
 
 type
   TSaveUnitForm = class(TForm)
@@ -15,7 +16,6 @@ type
     sd: TSaveDialog;
     Label1: TLabel;
     StyleBook1: TStyleBook;
-    procedure btnCloseClick(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
     procedure Memo1KeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
     procedure FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
@@ -37,11 +37,6 @@ implementation
 
 uses
   uMainForm, System.IoUtils;
-
-procedure TSaveUnitForm.btnCloseClick(Sender: TObject);
-begin
-  ModalResult := mrCancel;
-end;
 
 procedure TSaveUnitForm.btnSaveClick(Sender: TObject);
 var

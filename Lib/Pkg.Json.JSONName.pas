@@ -44,8 +44,6 @@ var
   s: string;
   i: Integer;
 begin
-  Value := Value.ToLower;
-
   if Value.Substring(1, 4) = 'name' then
     Value := Value[1] + 'Name' + Value.Substring(4);
 
@@ -68,7 +66,6 @@ begin
     if List.Count = 0 then
       Exit('');
 
-
     for i := 0 to List.Count - 1 do
     begin
       s := List[i];
@@ -90,7 +87,6 @@ begin
         for s in List do
           Append(s);
 
-      //  Length := Length - 1;
         Result := ToString(True);
       finally
         free;
@@ -130,18 +126,21 @@ begin
   if not FDelphiName[1].IsLetter then
     FDelphiName := '_' + FDelphiName;
 
-  FNeedsAttribute := not SameText(FDelphiName, FJsonName);
+  if TSettings.Instance.AddJsonPropertyAttributes then
+    FNeedsAttribute := True
+  else
+    FNeedsAttribute := not SameText(FDelphiName, FJsonName);
 end;
 
 function TJSONName.NameAttribute: string;
 begin
-  exit('JSONName(' + AnsiQuotedStr(FJsonName, #39) + ')');
+  Exit('JSONName(' + AnsiQuotedStr(FJsonName, #39) + ')');
 end;
 
 procedure TJSONName.SetName(const Value: string);
 begin
   FPureClassName := Value;
-  FName := 'T' + FPureClassName +  TSettings.GetPostFix;
+  FName := 'T' + FPureClassName + TSettings.GetPostFix;
 end;
 
 end.

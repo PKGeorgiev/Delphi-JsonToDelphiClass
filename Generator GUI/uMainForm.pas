@@ -12,7 +12,7 @@ uses
   Pkg.Json.Mapper, uUpdate, uUpdateForm, DTO.GitHUB.Release;
 
 const
-  JsonValidatorUrl = 'http://jsonlint.com';
+  JsonValidatorUrl = 'https://jsonformatter.curiousconcept.com/?data=%s&process=true';
 
 type
   TMainForm = class(TConstrainedForm)
@@ -51,7 +51,6 @@ type
     actValidateJSON: TAction;
     MenuItem4: TMenuItem;
     actRenameProperty: TAction;
-    Splitter2: TSplitter;
     ListView1: TListView;
     actFMXDemo: TAction;
     Button3: TButton;
@@ -104,6 +103,7 @@ implementation
 
 uses
   System.IoUtils, System.Json,
+  IdURI,
   uSaveUnitForm, uSettingsForm, Pkg.Json.Visualizer, Pkg.Json.DTO, Pkg.Json.StubField, Pkg.Json.DemoGenerator, Pkg.Json.Utils;
 
 const
@@ -223,13 +223,13 @@ begin
     try
       ShowModal;
     finally
-      Free;
+      free;
     end;
 end;
 
 procedure TMainForm.actValidateJSONExecute(Sender: TObject);
 begin
-  ShellExecute(JsonValidatorUrl);
+  ShellExecute(TIdURI.URLEncode(Format(JsonValidatorUrl, [Memo1.Text])));
 end;
 
 procedure TMainForm.ActDemoExecute(Sender: TObject);
@@ -259,7 +259,6 @@ begin
 
       ShellExecute(Destination);
     end)
-
 end;
 
 procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
