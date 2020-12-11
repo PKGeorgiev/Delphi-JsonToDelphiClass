@@ -1,6 +1,16 @@
 Delphi-JsonToDelphiClass
 ========================
 
+## Fixes & Features: 24th November 2020 ##
+
+### Bugs: ###
+
+### Features ###
+
+* Possibility to change the postfix of ClassNames, via Settings Dialog. Default: DTO
+* Settings Dialog rewritten to use LiveBindings
+* Create a Demoroiject, using *your* Json Data
+
 ## Fixes & Features: 22th November 2020 ##
 
 ### Bugs: ###
