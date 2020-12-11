@@ -166,6 +166,10 @@
         <DCCReference Include="..\Lib\Pkg.Json.Utils.pas"/>
         <DCCReference Include="..\Lib\Pkg.JSON.SubTypes.pas"/>
         <DCCReference Include="..\Lib\Pkg.Json.Settings.pas"/>
+        <DCCReference Include="uSettingsForm.pas">
+            <Form>SettingsForm</Form>
+            <FormType>fmx</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

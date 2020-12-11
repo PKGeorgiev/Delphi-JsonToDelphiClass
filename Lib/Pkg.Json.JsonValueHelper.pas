@@ -6,7 +6,7 @@ uses
   System.Json;
 
 type
-  TJsonType = (jtUnknown, jtObject, jtArray, jtString, jtTrue, jtFalse, jtNumber, jtDate, jtDateTime, jtBytes, jtInteger, jtInteger64);
+  TJsonType = (jtUnknown, jtObject, jtArray, jtString, jtTrue, jtFalse, jtNumber, jtDateTime, jtBytes, jtInteger, jtInteger64);
 
   TJsonValueHelper = class
   public
@@ -22,7 +22,7 @@ uses
 class function TJsonValueHelper.GetJsonType(aJsonValue: TJsonValue): TJsonType;
 var
   JsonString: TJsonString;
-  Value : string;
+  Value: string;
   i: Integer;
   j: Int64;
   b: Boolean;
@@ -55,12 +55,10 @@ begin
   else if aJsonValue is TJsonString then
   begin
     JsonString := (aJsonValue as TJsonString);
-    if TRegEx.IsMatch(JsonString.Value, '^([0-9]{4})(-?)(1[0-2]|0[1-9])\2(3[01]|0[1-9]|[12][0-9])$') then
-      Result := jtDate
-    else if TRegEx.IsMatch(JsonString.Value,
+    if TRegEx.IsMatch(JsonString.Value,
       '^(-?(?:[1-9][0-9]*)?[0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|[+-](?:2[0-3]|[01][0-9]):[0-5][0-9])?$') then
       Result := jtDateTime
-    else if TryStrToFloat(JsonString.Value, e) then
+    else if TryStrToFloat(JsonString.Value, E) then
       Result := jtString
     else if TryStrToBool(JsonString.Value, b) then
     begin

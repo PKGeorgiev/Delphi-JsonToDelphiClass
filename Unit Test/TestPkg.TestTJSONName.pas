@@ -38,6 +38,8 @@ type
     procedure TestNameProperties_StartsWithDigtig;
     [Test]
     procedure TestNameProperties_SpaceInName;
+    [Test]
+    procedure TestNameProperties_ColonInName;
   end;
 
 implementation
@@ -123,6 +125,16 @@ begin
   Assert.AreEqual(TestValue, FJsonName.DelphiName);
   Assert.IsFalse(FJsonName.NeedsAttribute)
 end;
+procedure TestTJSONName.TestNameProperties_ColonInName;
+const
+  TestValue = 'configGlossary:adminEmail';
+begin
+  JSONName(TestValue);
+  Assert.AreEqual(TestValue, FJsonName.JSONName);
+  Assert.AreEqual('ConfigGlossaryAdminEmail', FJsonName.DelphiName);
+  Assert.IsTrue(FJsonName.NeedsAttribute)
+end;
+
 procedure TestTJSONName.TestNameProperties_SpaceInName;
 const
   TestValue = '1 Test';

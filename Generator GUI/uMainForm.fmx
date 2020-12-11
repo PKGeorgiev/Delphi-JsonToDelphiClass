@@ -1528,7 +1528,7 @@ object MainForm: TMainForm
     Padding.Top = 2.000000000000000000
     Padding.Right = 6.000000000000000000
     Padding.Bottom = 6.000000000000000000
-    Size.Width = 852.000000000000000000
+    Size.Width = 856.000000000000000000
     Size.Height = 479.000000000000000000
     Size.PlatformDefault = False
     StyleLookup = 'Panel2Style1'
@@ -1547,20 +1547,20 @@ object MainForm: TMainForm
       Align = Client
       Margins.Bottom = 6.000000000000000000
       PopupMenu = MemoPopupMenu
-      Size.Width = 840.000000000000000000
+      Size.Width = 844.000000000000000000
       Size.Height = 448.000000000000000000
       Size.PlatformDefault = False
       StyleLookup = 'Memo1Style1'
       TabOrder = 0
       Viewport.Width = 840.000000000000000000
-      Viewport.Height = 448.000000000000000000
+      Viewport.Height = 444.000000000000000000
     end
     object Label4: TLabel
       Align = Top
       Margins.Left = 2.000000000000000000
       Position.X = 8.000000000000000000
       Position.Y = 2.000000000000000000
-      Size.Width = 838.000000000000000000
+      Size.Width = 842.000000000000000000
       Size.Height = 17.000000000000000000
       Size.PlatformDefault = False
       Text = 'Paste JSON String here:'
@@ -1570,7 +1570,7 @@ object MainForm: TMainForm
     Align = Left
     Cursor = crHSplit
     MinSize = 20.000000000000000000
-    Position.X = 165.000000000000000000
+    Position.X = 161.000000000000000000
     Position.Y = 3.000000000000000000
     Size.Width = 4.000000000000000000
     Size.Height = 479.000000000000000000
@@ -1749,8 +1749,8 @@ object MainForm: TMainForm
       TabOrder = 0
       OnDblClick = TreeViewDblClick
       OnKeyDown = TreeViewKeyDown
-      Viewport.Width = 333.000000000000000000
-      Viewport.Height = 454.000000000000000000
+      Viewport.Width = 329.000000000000000000
+      Viewport.Height = 450.000000000000000000
     end
     object Label3: TLabel
       Align = Top
@@ -1770,16 +1770,6 @@ object MainForm: TMainForm
       Text = 'Button1'
       Visible = False
     end
-  end
-  object Splitter2: TSplitter
-    Align = Left
-    Cursor = crHSplit
-    MinSize = 20.000000000000000000
-    Position.X = 161.000000000000000000
-    Position.Y = 3.000000000000000000
-    Size.Width = 4.000000000000000000
-    Size.Height = 479.000000000000000000
-    Size.PlatformDefault = False
   end
   object ListView1: TListView
     ItemAppearanceClassName = 'TListItemAppearance'
