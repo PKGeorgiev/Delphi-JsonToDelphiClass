@@ -9,7 +9,7 @@ uses
   FMX.Menus, FMX.Controls.Presentation, FMX.Objects, System.Actions, FMX.ActnList, FMX.ConstrainedForm, FMX.ListView.Types, FMX.ListView.Appearances, FMX.ListView.Adapters.Base,
   FMX.ListView, FMX.Memo.Types,
 
-  Pkg.Json.Mapper, uUpdate, uUpdateForm, DTO.GitHUB.Release;
+  Pkg.Json.Mapper, uUpdate, uUpdateForm, DTO.GitHUB.Release, Pkg.Json.ThreadingEx;
 
 const
   JsonValidatorUrl = 'https://jsonformatter.curiousconcept.com/?data=%s&process=true';
@@ -77,6 +77,7 @@ type
     procedure ListView1Change(Sender: TObject);
     procedure ActDemoExecute(Sender: TObject);
     procedure actSettingsExecute(Sender: TObject);
+    procedure Memo1Change(Sender: TObject);
   private
     { Private declarations }
     FJsonMapper: TPkgJsonMapper;
@@ -229,7 +230,7 @@ end;
 
 procedure TMainForm.actValidateJSONExecute(Sender: TObject);
 begin
-  ShellExecute(TIdURI.URLEncode(Format(JsonValidatorUrl, [Memo1.Text])));
+  ShellExecute(TIdURI.URLEncode(Format(JsonValidatorUrl, [MinifyJson(Memo1.Text)])));
 end;
 
 procedure TMainForm.ActDemoExecute(Sender: TObject);
@@ -348,25 +349,18 @@ begin
 
   ListView1.BeginUpdate;
   try
-    for FileName in TDirectory.GetFiles(DemoDataRoot, '*.json') do
-      ListView1.Items.Add.Text := TPath.GetFileName(FileName);
+    if TDirectory.Exists(DemoDataRoot) then
+      for FileName in TDirectory.GetFiles(DemoDataRoot, '*.json') do
+        ListView1.Items.Add.Text := TPath.GetFileName(FileName);
   finally
     ListView1.EndUpdate;
   end;
 
-  TTask.Run(
+  TTaskEx.QueueMainThread(50,
     procedure
     begin
-      Sleep(50);
-      TThread.Queue(nil,
-          procedure
-        begin
-          if ListView1.Items.Count > 0 then
-          begin
-            ListView1.ItemIndex := 0;
-            ListView1.OnChange(nil);
-          end;
-        end);
+      ListView1.ItemIndex := 0;
+      ListView1.OnChange(nil);
     end);
 end;
 
@@ -417,6 +411,12 @@ begin
       free;
     end;
 
+end;
+
+procedure TMainForm.Memo1Change(Sender: TObject);
+begin
+  VisualizeClass;
+  Memo1.Text := PrettyPrint(Memo1.Text);
 end;
 
 procedure TMainForm.MenuItem5Click(Sender: TObject);

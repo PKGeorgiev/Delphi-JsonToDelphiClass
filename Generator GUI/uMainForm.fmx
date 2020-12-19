@@ -1544,6 +1544,7 @@ object MainForm: TMainForm
         '}')
       StyledSettings = [Size, Style, FontColor]
       TextSettings.Font.Family = 'Consolas'
+      OnChange = Memo1Change
       Align = Client
       Margins.Bottom = 6.000000000000000000
       PopupMenu = MemoPopupMenu

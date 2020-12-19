@@ -26,7 +26,8 @@ uses
   Pkg.Json.Utils in '..\Lib\Pkg.Json.Utils.pas',
   Pkg.JSON.SubTypes in '..\Lib\Pkg.JSON.SubTypes.pas',
   Pkg.Json.Settings in '..\Lib\Pkg.Json.Settings.pas',
-  uSettingsForm in 'uSettingsForm.pas' {SettingsForm};
+  uSettingsForm in 'uSettingsForm.pas' {SettingsForm},
+  Pkg.Json.ThreadingEx in '..\Lib\Pkg.Json.ThreadingEx.pas';
 
 {$R *.res}
 
