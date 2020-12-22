@@ -6,9 +6,6 @@ program JsonToDelphiClass;
 uses
   System.StartUpCopy,
   FMX.Forms,
-  uMainForm in 'uMainForm.pas' {MainForm},
-  uSaveUnitForm in 'uSaveUnitForm.pas' {SaveUnitForm},
-  FMX.ConstrainedForm in 'FMX.ConstrainedForm.pas' {TFormConstraints},
   uUpdateForm in 'uUpdateForm.pas' {UpdateForm},
   uUpdate in '..\Components\uUpdate.pas',
   Pkg.Json.Visualizer in '..\Components\Pkg.Json.Visualizer.pas',
@@ -26,7 +23,11 @@ uses
   Pkg.Json.Utils in '..\Lib\Pkg.Json.Utils.pas',
   Pkg.JSON.SubTypes in '..\Lib\Pkg.JSON.SubTypes.pas',
   Pkg.Json.Settings in '..\Lib\Pkg.Json.Settings.pas',
-  uSettingsForm in 'uSettingsForm.pas' {SettingsForm};
+  uSettingsForm in 'uSettingsForm.pas' {SettingsForm},
+  Pkg.Json.ThreadingEx in '..\Lib\Pkg.Json.ThreadingEx.pas',
+  MainFormU in 'MainFormU.pas' {MainForm},
+  Pkg.Json.Lib.JSONConverter in '..\Lib\Pkg.Json.Lib.JSONConverter.pas',
+  Pkg.Json.OutputFormat in '..\Lib\Pkg.Json.OutputFormat.pas';
 
 {$R *.res}
 

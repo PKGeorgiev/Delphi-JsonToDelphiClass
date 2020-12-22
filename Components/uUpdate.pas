@@ -3,16 +3,16 @@ unit uUpdate;
 interface
 
 uses
-  System.JSON, System.SysUtils, System.Threading, System.Classes, IPPeerClient,
+  System.JSON, System.SysUtils, System.Classes, IPPeerClient,
 
-  DTO.GitHUB.Release;
+  DTO.GitHUB.Release, Pkg.JSON.ThreadingEx;
 
 const
-  ProgramVersion: double = 2.2;
+  ProgramVersion: double = 3.0;
   UpdateUrl = 'https://api.github.com/repos/JensBorrisholt/Delphi-JsonToDelphiClass/releases';
   ProgramUrl = 'https://github.com/JensBorrisholt/Delphi-JsonToDelphiClass';
 
-procedure CheckForUpdate(AOnFinish: TProc<TRelease, string>);
+function CheckForUpdate(AOnFinish: TProc<TRelease, string>): ITaskEx;
 
 implementation
 
@@ -21,14 +21,14 @@ uses
 
   Pkg.JSON.SerializableObject;
 
-procedure CheckForUpdate(AOnFinish: TProc<TRelease, string>);
+function CheckForUpdate(AOnFinish: TProc<TRelease, string>): ITaskEx;
+var
+  Releases: TObjectList<TRelease>;
+  LResult: TRelease;
+  LErrorMessage: string;
 begin
-  TTask.Run(
+  Result := TTaskEx.Run(
       procedure
-    var
-      LResult: TRelease;
-      LErrorMessage: string;
-      Releases: TObjectList<TRelease>;
     begin
       try
         Releases := TUGitHubSerializableObject.RestRequest<TReleasesDTO>(UpdateUrl).Releases;
@@ -43,18 +43,11 @@ begin
         on e: Exception do
           LErrorMessage := e.message;
       end;
-
-      try
-        // Execute AOnFinish in the context of the Main Thread
-        TThread.Synchronize(nil,
-            procedure
-          begin
-            AOnFinish(LResult, LErrorMessage);
-          end);
-      except
-      end;
-    end);
-
+    end).ContinueWithInMainThread(
+    procedure(const aTask: ITaskEx)
+    begin
+      AOnFinish(LResult, LErrorMessage);
+    end, TTaskContinuationOptions.OnlyOnCompleted);
 end;
 
 initialization

@@ -28,6 +28,7 @@ type
   public
     constructor Create; override;
     class function PrettyPrintJSON(aJson: string): string; overload;
+    function ToString : string; override;
     property AsJson: string read GetAsJson write SetAsJson;
   end;
 
@@ -174,6 +175,11 @@ begin
   finally
     JSONValue.Free;
   end;
+end;
+
+function TJsonDTO.ToString: string;
+begin
+  Result := AsJson;
 end;
 
 { TArrayMapper }

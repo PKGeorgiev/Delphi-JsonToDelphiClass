@@ -27,6 +27,8 @@ type
     destructor Destroy; override;
     // Parses a JSON string and creates internal stub class structure
     function Parse(aJsonString: string): TPkgJsonMapper;
+    function IsValid(aJsonString: string): boolean;
+
     function LoadFormFile(aJsonFile: string): TPkgJsonMapper;
     // Generates result unit
     function GenerateUnit: string;
@@ -262,6 +264,11 @@ end;
 function TPkgJsonMapper.GetJsonType(aJsonValue: TJsonValue): TJsonType;
 begin
   exit(TJsonValueHelper.GetJsonType(aJsonValue))
+end;
+
+function TPkgJsonMapper.IsValid(aJsonString: string): boolean;
+begin
+  Result := TJSONObject.ParseJSONValue(aJsonString) <> nil;
 end;
 
 function TPkgJsonMapper.LoadFormFile(aJsonFile: string): TPkgJsonMapper;
