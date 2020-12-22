@@ -25,29 +25,23 @@ type
     lblDownloadLink: TLabel;
     Label2: TLabel;
     lblDownloadCount: TLabel;
-    procedure Button1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure lblReleasesLinkClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
   private
     FRelease: TRelease;
-    procedure SetRelease(const Value: TRelease);
     { Private declarations }
   public
     { Public declarations }
-    property NewRelease: TRelease read FRelease write SetRelease;
+    property NewRelease: TRelease read FRelease write FRelease;
   end;
 
 implementation
 
 uses
   System.UIConsts, Pkg.Json.Utils;
-{$R *.fmx}
 
-procedure TUpdateForm.Button1Click(Sender: TObject);
-begin
-  ModalResult := mrCancel;
-end;
+{$R *.fmx}
 
 procedure TUpdateForm.FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
 begin
@@ -77,17 +71,8 @@ begin
 end;
 
 procedure TUpdateForm.lblReleasesLinkClick(Sender: TObject);
-var
-  LUrl: string;
 begin
-  LUrl := (Sender as TText).Text;
-  ShellExecute(LUrl);
+  ShellExecute((Sender as TText).Text);
   ModalResult := mrOk;
 end;
-
-procedure TUpdateForm.SetRelease(const Value: TRelease);
-begin
-  FRelease := Value;
-end;
-
 end.

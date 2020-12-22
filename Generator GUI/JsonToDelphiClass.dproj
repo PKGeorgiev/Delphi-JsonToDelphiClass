@@ -135,17 +135,6 @@
         <RcCompile Include="..\Lib\JSON_PAS.rc">
             <Form>JSON_PAS.res</Form>
         </RcCompile>
-        <DCCReference Include="uMainForm.pas">
-            <Form>MainForm</Form>
-            <FormType>fmx</FormType>
-        </DCCReference>
-        <DCCReference Include="uSaveUnitForm.pas">
-            <Form>SaveUnitForm</Form>
-            <FormType>fmx</FormType>
-        </DCCReference>
-        <DCCReference Include="FMX.ConstrainedForm.pas">
-            <Form>TFormConstraints</Form>
-        </DCCReference>
         <DCCReference Include="uUpdateForm.pas">
             <Form>UpdateForm</Form>
             <FormType>fmx</FormType>
@@ -171,6 +160,12 @@
             <FormType>fmx</FormType>
         </DCCReference>
         <DCCReference Include="..\Lib\Pkg.Json.ThreadingEx.pas"/>
+        <DCCReference Include="MainFormU.pas">
+            <Form>MainForm</Form>
+            <FormType>fmx</FormType>
+        </DCCReference>
+        <DCCReference Include="..\Lib\Pkg.Json.Lib.JSONConverter.pas"/>
+        <DCCReference Include="..\Lib\Pkg.Json.OutputFormat.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

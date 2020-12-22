@@ -16,6 +16,7 @@ type
     function GetExceptObj: Exception;
     function GetStatus: TTaskStatus;
     function ContinueWith(const continuationAction: TAction<ITaskEx>; continuationOptions: TTaskContinuationOptions): ITaskEx;
+    function ContinueWithInMainThread(const continuationAction: TAction<ITaskEx>; continuationOptions: TTaskContinuationOptions): ITaskEx;
     property ExceptObj: Exception read GetExceptObj;
     property Status: TTaskStatus read GetStatus;
   end;
@@ -24,8 +25,11 @@ type
   private
     fExceptObj: Exception;
     function GetExceptObj: Exception;
+    function InternalContinueWith(const continuationAction: TAction<ITaskEx>; continuationOptions: TTaskContinuationOptions; aMainThread: boolean): ITaskEx;
+
   protected
     function ContinueWith(const continuationAction: TAction<ITaskEx>; continuationOptions: TTaskContinuationOptions): ITaskEx;
+    function ContinueWithInMainThread(const continuationAction: TAction<ITaskEx>; continuationOptions: TTaskContinuationOptions): ITaskEx;
   public
     destructor Destroy; override;
 
@@ -42,11 +46,33 @@ uses
 
 function TTaskEx.ContinueWith(const continuationAction: TAction<ITaskEx>; continuationOptions: TTaskContinuationOptions): ITaskEx;
 begin
+  Result := InternalContinueWith(continuationAction, continuationOptions, false);
+
+end;
+
+function TTaskEx.ContinueWithInMainThread(const continuationAction: TAction<ITaskEx>; continuationOptions: TTaskContinuationOptions): ITaskEx;
+begin
+  Result := InternalContinueWith(continuationAction, continuationOptions, true);
+end;
+
+destructor TTaskEx.Destroy;
+begin
+  fExceptObj.Free;
+  inherited;
+end;
+
+function TTaskEx.GetExceptObj: Exception;
+begin
+  Result := fExceptObj;
+end;
+
+function TTaskEx.InternalContinueWith(const continuationAction: TAction<ITaskEx>; continuationOptions: TTaskContinuationOptions; aMainThread: boolean): ITaskEx;
+begin
   Result := TTaskEx.Run(
       procedure
     var
       task: ITaskEx;
-      doContinue: Boolean;
+      doContinue: boolean;
     begin
       task := Self;
       if not IsComplete then
@@ -66,22 +92,19 @@ begin
         OnlyOnCanceled:
           doContinue := GetStatus = TTaskStatus.Canceled;
       else
-        doContinue := False;
+        doContinue := false;
       end;
+
       if doContinue then
-        continuationAction(task);
+        if aMainThread then
+          TThread.Synchronize(nil,
+              procedure
+            begin
+              continuationAction(task);
+            end)
+        else
+          continuationAction(task);
     end);
-end;
-
-destructor TTaskEx.Destroy;
-begin
-  fExceptObj.Free;
-  inherited;
-end;
-
-function TTaskEx.GetExceptObj: Exception;
-begin
-  Result := fExceptObj;
 end;
 
 class function TTaskEx.QueueMainThread(aDelay: Integer; const action: TProc): ITaskEx;
@@ -91,11 +114,10 @@ begin
     begin
       TThread.Sleep(aDelay);
       TThread.Queue(nil,
-        procedure
+          procedure
         begin
           action;
-        end
-      );
+        end);
     end);
 end;
 
