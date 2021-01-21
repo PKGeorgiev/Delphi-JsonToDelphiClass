@@ -746,6 +746,9 @@ begin
 
     for LItem in FItems do
     begin
+      if FMapper.PreserveCapitalization then
+        LLines.Add(format('  [JsonName(''%s'')]',[LItem.PropertyName]));
+
       LString := format('  %s: %s;', [LItem.FieldName, LItem.GetTypeAsString]);
       LLines.Add(LString);
     end;
@@ -756,9 +759,6 @@ begin
     begin
       if (LItem.FieldType = jtUnknown) OR ((LItem is TStubContainerField) AND ((LItem as TStubContainerField).ContainedType = jtUnknown)) then
         raise EJsonMapper.CreateFmt('The property [%s] has unknown type!', [LItem.PropertyName]);
-
-      if FMapper.PreserveCapitalization then
-        LLines.Add(format('  [JsonName(''%s'')]',[LItem.PropertyName]));
 
       LString := format('  property %s: %s read %s write %s;', [LItem.PropertyName, LItem.GetTypeAsString, LItem.FieldName, LItem.FieldName]);
       LLines.Add(LString);
