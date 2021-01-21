@@ -1,7 +1,7 @@
 unit Pkg.Json.Mapper;
 
 interface
-uses FMX.TreeView, System.JSON, Rest.Json, RTTI, RegularExpressions, TypInfo,
+uses FMX.TreeView, System.JSON, System.StrUtils, Rest.Json, RTTI, RegularExpressions, TypInfo,
   SysUtils, classes, Generics.Collections, Generics.Defaults;
 
 type
@@ -89,6 +89,7 @@ type
       FClasses: TList<TStubClass>;
       FRootClass: TStubClass;
       FUnitName: string;
+    FPreserveCapitalization: Boolean;
       procedure SetUnitName(const Value: string);
     protected
       function  GetJsonType(AJsonValue: TJsonValue): TJsonType;
@@ -110,6 +111,7 @@ type
       //  Visualizes stub class structure in a treeview
       procedure   Visualize(ATreeView: TTreeView; AItemStyleLookup: string);
       property    DestinationUnitName: string read FUnitName write SetUnitName;
+      property    PreserveCapitalization: Boolean read FPreserveCapitalization write FPreserveCapitalization;
   end;
 
 procedure PrettyPrintJSON(JSONValue: TJSONValue; OutputStrings: TStrings; indent: integer = 0);
@@ -267,7 +269,7 @@ begin
     LList.Add('');
     LList.Add('interface');
     LList.Add('');
-    LList.Add('uses Generics.Collections, Rest.Json;');
+    LList.Add('uses Generics.Collections, Rest.Json' + ifThen(FPreserveCapitalization,', Rest.Json.Types','') +';');
     LList.Add('');
     LList.Add('type');
 
@@ -754,6 +756,9 @@ begin
     begin
       if (LItem.FieldType = jtUnknown) OR ((LItem is TStubContainerField) AND ((LItem as TStubContainerField).ContainedType = jtUnknown)) then
         raise EJsonMapper.CreateFmt('The property [%s] has unknown type!', [LItem.PropertyName]);
+
+      if FMapper.PreserveCapitalization then
+        LLines.Add(format('  [JsonName(''%s'')]',[LItem.PropertyName]));
 
       LString := format('  property %s: %s read %s write %s;', [LItem.PropertyName, LItem.GetTypeAsString, LItem.FieldName, LItem.FieldName]);
       LLines.Add(LString);
