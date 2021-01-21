@@ -44,6 +44,8 @@ type
     Panel4: TPanel;
     MenuItem8: TMenuItem;
     btnGenerateUnit: TButton;
+    Panel5: TPanel;
+    CheckBox1: TCheckBox;
     procedure btnVisualizeClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -138,6 +140,8 @@ end;
 
 procedure TMainForm.PreviewUnitClick(Sender: TObject);
 begin
+  jm.PreserveCapitalization := CheckBox1.IsChecked;
+
   if tv.Count = 0 then
     btnVisualizeClick(self);
 

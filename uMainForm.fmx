@@ -1707,13 +1707,13 @@ object MainForm: TMainForm
       Margins.Bottom = 6.000000000000000000
       PopupMenu = MemoPopupMenu
       Size.Width = 657.000000000000000000
-      Size.Height = 448.000000000000000000
+      Size.Height = 414.000000000000000000
       Size.PlatformDefault = False
       StyleLookup = 'Memo1Style1'
       TabOrder = 0
       OnDblClick = Memo1DblClick
       Viewport.Width = 637.000000000000000000
-      Viewport.Height = 428.000000000000000000
+      Viewport.Height = 394.000000000000000000
     end
     object Panel3: TPanel
       Align = Bottom
@@ -1722,11 +1722,11 @@ object MainForm: TMainForm
       Padding.Right = 6.000000000000000000
       Padding.Bottom = 6.000000000000000000
       Position.X = 6.000000000000000000
-      Position.Y = 473.000000000000000000
+      Position.Y = 439.000000000000000000
       Size.Width = 657.000000000000000000
       Size.Height = 53.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 1
+      TabOrder = 2
       object btnVisualize: TButton
         Align = Right
         Margins.Right = 9.000000000000000000
@@ -1811,6 +1811,30 @@ object MainForm: TMainForm
       Size.Height = 17.000000000000000000
       Size.PlatformDefault = False
       Text = 'Paste JSON String here:'
+    end
+    object Panel5: TPanel
+      Align = Bottom
+      Padding.Left = 6.000000000000000000
+      Padding.Top = 6.000000000000000000
+      Padding.Right = 6.000000000000000000
+      Padding.Bottom = 6.000000000000000000
+      Margins.Top = 4.000000000000000000
+      Position.X = 6.000000000000000000
+      Position.Y = 496.000000000000000000
+      Size.Width = 657.000000000000000000
+      Size.Height = 30.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      object CheckBox1: TCheckBox
+        Align = Left
+        Position.X = 6.000000000000000000
+        Position.Y = 6.000000000000000000
+        Size.Width = 307.000000000000000000
+        Size.Height = 18.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        Text = 'Preserve capitalization of words'
+      end
     end
   end
   object Splitter1: TSplitter
