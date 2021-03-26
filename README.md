@@ -1,6 +1,19 @@
 Delphi-JsonToDelphiClass
 ========================
 
+## Fixes & Features: 22th December 2020 ##
+
+### Bugs: ###
+
+### Features ###
+
+* New main form. Completly rewritten. 
+* Support for BSON
+* Support for Minify JSON
+* Support for multiblt output formats
+* JSON are now minifyed before posted to the validator. Means support for larger JSONs to be validated. 
+* Version 3.0 released.
+
 ## Fixes & Features: 11th December 2020 ##
 
 ### Bugs: ###
