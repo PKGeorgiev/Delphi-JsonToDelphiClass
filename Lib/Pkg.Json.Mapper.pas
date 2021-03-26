@@ -117,6 +117,7 @@ var
   i: Integer;
   SubClasslist: TStringList;
 begin
+  TStubClass.ClearNames;
   StringList := TStringList.Create;
   SubClasslist := TStringList.Create;;
   SubClasslist.Duplicates := TDuplicates.dupIgnore;
