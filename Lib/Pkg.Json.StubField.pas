@@ -69,6 +69,8 @@ type
   end;
 
   TStubClass = class(TJsonName)
+  private
+    class var UsedClassNames: TDictionary<string, string>;
   strict private
     FArrayItems: TStubFieldList;
     FComplexItems: TStubFieldList;
@@ -82,7 +84,11 @@ type
     FNeedsSourceCode: Boolean;
   strict protected
     constructor Create(aParentClass: TStubClass; aClassName: string; aStubClasses: TStubClassList; aArrayProperty: string = ''; aNeedsSourceCode: Boolean = True); virtual;
+    procedure SetName(const Value: string); override;
   public
+    class constructor Create;
+    class destructor Destroy;
+    class procedure ClearNames;
     class function Construct(aParentClass: TStubClass; aClassName: string; aStubClasses: TStubClassList; aArrayProperty: string = ''; aNeedsSourceCode: Boolean = True): TStubClass;
     destructor Destroy; override;
     function GetDeclarationPart(const BaseClass: string = ''): string;
@@ -101,9 +107,14 @@ type
 implementation
 
 uses
-  System.Classes, System.StrUtils,
+  System.StrUtils, System.Classes,
 
   Pkg.Json.ReservedWords;
+
+class procedure TStubClass.ClearNames;
+begin
+  UsedClassNames.Clear;
+end;
 
 class function TStubClass.Construct(aParentClass: TStubClass; aClassName: string; aStubClasses: TStubClassList; aArrayProperty: string; aNeedsSourceCode: Boolean): TStubClass;
 var
@@ -123,17 +134,31 @@ begin
 end;
 
 constructor TStubClass.Create(aParentClass: TStubClass; aClassName: string; aStubClasses: TStubClassList; aArrayProperty: string; aNeedsSourceCode: Boolean);
+var
+  lIndex: Integer;
+  Dummy: string;
 begin
   inherited Create(aClassName);
   FStubClasses := aStubClasses;
-  SetName(DelphiName);
+  aClassName := DelphiName;
+
+  lIndex := -1;
+
+  while UsedClassNames.ContainsValue(aClassName) do
+  begin
+    inc(lIndex);
+    aClassName := aClassName + Char(ORD('A') + lIndex);
+  end;
+
+  UsedClassNames.Add(JSONName, aClassName);
+  SetName(aClassName);
 
   FItems := TStubFieldObjectList.Create;
   FComplexItems := TStubFieldList.Create;
   FArrayItems := TStubFieldList.Create;
   FStubClasses.Add(Self);
   FArrayProperty := aArrayProperty;
-  FHasSimpleArray := False;
+  FHasSimpleArray := false;
   FNeedsSourceCode := aNeedsSourceCode;
 
   FParentClass := aParentClass;
@@ -144,6 +169,11 @@ begin
     end;
 
   FComparer := TComparer<TStubField>.Construct(FComparison);
+end;
+
+class constructor TStubClass.Create;
+begin
+  UsedClassNames := TDictionary<string, string>.Create;
 end;
 
 destructor TStubClass.Destroy;
@@ -225,11 +255,17 @@ begin
       Lines.Add('end;');
     end;
 
-    Lines.TrailingLineBreak := False;
+    Lines.TrailingLineBreak := false;
     Result := Lines.Text;
   finally
     Lines.Free;
   end;
+end;
+
+procedure TStubClass.SetName(const Value: string);
+begin
+  inherited;
+
 end;
 
 procedure TStubClass.SortFields;
@@ -367,7 +403,7 @@ begin
     for i := 0 to Lines.Count - 1 do
       Lines[i] := '  ' + Lines[i];
 
-    Lines.TrailingLineBreak := False;
+    Lines.TrailingLineBreak := false;
     Result := Lines.Text;
   finally
     Lines.Free;
@@ -377,12 +413,19 @@ end;
 { TVirtualClassItemBase }
 
 constructor TStubField.Create(aParentClass: TStubClass; aItemName: string; aFieldType: TJsonType);
+var
+  Value: string;
 begin
   inherited Create(aItemName);
 
   FParentClass := aParentClass;
   FFieldType := aFieldType;
-  SetName(DelphiName);
+
+  if (aFieldType = jtObject) and (aParentClass <> nil) then
+    if not aParentClass.UsedClassNames.TryGetValue(aItemName, Value) then
+      Value := DelphiName;
+
+  SetName(Value);
 
   if FParentClass <> nil then
     FParentClass.Items.Add(Self);
@@ -475,6 +518,11 @@ end;
 function TStubObjectField.GetTypeAsString: string;
 begin
   Result := FieldClass.Name;
+end;
+
+class destructor TStubClass.Destroy;
+begin
+  UsedClassNames.Free;
 end;
 
 end.
