@@ -268,8 +268,13 @@ begin
 end;
 
 function TPkgJsonMapper.IsValid(aJsonString: string): boolean;
+var
+  Value: TJSONValue;
 begin
-  Result := TJSONObject.ParseJSONValue(aJsonString) <> nil;
+  Value := TJSONObject.ParseJSONValue(aJsonString);
+  Result := Value <> nil;
+  if Result then
+    Value.Free;
 end;
 
 function TPkgJsonMapper.LoadFormFile(aJsonFile: string): TPkgJsonMapper;
