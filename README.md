@@ -1,5 +1,22 @@
 Delphi-JsonToDelphiClass
 ========================
+## Fixes & Features: 26th Marts 2021 ##
+
+### Bugs: ###
+* The same class name could appear multiple times:
+
+E.g this JSON generated faulty code:
+
+```
+{
+    "/": {
+        "readonly": true
+    },
+    "\\": {
+        "readonly": true
+    }
+} 
+```
 
 ## Fixes & Features: 22th December 2020 ##
 
