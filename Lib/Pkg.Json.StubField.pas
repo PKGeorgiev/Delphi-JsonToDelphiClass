@@ -381,7 +381,6 @@ begin
           ListType := 'TList';
 
         Lines.AddFormat('  property %s: %s<%s> read Get%s;', [StubField.PropertyName, ListType, StubArrayField.TypeAsString, StubArrayField.Name]);
-
       end
       else if StubField.FieldType = jtObject then
         Lines.AddFormat('  property %s: %s read %s;', [StubField.PropertyName, StubField.TypeAsString, StubField.FieldName])
@@ -422,8 +421,12 @@ begin
   FFieldType := aFieldType;
 
   if (aFieldType = jtObject) and (aParentClass <> nil) then
+  begin
     if not aParentClass.UsedClassNames.TryGetValue(aItemName, Value) then
       Value := DelphiName;
+  end
+  else
+    Value := DelphiName;
 
   SetName(Value);
 
