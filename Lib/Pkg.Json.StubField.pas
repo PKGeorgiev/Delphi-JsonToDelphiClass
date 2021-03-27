@@ -84,7 +84,6 @@ type
     FNeedsSourceCode: Boolean;
   strict protected
     constructor Create(aParentClass: TStubClass; aClassName: string; aStubClasses: TStubClassList; aArrayProperty: string = ''; aNeedsSourceCode: Boolean = True); virtual;
-    procedure SetName(const Value: string); override;
   public
     class constructor Create;
     class destructor Destroy;
@@ -260,12 +259,6 @@ begin
   finally
     Lines.Free;
   end;
-end;
-
-procedure TStubClass.SetName(const Value: string);
-begin
-  inherited;
-
 end;
 
 procedure TStubClass.SortFields;
