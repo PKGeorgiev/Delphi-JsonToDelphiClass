@@ -5,7 +5,7 @@ interface
 uses
   DUnitX.TestFramework, DUnitX.Assert.Ex,
 
-  Test.Helper.Helper, AnonymousArray;
+  AnonymousArray;
 {$SCOPEDENUMS ON}
 
 type

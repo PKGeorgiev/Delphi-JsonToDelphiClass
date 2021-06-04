@@ -89,6 +89,9 @@
         <DCCReference Include="..\Lib\Pkg.Json.JSONName.pas"/>
         <DCCReference Include="..\Lib\Pkg.Json.JsonValueHelper.pas"/>
         <DCCReference Include="TeskPkg.TestJsonValueHelper.pas"/>
+        <DCCReference Include="TestPkg.PersonDTO.pas"/>
+        <DCCReference Include="TestPkg.TestJsonDTO.pas"/>
+        <DCCReference Include="TestPkg.SimpleDTO.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

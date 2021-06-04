@@ -74,10 +74,14 @@ type
     procedure Label1Click(Sender: TObject);
     procedure ActionList1Update(Action: TBasicAction; var Handled: Boolean);
     procedure EditClassNameChange(Sender: TObject);
+    procedure MemoJSONChangeTracking(Sender: TObject);
+  private type
+    TValidationTypes = (vtUnchecked, vtValid, vtInvalid);
   private
     { Private declarations }
     FCheckVersionResponse: TRelease;
     FJsonMapper: TPkgJsonMapper;
+    FIsValid: TValidationTypes;
   public
     { Public declarations }
   end;
@@ -211,8 +215,18 @@ begin
   if not OutputFormatDict.TryGetValue(TabControl1.ActiveTab, OutputFormat) then
     OutputFormat := nil;
 
-  actConvert.Enabled := FJsonMapper.IsValid(MemoJSON.Text.Trim);
+  if FIsValid = vtUnchecked then
+    if FJsonMapper.IsValid(MemoJSON.Text.Trim) then
+      FIsValid := vtValid
+    else
+      FIsValid := vtInvalid;
+  actConvert.Enabled := FIsValid = vtValid;
   actSaveAs.Enabled := (OutputFormat <> nil) and (actConvert.Enabled);
+end;
+
+procedure TMainForm.MemoJSONChangeTracking(Sender: TObject);
+begin
+  FIsValid := vtUnchecked;
 end;
 
 procedure TMainForm.actOnlineValidationExecute(Sender: TObject);

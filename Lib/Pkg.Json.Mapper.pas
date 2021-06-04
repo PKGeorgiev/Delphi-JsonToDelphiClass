@@ -268,8 +268,13 @@ begin
 end;
 
 function TPkgJsonMapper.IsValid(aJsonString: string): boolean;
+var
+  Value: TJSONValue;
 begin
-  Result := TJSONObject.ParseJSONValue(aJsonString) <> nil;
+  Value := TJSONObject.ParseJSONValue(aJsonString);
+  Result := Value <> nil;
+  if Result then
+    Value.Free;
 end;
 
 function TPkgJsonMapper.LoadFormFile(aJsonFile: string): TPkgJsonMapper;
@@ -292,11 +297,12 @@ begin
   Result := Self;
   FStubClasses.Clear;
   FJsonString := aJsonString;
-
+  TStubClass.ClearNames;
   JSONValue := TJSONObject.ParseJSONValue(aJsonString);
   if JSONValue <> nil then
   begin
     try
+
       FRootClass := TStubClass.Construct(nil, FClassName, Self.FStubClasses);
 
       case GetJsonType(JSONValue) of

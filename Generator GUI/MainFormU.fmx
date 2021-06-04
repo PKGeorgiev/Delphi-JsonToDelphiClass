@@ -123,6 +123,7 @@ object MainForm: TMainForm
             '"'
           ''
           'See also the possibilities in the MenuBar')
+        OnChangeTracking = MemoJSONChangeTracking
         Align = Client
         Size.Width = 613.000000000000000000
         Size.Height = 355.000000000000000000

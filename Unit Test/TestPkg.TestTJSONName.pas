@@ -23,7 +23,7 @@ type
     [Test]
     procedure TestEmptyName;
     [Test]
-    procedure TestCapitalizeFirst_teststring;
+    procedure TestCapitalizeFirst_Teststring;
     [Test]
     procedure TestCapitalizeFirst_NameTest;
     [Test]
@@ -78,7 +78,7 @@ begin
   Assert.AreEqual(TestResult, TJSONName.CapitalizeFirst('test string'));
 end;
 
-procedure TestTJSONName.TestCapitalizeFirst_teststring;
+procedure TestTJSONName.TestCapitalizeFirst_Teststring;
 const
   TestResult = 'Teststring';
 begin
@@ -125,6 +125,7 @@ begin
   Assert.AreEqual(TestValue, FJsonName.DelphiName);
   Assert.IsFalse(FJsonName.NeedsAttribute)
 end;
+
 procedure TestTJSONName.TestNameProperties_ColonInName;
 const
   TestValue = 'configGlossary:adminEmail';

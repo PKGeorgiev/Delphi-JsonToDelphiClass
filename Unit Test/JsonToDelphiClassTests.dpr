@@ -28,7 +28,10 @@ uses
   TestPkg.TestTJSONName in 'TestPkg.TestTJSONName.pas',
   Pkg.Json.JSONName in '..\Lib\Pkg.Json.JSONName.pas',
   Pkg.Json.JsonValueHelper in '..\Lib\Pkg.Json.JsonValueHelper.pas',
-  TeskPkg.TestJsonValueHelper in 'TeskPkg.TestJsonValueHelper.pas';
+  TeskPkg.TestJsonValueHelper in 'TeskPkg.TestJsonValueHelper.pas',
+  TestPkg.PersonDTO in 'TestPkg.PersonDTO.pas',
+  TestPkg.TestJsonDTO in 'TestPkg.TestJsonDTO.pas',
+  TestPkg.SimpleDTO in 'TestPkg.SimpleDTO.pas';
 
 {$R *.RES}
 
