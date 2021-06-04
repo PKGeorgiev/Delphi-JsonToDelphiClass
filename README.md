@@ -1,5 +1,17 @@
 Delphi-JsonToDelphiClass
 ========================
+## Fixes & Features: 04th June 2021 ##
+
+### Bugs: ###
+* An error message occured when switching betewwn the diffrent demofiles
+* Dates without timestamp wasn't recognized within  the RegEx
+* Compile error in unit tests
+* Updated elements in a list wasn't applied to the generated json.
+* Issue #2 [Out of memory error and High CPU usage](https://github.com/JensBorrisholt/Delphi-JsonToDelphiClass/pull/2) - Thank You [MarkRSill](https://github.com/MarkRSill)
+
+### Features ###
+* Added unit tests for updating elements in lists.
+
 ## Fixes & Features: 26th Marts 2021 ##
 
 ### Bugs: ###
