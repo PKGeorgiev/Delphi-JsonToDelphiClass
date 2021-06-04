@@ -297,11 +297,12 @@ begin
   Result := Self;
   FStubClasses.Clear;
   FJsonString := aJsonString;
-
+  TStubClass.ClearNames;
   JSONValue := TJSONObject.ParseJSONValue(aJsonString);
   if JSONValue <> nil then
   begin
     try
+
       FRootClass := TStubClass.Construct(nil, FClassName, Self.FStubClasses);
 
       case GetJsonType(JSONValue) of

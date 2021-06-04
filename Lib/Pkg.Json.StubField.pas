@@ -80,7 +80,7 @@ type
     FParentClass: TStubClass;
     FStubClasses: TStubClassList;
     FArrayProperty: string;
-    FHasSimpleArray: Boolean;
+    FHasArray: Boolean;
     FNeedsSourceCode: Boolean;
   strict protected
     constructor Create(aParentClass: TStubClass; aClassName: string; aStubClasses: TStubClassList; aArrayProperty: string = ''; aNeedsSourceCode: Boolean = True); virtual;
@@ -135,7 +135,6 @@ end;
 constructor TStubClass.Create(aParentClass: TStubClass; aClassName: string; aStubClasses: TStubClassList; aArrayProperty: string; aNeedsSourceCode: Boolean);
 var
   lIndex: Integer;
-  Dummy: string;
 begin
   inherited Create(aClassName);
   FStubClasses := aStubClasses;
@@ -157,7 +156,7 @@ begin
   FArrayItems := TStubFieldList.Create;
   FStubClasses.Add(Self);
   FArrayProperty := aArrayProperty;
-  FHasSimpleArray := false;
+  FHasArray := False;
   FNeedsSourceCode := aNeedsSourceCode;
 
   FParentClass := aParentClass;
@@ -241,20 +240,26 @@ begin
         Lines.Add('end;');
       end;
 
-    if FHasSimpleArray then
+    if FHasArray  then
     begin
       Lines.Add('');
       Lines.AddFormat('function %s.GetAsJson: string;', [Name]);
       Lines.Add('begin');
+
       for StubField in FItems do
-        if (StubField.IsArrayField) and (not StubField.IsObjectArrayField) then
-          Lines.AddFormat('  RefreshArray<%s>(%s, %sArray);', [(StubField as TStubArrayField).TypeAsString, StubField.FieldName, StubField.FieldName]);
+      begin
+        if not StubField.IsArrayField then
+          continue;
+        Lines.AddFormat('  RefreshArray<%s>(%s, %sArray);', [(StubField as TStubArrayField).TypeAsString, StubField.FieldName, StubField.FieldName]);
+      end;
+
+          // RefreshArray<TPerson>(FPersons, FPersonsArray);
 
       Lines.Add('  Result := inherited;');
       Lines.Add('end;');
     end;
 
-    Lines.TrailingLineBreak := false;
+    Lines.TrailingLineBreak := False;
     Result := Lines.Text;
   finally
     Lines.Free;
@@ -315,6 +320,7 @@ begin
     begin
       if StubField.IsObjectArrayField then
       begin
+        FHasArray := True;
         StubArrayField := StubField as TStubArrayField;
         Lines.AddFormat('  [%s, JSONMarshalled(False)]', [StubField.NameAttribute]);
         Lines.AddFormat('  %sArray: TArray<%s>;', [StubField.FieldName, StubField.TypeAsString]);
@@ -323,7 +329,7 @@ begin
       end
       else if StubField.IsArrayField then
       begin
-        FHasSimpleArray := True;
+        FHasArray := True;
         StubArrayField := StubField as TStubArrayField;
         Lines.AddFormat('  [%s]', [StubField.NameAttribute]);
         Lines.AddFormat('  %sArray: TArray<%s>;', [StubField.FieldName, StubField.TypeAsString]);
@@ -351,7 +357,7 @@ begin
         Lines.AddFormat('  function Get%s: %s<%s>;', [StubField.Name, ListType, StubArrayField.TypeAsString]);
       end;
 
-    if FHasSimpleArray then
+    if FHasArray then
     begin
       Lines.Add('protected');
       Lines.Add('  function GetAsJson: string; override;');
@@ -395,7 +401,7 @@ begin
     for i := 0 to Lines.Count - 1 do
       Lines[i] := '  ' + Lines[i];
 
-    Lines.TrailingLineBreak := false;
+    Lines.TrailingLineBreak := False;
     Result := Lines.Text;
   finally
     Lines.Free;

@@ -176,7 +176,7 @@ end;
 
 procedure TTestJsonValueHelper.Test_TJSONString_ISO8601Date_jtDate;
 begin
-  JsonStringTest('2019-08-29', jtDate);
+  JsonStringTest('2019-08-29', jtDateTime);
 end;
 
 procedure TTestJsonValueHelper.Test_TJSONString_True_jrTrue;
