@@ -3,7 +3,7 @@ Delphi-JsonToDelphiClass
 ## Fixes & Features: 04th June 2021 ##
 
 ### Bugs: ###
-* An error message occured when switching beteewn the diffrent demo files
+* An error message occured when switching between the diffrent demo files
 * Dates without timestamp wasn't recognized within  the RegEx
 * Compile error in unit tests
 * Updated elements in a list wasn't applied to the generated json.
