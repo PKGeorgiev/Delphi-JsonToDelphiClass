@@ -1,0 +1,30 @@
+{
+    "LastName": "Farhat",
+    "FirstName": "Joe",
+    "Mail": "string",
+    "MailAlias": "string",
+    "PayId": "string",
+    "PayId2": "string",
+    "PayId3": "string",
+    "PayId4": "string",
+    "PayId5": "string",
+    "PayId6": "string",
+    "Language": "string",
+    "LocalCurrency": "string",
+    "LocalCountry": "string",
+    "ManagerId": "string",
+    "ReviewerId": "string",
+    "UserType": 0,
+    "Vendor": "string",
+    "UserRole": 0,
+    "DefaultProjectId": "string",
+    "IKRatesId": "string",
+    "AdditionalValidators": [{
+        "Mail": "string",
+        "MinimumAmount": 0.24776703043946879
+    }],
+    "Tags": [
+        "string"
+    ]
+}
+
