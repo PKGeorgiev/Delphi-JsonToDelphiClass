@@ -128,8 +128,9 @@ object MainForm: TMainForm
         Size.Width = 613.000000000000000000
         Size.Height = 355.000000000000000000
         Size.PlatformDefault = False
-        Viewport.Width = 613.000000000000000000
-        Viewport.Height = 355.000000000000000000
+        TabOrder = 2
+        Viewport.Width = 609.000000000000000000
+        Viewport.Height = 351.000000000000000000
       end
       object ListView1: TListView
         ItemAppearanceClassName = 'TListItemAppearance'
@@ -140,6 +141,7 @@ object MainForm: TMainForm
         Size.Width = 158.000000000000000000
         Size.Height = 430.000000000000000000
         Size.PlatformDefault = False
+        TabOrder = 3
         Visible = False
         OnChange = ListView1Change
       end
@@ -159,8 +161,8 @@ object MainForm: TMainForm
         Size.PlatformDefault = False
         TabOrder = 0
         Visible = False
-        Viewport.Width = 209.000000000000000000
-        Viewport.Height = 377.000000000000000000
+        Viewport.Width = 205.000000000000000000
+        Viewport.Height = 373.000000000000000000
       end
       object Panel3: TPanel
         Align = Bottom

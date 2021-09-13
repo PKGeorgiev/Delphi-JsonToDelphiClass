@@ -82,6 +82,7 @@ type
     FCheckVersionResponse: TRelease;
     FJsonMapper: TPkgJsonMapper;
     FIsValid: TValidationTypes;
+    FJson: string;
   public
     { Public declarations }
   end;
@@ -120,9 +121,9 @@ end;
 procedure TMainForm.actConvertExecute(Sender: TObject);
 var
   Destination: string;
-  Json: string;
+// Json: string;
 begin
-  Json := MemoJSON.Text;
+// Json := MemoJSON.Text;
 
   while TabControl1.TabCount > 1 do
     TabControl1.Delete(TabControl1.TabCount - 1);
@@ -130,18 +131,18 @@ begin
   OutputFormatDict.Clear;
 
   if actBSON.Checked then
-    with TOutputFormat.Create(TabControl1, 'BJSON', TJSONConverter.Json2BsonString(Json), 'bson') do
+    with TOutputFormat.Create(TabControl1, 'BJSON', TJSONConverter.Json2BsonString(FJson), 'bson') do
       Execute;
 
   if actMinifyJson.Checked then
-    with TOutputFormat.Create(TabControl1, 'Minify Json', TJSONConverter.MinifyJson(Json), 'json') do
+    with TOutputFormat.Create(TabControl1, 'Minify Json', TJSONConverter.MinifyJson(FJson), 'json') do
       Execute;
 
   if actDelphiUnit.Checked then
   begin
     FJsonMapper.DestinationClassName := EditClassName.Text;
     FJsonMapper.DestinationUnitName := EditUnitName.Text;
-    FJsonMapper.Parse(Json);
+    FJsonMapper.Parse(FJson);
 
     with TOutputFormat.Create(TabControl1, 'Delphi Unit', FJsonMapper.GenerateUnit, 'pas') do
       Execute;
@@ -244,8 +245,11 @@ begin
   while TabControl1.TabCount > 1 do
     TabControl1.Delete(TabControl1.TabCount - 1);
 
-  MemoJSON.Lines.LoadFromFile(OpenDialog1.FileName);
-  MemoJSON.Text := PrettyPrint(MemoJSON.Text);
+  MemoJSON.BeginUpdate;
+  FJson := TFile.ReadAllText(OpenDialog1.FileName);
+
+  MemoJSON.Lines.Text := PrettyPrint(FJson);
+  MemoJSON.EndUpdate;
 end;
 
 procedure TMainForm.actSaveAsExecute(Sender: TObject);
@@ -315,6 +319,7 @@ end;
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
   FJsonMapper := TPkgJsonMapper.Create;
+  FJson := '';
   Caption := 'JsonToDelphiClass - ' + FloatToJson(ProgramVersion) + '.0 | By Jens Borrisholt';
 
   CheckForUpdate(

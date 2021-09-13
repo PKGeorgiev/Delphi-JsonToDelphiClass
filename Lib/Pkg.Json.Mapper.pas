@@ -69,7 +69,11 @@ begin
   if not(aJsonValue is TJSONObject) then
   begin
     JsonType := GetJsonType(aJsonValue);
-    TStubField.Create(aParentClass, (aJsonValue as TJsonString).Value, JsonType);
+    var name := (aJsonValue as TJsonString).Value;
+    if Name = '' then
+      Name := 'Element';
+
+    TStubField.Create(aParentClass, Name, JsonType);
     exit;
   end;
 

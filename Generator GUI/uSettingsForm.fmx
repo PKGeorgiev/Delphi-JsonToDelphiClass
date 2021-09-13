@@ -87,14 +87,14 @@ object SettingsForm: TSettingsForm
       end>
     ScopeMappings = <>
     OnCreateAdapter = PrototypeBindSource1CreateAdapter
-    Left = 80
-    Top = 16
+    Left = 64
+    Top = 120
   end
   object BindingsList1: TBindingsList
     Methods = <>
     OutputConverters = <>
-    Left = 168
-    Top = 5
+    Left = 88
+    Top = 53
     object LinkControlToField1: TLinkControlToField
       Category = 'Quick Bindings'
       DataSource = PrototypeBindSource1
