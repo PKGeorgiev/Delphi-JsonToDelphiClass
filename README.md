@@ -9,7 +9,7 @@ Delphi-JsonToDelphiClass
 * In the generator main form, the JSON wasn't allways updated
 
 ### Features ###
-
+* Upgraded to Delphi 11
 * New property attribute : ```[SuppressZero]```
   Delphi doesn't support Nullable types, so use this attribute to strip TDateTime property where value is 0.
 
