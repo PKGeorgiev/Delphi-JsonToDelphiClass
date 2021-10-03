@@ -74,7 +74,7 @@ type
     procedure Label1Click(Sender: TObject);
     procedure ActionList1Update(Action: TBasicAction; var Handled: Boolean);
     procedure EditClassNameChange(Sender: TObject);
-    procedure MemoJSONChangeTracking(Sender: TObject);
+    procedure MemoJSONExit(Sender: TObject);
   private type
     TValidationTypes = (vtUnchecked, vtValid, vtInvalid);
   private
@@ -83,8 +83,10 @@ type
     FJsonMapper: TPkgJsonMapper;
     FIsValid: TValidationTypes;
     FJson: string;
+    procedure SetJSON(const Value: string);
   public
     { Public declarations }
+    property Json: string read FJson write SetJSON;
   end;
 
 var
@@ -121,9 +123,9 @@ end;
 procedure TMainForm.actConvertExecute(Sender: TObject);
 var
   Destination: string;
-// Json: string;
+  // Json: string;
 begin
-// Json := MemoJSON.Text;
+  FJson := MemoJSON.Text;
 
   while TabControl1.TabCount > 1 do
     TabControl1.Delete(TabControl1.TabCount - 1);
@@ -166,7 +168,7 @@ begin
       end;
 
     TDialogService.MessageDialog('Demo project sucessfull genereted. Do you want to open the destination folder?', TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbYes, 0,
-        procedure(const AResult: TModalResult)
+      procedure(const AResult: TModalResult)
       begin
         if AResult <> mrYes then
           exit;
@@ -216,18 +218,29 @@ begin
   if not OutputFormatDict.TryGetValue(TabControl1.ActiveTab, OutputFormat) then
     OutputFormat := nil;
 
-  if FIsValid = vtUnchecked then
-    if FJsonMapper.IsValid(MemoJSON.Text.Trim) then
-      FIsValid := vtValid
-    else
-      FIsValid := vtInvalid;
   actConvert.Enabled := FIsValid = vtValid;
   actSaveAs.Enabled := (OutputFormat <> nil) and (actConvert.Enabled);
 end;
 
-procedure TMainForm.MemoJSONChangeTracking(Sender: TObject);
+procedure TMainForm.MemoJSONExit(Sender: TObject);
 begin
-  FIsValid := vtUnchecked;
+  Json := MemoJSON.Text;
+end;
+
+procedure TMainForm.SetJSON(const Value: string);
+begin
+  if FJson = Value then
+    exit;
+
+  FJson := Value;
+
+  if FJsonMapper.IsValid(FJson) then
+    FIsValid := vtValid
+  else
+  begin
+    FIsValid := vtInvalid;
+    FJson := string.empty;
+  end;
 end;
 
 procedure TMainForm.actOnlineValidationExecute(Sender: TObject);
@@ -246,7 +259,7 @@ begin
     TabControl1.Delete(TabControl1.TabCount - 1);
 
   MemoJSON.BeginUpdate;
-  FJson := TFile.ReadAllText(OpenDialog1.FileName);
+  Json := TFile.ReadAllText(OpenDialog1.FileName);
 
   MemoJSON.Lines.Text := PrettyPrint(FJson);
   MemoJSON.EndUpdate;
@@ -313,7 +326,7 @@ end;
 
 procedure TMainForm.EmptyExecute(Sender: TObject);
 begin
-//
+  //
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
@@ -393,3 +406,4 @@ begin
 end;
 
 end.
+

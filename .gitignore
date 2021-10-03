@@ -68,3 +68,5 @@ Unit Test/__recovery/
 Unit Test/Win32/Debug/
 
 *.skincfg
+
+*.vlb

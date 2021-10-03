@@ -26,6 +26,8 @@ type
     LinkControlToField3: TLinkControlToField;
     LinkControlToField4: TLinkControlToField;
     LinkPropertyToFieldEnabled: TLinkPropertyToField;
+    CheckBoxSuppressZeroDate: TCheckBox;
+    LinkControlToField5: TLinkControlToField;
     procedure PrototypeBindSource1CreateAdapter(Sender: TObject; var ABindSourceAdapter: TBindSourceAdapter);
   private
     { Private declarations }

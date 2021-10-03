@@ -1,11 +1,8 @@
 unit Pkg.Json.DTO;
 
-
-
 interface
 
-uses
-  System.Classes, System.Json, Rest.Json, System.Generics.Collections, Rest.JsonReflect;
+uses System.Classes, System.Json, Rest.Json, System.Generics.Collections, Rest.JsonReflect;
 
 type
   TArrayMapper = class
@@ -29,7 +26,7 @@ type
   public
     constructor Create; override;
     class function PrettyPrintJSON(aJson: string): string; overload;
-    function ToString : string; override;
+    function ToString: string; override;
     property AsJson: string read GetAsJson write SetAsJson;
   end;
 
@@ -38,10 +35,14 @@ type
     constructor Create;
   end;
 
+  SuppressZeroAttribute = class(JsonReflectAttribute)
+  public
+    constructor Create;
+  end;
+
 implementation
 
-uses
-  System.Sysutils, System.JSONConsts, System.Rtti;
+uses System.Sysutils, System.JSONConsts, System.Rtti, System.DateUtils;
 
 { TJsonDTO }
 
@@ -246,6 +247,43 @@ begin
   inherited Create(ctObjects, rtObjects, TGenericListFieldInterceptor, nil, false);
 end;
 
+type
+  TSuppressZeroDateInterceptor = class(TJSONInterceptor)
+  public
+    function StringConverter(Data: TObject; Field: string): string; override;
+    procedure StringReverter(Data: TObject; Field: string; Arg: string); override;
+  end;
+
+function TSuppressZeroDateInterceptor.StringConverter(Data: TObject; Field: string): string;
+var
+  RttiContext: TRttiContext;
+  Date: TDateTime;
+begin
+  Date := RttiContext.GetType(Data.ClassType).GetField(Field).GetValue(Data).AsType<TDateTime>;
+  if Date = 0 then
+    Result := string.Empty
+  else
+    Result := DateToISO8601(Date, True);
+end;
+
+procedure TSuppressZeroDateInterceptor.StringReverter(Data: TObject; Field, Arg: string);
+var
+  RttiContext: TRttiContext;
+  Date: TDateTime;
+begin
+  if Arg.IsEmpty then
+    Date := 0
+  else
+    Date := ISO8601ToDate(Arg, True);
+
+  RttiContext.GetType(Data.ClassType).GetField(Field).SetValue(Data, Date);
+end;
+
+{ SuppressZeroAttribute }
+
+constructor SuppressZeroAttribute.Create;
+begin
+  inherited Create(ctString, rtString, TSuppressZeroDateInterceptor);
+end;
+
 end.
-
-
