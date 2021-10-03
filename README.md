@@ -34,6 +34,7 @@ The above class will generate the following JSON, if both properties is 0
     "noSuppressDate":"1899-12-30T00:00:00.000Z"
   }
 ```
+NOTE: You can turn off this feature in the settings form 
 
 ## Fixes & Features: 04th June 2021 ##
 
