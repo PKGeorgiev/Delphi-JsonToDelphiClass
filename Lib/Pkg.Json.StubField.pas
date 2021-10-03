@@ -2,8 +2,7 @@ unit Pkg.Json.StubField;
 
 interface
 
-uses
-  System.SysUtils, System.Generics.Defaults, System.Generics.Collections,
+uses System.SysUtils, System.Generics.Defaults, System.Generics.Collections,
   Pkg.Json.JSONName, Pkg.Json.Lists, Pkg.Json.JsonValueHelper;
 
 type
@@ -28,6 +27,8 @@ type
   public
     function IsArrayField: Boolean;
     function IsObjectArrayField: Boolean;
+
+    function DateAttribute: string;
   published
     property Name: string read FName write SetName;
     property FieldName: string read FFieldName;
@@ -105,10 +106,9 @@ type
 
 implementation
 
-uses
-  System.StrUtils, System.Classes,
+uses System.StrUtils, System.Classes,
 
-  Pkg.Json.ReservedWords;
+  Pkg.Json.ReservedWords, Pkg.Json.Settings;
 
 class procedure TStubClass.ClearNames;
 begin
@@ -240,7 +240,7 @@ begin
         Lines.Add('end;');
       end;
 
-    if FHasArray  then
+    if FHasArray then
     begin
       Lines.Add('');
       Lines.AddFormat('function %s.GetAsJson: string;', [Name]);
@@ -253,7 +253,7 @@ begin
         Lines.AddFormat('  RefreshArray<%s>(%s, %sArray);', [(StubField as TStubArrayField).TypeAsString, StubField.FieldName, StubField.FieldName]);
       end;
 
-          // RefreshArray<TPerson>(FPersons, FPersonsArray);
+      // RefreshArray<TPerson>(FPersons, FPersonsArray);
 
       Lines.Add('  Result := inherited;');
       Lines.Add('end;');
@@ -304,7 +304,7 @@ var
   StubArrayField: TStubArrayField;
   StubField: TStubField;
   i: Integer;
-  ListType: String;
+  DateAttribute, ListType: String;
 begin
   if not FNeedsSourceCode then
     exit('');
@@ -338,8 +338,19 @@ begin
       end
       else
       begin
+        DateAttribute := StubField.DateAttribute;
         if StubField.NeedsAttribute then
-          Lines.AddFormat('  [%s]', [StubField.NameAttribute]);
+        begin
+          if DateAttribute <> '' then
+            Lines.AddFormat('  [%s, %s]', [DateAttribute, StubField.NameAttribute])
+          else
+            Lines.AddFormat('  [%s]', [StubField.NameAttribute]);
+        end
+        else
+        begin
+          if DateAttribute <> '' then
+            Lines.AddFormat('  [%s]', [DateAttribute]);
+        end;
 
         Lines.AddFormat('  %s: %s;', [StubField.FieldName, StubField.TypeAsString]);
       end;
@@ -468,6 +479,16 @@ begin
     FPropertyName := '&' + Value
   else
     FPropertyName := Value;
+end;
+
+function TStubField.DateAttribute: string;
+begin
+  Result := '';
+
+  if (not TSettings.Instance.SuppressZeroDate) or (FFieldType <> jtDateTime) then
+    exit('');
+
+  exit('SuppressZero');
 end;
 
 function TStubField.GetTypeAsString: string;

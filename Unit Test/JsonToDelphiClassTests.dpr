@@ -31,7 +31,8 @@ uses
   TeskPkg.TestJsonValueHelper in 'TeskPkg.TestJsonValueHelper.pas',
   TestPkg.PersonDTO in 'TestPkg.PersonDTO.pas',
   TestPkg.TestJsonDTO in 'TestPkg.TestJsonDTO.pas',
-  TestPkg.SimpleDTO in 'TestPkg.SimpleDTO.pas';
+  TestPkg.SimpleDTO in 'TestPkg.SimpleDTO.pas',
+  TestPkg.TestSuppressZero in 'TestPkg.TestSuppressZero.pas';
 
 {$R *.RES}
 
