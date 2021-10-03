@@ -70,3 +70,5 @@ Unit Test/Win32/Debug/
 *.skincfg
 
 *.vlb
+
+*.res
