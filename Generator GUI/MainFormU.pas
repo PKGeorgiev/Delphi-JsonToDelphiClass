@@ -123,7 +123,6 @@ end;
 procedure TMainForm.actConvertExecute(Sender: TObject);
 var
   Destination: string;
-  // Json: string;
 begin
   FJson := MemoJSON.Text;
 
