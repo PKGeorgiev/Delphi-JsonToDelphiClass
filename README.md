@@ -1,6 +1,6 @@
 Delphi-JsonToDelphiClass
 ========================
-## Fixes & Features: 043h October 2021 ##
+## Fixes & Features: 03h October 2021 ##
 
 ### Bugs: ###
 * Wrong type detection. '2019-08-29' wasn't recognized as a Date, but a string
