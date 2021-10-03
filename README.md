@@ -1,5 +1,40 @@
 Delphi-JsonToDelphiClass
 ========================
+## Fixes & Features: 043h October 2021 ##
+
+### Bugs: ###
+* Wrong type detection. '2019-08-29' wasn't recognized as a Date, but a string
+* All unittests didn't pass
+* In the generator main form, the correct JSON wans't allways read from the MEMO 
+* In the generator main form, the JSON wasn't allways updated
+
+### Features ###
+
+* New property attribute : ```[SuppressZero]```
+  Delphi doesn't support Nullable types, so use this attribute to strip TDateTime property where value is 0.
+
+A Small example:
+```  
+type
+  TDateTimeDTO = class(TJsonDTO)
+  private
+    [SuppressZero]
+    FSuppressDate: TDateTime;
+    FNoSuppressDate: TDateTime;
+  public
+    property DateSuppress: TDateTime read FSuppressDate write FSuppressDate;
+    property NoDateSuppress: TDateTime read FNoSuppressDate write FNoSuppressDate;
+  end;
+```
+The above class will generate the following JSON, if both properties is 0 
+
+```
+  {
+    "suppressDate":"",
+    "noSuppressDate":"1899-12-30T00:00:00.000Z"
+  }
+```
+
 ## Fixes & Features: 04th June 2021 ##
 
 ### Bugs: ###
