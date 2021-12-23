@@ -1,0 +1,18 @@
+.delphiCustom3Alt { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:normal;background-color:white;color:black; }
+.delphiCustom3Alt table, td, th { border-spacing:0px;padding:0px; }
+.delphiCustom3Alt .comment { font-family:"Courier New",Courier,monospace;font-style:italic;font-weight:normal;color:#008080; }
+.delphiCustom3Alt .keyword { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:bold;color:#aa00ff; }
+.delphiCustom3Alt .identifier { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:normal;color:#d56000; }
+.delphiCustom3Alt .symbol { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:normal;color:#0000f0; }
+.delphiCustom3Alt .string { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:normal;color:#777777; }
+.delphiCustom3Alt .character { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:normal;color:#777777; }
+.delphiCustom3Alt .number { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:bold;color:#990000; }
+.delphiCustom3Alt .float { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:bold;color:#990000; }
+.delphiCustom3Alt .hex { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:bold;color:#990000; }
+.delphiCustom3Alt .assembler { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:normal;color:black; }
+.delphiCustom3Alt .preprocessor { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:normal;color:#8d7f07; }
+.delphiCustom3Alt .error { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:normal;color:red; }
+.delphiCustom3Alt .gutter { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:normal;color:gray;text-align:right;padding-right:4px;border-right-color:lightgray;border-right-style:solid;border-right-width:2px; }
+.delphiCustom3Alt .content { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:normal;color:black;padding-left:6px; }
+.delphiCustom3Alt tr:nth-child(odd) { background:white; }
+.delphiCustom3Alt tr:nth-child(even) { background:#f3f3f3; }

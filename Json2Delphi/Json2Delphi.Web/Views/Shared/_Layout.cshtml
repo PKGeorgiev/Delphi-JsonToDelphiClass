@@ -1,0 +1,34 @@
+﻿@{
+  ViewData.SetTitle("Json to Delphi");
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData.GetTitle()</title>
+
+    <link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" async/>
+    <link href="~/lib/highlight/highlight-bundle.css" rel="stylesheet" async/>
+    <link href="~/css/json2delphi-bundle.css" rel="stylesheet" async/>
+
+  </head>
+
+  <body>
+    <nav class="navbar json2delphi-title">
+      <h2>@ViewData.GetTitle()</h2>
+    </nav>
+
+    <main>
+      @RenderBody()
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    @await RenderSectionAsync("viewScripts")
+
+  </body>
+</html>

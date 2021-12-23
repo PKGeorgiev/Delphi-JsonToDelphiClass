@@ -1,0 +1,35 @@
+﻿.json2delphi-title {
+  height: var(--titleHeight);
+  vertical-align: center;
+}
+
+.json2delphi-form {
+  height: var(--formHeight);
+  padding: var(--global-group-spacing);
+}
+
+.json2delphi-group { padding: var(--global-group-spacing); }
+
+.json2delphi-sourcecode { height: var(--sourceCodeHeight); }
+
+.json2delphi-sourcecode textarea {
+  height: 100%;
+  resize: none;
+  width: 100%;
+}
+
+.json2delphi-sourcecode .result-text {
+  border: 1px solid black;
+  display: inline-block;
+  height: 100%;
+  overflow: auto;
+  padding: 1px;
+  white-space: pre-wrap;
+  width: 100%;
+}
+
+.json2delphi-settings { }
+
+.json2delphi-settings .postfix-classnames { padding-left: var(--settingsPostfixIdent); }
+
+.json2delphi-settings .postfix-classnames input { width: 100%; }

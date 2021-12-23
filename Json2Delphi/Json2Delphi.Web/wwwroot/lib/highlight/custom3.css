@@ -1,0 +1,16 @@
+.delphiCustom3 { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:normal;background-color:white;color:black; }
+.delphiCustom3 table, td, th { border-spacing:0px;padding:0px; }
+.delphiCustom3 .comment { font-family:"Courier New",Courier,monospace;font-style:italic;font-weight:normal;background-color:white;color:#008080; }
+.delphiCustom3 .keyword { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:bold;background-color:white;color:#aa00ff; }
+.delphiCustom3 .identifier { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:normal;background-color:white;color:#d56000; }
+.delphiCustom3 .symbol { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:normal;background-color:white;color:#0000f0; }
+.delphiCustom3 .string { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:normal;background-color:white;color:#777777; }
+.delphiCustom3 .character { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:normal;background-color:white;color:#777777; }
+.delphiCustom3 .number { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:bold;background-color:white;color:#990000; }
+.delphiCustom3 .float { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:bold;background-color:white;color:#990000; }
+.delphiCustom3 .hex { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:bold;background-color:white;color:#990000; }
+.delphiCustom3 .assembler { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:normal;background-color:white;color:black; }
+.delphiCustom3 .preprocessor { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:normal;background-color:white;color:#8d7f07; }
+.delphiCustom3 .error { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:normal;background-color:white;color:red; }
+.delphiCustom3 .gutter { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:normal;background-color:white;color:gray;text-align:right;padding-right:4px;border-right-color:lightgray;border-right-style:solid;border-right-width:2px; }
+.delphiCustom3 .content { font-family:"Courier New",Courier,monospace;font-style:normal;font-weight:normal;background-color:white;color:black;padding-left:6px; }

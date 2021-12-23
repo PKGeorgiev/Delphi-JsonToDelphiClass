@@ -1,0 +1,16 @@
+.delphiTwilight { font-family:monospace;font-style:normal;font-weight:normal;background-color:black;color:white; }
+.delphiTwilight table, td, th { border-spacing:0px;padding:0px; }
+.delphiTwilight .comment { font-family:monospace;font-style:italic;font-weight:normal;background-color:black;color:lime; }
+.delphiTwilight .keyword { font-family:monospace;font-style:normal;font-weight:normal;background-color:black;color:aqua; }
+.delphiTwilight .identifier { font-family:monospace;font-style:normal;font-weight:normal;background-color:black;color:white; }
+.delphiTwilight .symbol { font-family:monospace;font-style:normal;font-weight:normal;background-color:black;color:silver; }
+.delphiTwilight .string { font-family:monospace;font-style:normal;font-weight:normal;background-color:black;color:yellow; }
+.delphiTwilight .character { font-family:monospace;font-style:normal;font-weight:normal;background-color:black;color:yellow; }
+.delphiTwilight .number { font-family:monospace;font-style:normal;font-weight:normal;background-color:black;color:fuchsia; }
+.delphiTwilight .float { font-family:monospace;font-style:normal;font-weight:normal;background-color:black;color:fuchsia; }
+.delphiTwilight .hex { font-family:monospace;font-style:normal;font-weight:normal;background-color:black;color:fuchsia; }
+.delphiTwilight .assembler { font-family:monospace;font-style:normal;font-weight:normal;background-color:black;color:lime; }
+.delphiTwilight .preprocessor { font-family:monospace;font-style:normal;font-weight:normal;background-color:black;color:green; }
+.delphiTwilight .error { font-family:monospace;font-style:normal;font-weight:normal;background-color:black;color:red; }
+.delphiTwilight .gutter { font-family:monospace;font-style:normal;font-weight:normal;background-color:black;text-align:right;padding-right:4px;border-right-color:lightgray;border-right-style:solid;border-right-width:2px; }
+.delphiTwilight .content { font-family:monospace;font-style:normal;font-weight:normal;background-color:black;padding-left:6px; }

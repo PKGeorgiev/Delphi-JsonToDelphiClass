@@ -1,0 +1,8 @@
+﻿:root {
+  --titleHeight: 54px;
+  --formHeight: calc(100vh - var(--titleHeight));
+  --settingsHeight: 230px;
+  --settingsPostfixIdent: 20px;
+  --sourceCodeHeight: calc(var(--formHeight) - var(--settingsHeight));
+  --global-group-spacing: 5px;
+}

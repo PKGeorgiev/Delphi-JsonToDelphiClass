@@ -1,0 +1,18 @@
+.delphiOceanAlt { font-family:monospace;font-style:normal;font-weight:normal;background-color:aqua;color:black; }
+.delphiOceanAlt table, td, th { border-spacing:0px;padding:0px; }
+.delphiOceanAlt .comment { font-family:monospace;font-style:italic;font-weight:normal;color:teal; }
+.delphiOceanAlt .keyword { font-family:monospace;font-style:normal;font-weight:normal;color:black; }
+.delphiOceanAlt .identifier { font-family:monospace;font-style:normal;font-weight:normal;color:blue; }
+.delphiOceanAlt .symbol { font-family:monospace;font-style:normal;font-weight:normal;color:black; }
+.delphiOceanAlt .string { font-family:monospace;font-style:normal;font-weight:normal;color:purple; }
+.delphiOceanAlt .character { font-family:monospace;font-style:normal;font-weight:normal;color:purple; }
+.delphiOceanAlt .number { font-family:monospace;font-style:normal;font-weight:normal;color:olive; }
+.delphiOceanAlt .float { font-family:monospace;font-style:normal;font-weight:normal;color:olive; }
+.delphiOceanAlt .hex { font-family:monospace;font-style:normal;font-weight:normal;color:olive; }
+.delphiOceanAlt .assembler { font-family:monospace;font-style:normal;font-weight:normal;color:blue; }
+.delphiOceanAlt .preprocessor { font-family:monospace;font-style:normal;font-weight:normal;color:black; }
+.delphiOceanAlt .error { font-family:monospace;font-style:normal;font-weight:normal;color:red; }
+.delphiOceanAlt .gutter { font-family:monospace;font-style:normal;font-weight:normal;color:gray;text-align:right;padding-right:4px;border-right-color:lightgray;border-right-style:solid;border-right-width:2px; }
+.delphiOceanAlt .content { font-family:monospace;font-style:normal;font-weight:normal;padding-left:6px; }
+.delphiOceanAlt tr:nth-child(odd) { background:aqua; }
+.delphiOceanAlt tr:nth-child(even) { background:#00f0f0; }

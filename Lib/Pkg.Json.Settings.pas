@@ -2,8 +2,10 @@ unit Pkg.Json.Settings;
 
 interface
 
+uses Pkg.Json.DTO;
+
 Type
-  TSettings = class
+  TSettings = class(TJsonDTO)
   private
     class var FInstance: TSettings;
 
@@ -65,3 +67,5 @@ finalization
 TSettings.Instance.Free;
 
 end.
+
+

@@ -1,0 +1,18 @@
+.delphiDefaultAlt { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:black; }
+.delphiDefaultAlt table, td, th { border-spacing:0px;padding:0px; }
+.delphiDefaultAlt .comment { font-family:monospace;font-style:italic;font-weight:normal;color:green; }
+.delphiDefaultAlt .keyword { font-family:monospace;font-style:normal;font-weight:bold;color:navy; }
+.delphiDefaultAlt .identifier { font-family:monospace;font-style:normal;font-weight:normal;color:black; }
+.delphiDefaultAlt .symbol { font-family:monospace;font-style:normal;font-weight:normal;color:black; }
+.delphiDefaultAlt .string { font-family:monospace;font-style:normal;font-weight:normal;color:blue; }
+.delphiDefaultAlt .character { font-family:monospace;font-style:normal;font-weight:normal;color:purple; }
+.delphiDefaultAlt .number { font-family:monospace;font-style:normal;font-weight:normal;color:blue; }
+.delphiDefaultAlt .float { font-family:monospace;font-style:normal;font-weight:normal;color:blue; }
+.delphiDefaultAlt .hex { font-family:monospace;font-style:normal;font-weight:normal;color:blue; }
+.delphiDefaultAlt .assembler { font-family:monospace;font-style:normal;font-weight:normal;color:black; }
+.delphiDefaultAlt .preprocessor { font-family:monospace;font-style:normal;font-weight:normal;color:teal; }
+.delphiDefaultAlt .error { font-family:monospace;font-style:normal;font-weight:normal;color:black; }
+.delphiDefaultAlt .gutter { font-family:monospace;font-style:normal;font-weight:normal;color:gray;text-align:right;padding-right:4px;border-right-color:lightgray;border-right-style:solid;border-right-width:2px; }
+.delphiDefaultAlt .content { font-family:monospace;font-style:normal;font-weight:normal;color:black;padding-left:6px; }
+.delphiDefaultAlt tr:nth-child(odd) { background:white; }
+.delphiDefaultAlt tr:nth-child(even) { background:#f3f3f3; }
