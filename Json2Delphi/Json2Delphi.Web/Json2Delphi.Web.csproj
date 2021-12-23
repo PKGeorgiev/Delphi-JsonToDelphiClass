@@ -7,8 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Pkg.Json.DTO.pas">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.319" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
+    <PackageReference Include="MimeKit" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,6 +31,9 @@
 
   <ItemGroup>
     <None Update="GeneratorLIB.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Pkg.Json.DTO.pas">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
