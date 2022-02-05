@@ -1,6 +1,12 @@
 Delphi-JsonToDelphiClass
 ========================
-## Fixes & Features: 03h October 2021 ##
+## Fixes & Features: 23th December 2021 ##
+
+### Features ###
+* Added ASP.NET interface: www.Json2Delphi.com
+* Source code included
+
+## Fixes & Features: 03th October 2021 ##
 
 ### Bugs: ###
 * Wrong type detection. '2019-08-29' wasn't recognized as a Date, but a string
@@ -14,7 +20,7 @@ Delphi-JsonToDelphiClass
   Delphi doesn't support Nullable types, so use this attribute to strip TDateTime property where value is 0.
 
 A Small example:
-```  
+``` pascal 
 type
   TDateTimeDTO = class(TJsonDTO)
   private
@@ -28,7 +34,7 @@ type
 ```
 The above class will generate the following JSON, if both properties is 0 
 
-```
+```json
   {
     "suppressDate":"",
     "noSuppressDate":"1899-12-30T00:00:00.000Z"
@@ -55,7 +61,7 @@ NOTE: You can turn off this feature in the settings form
 
 E.g this JSON generated faulty code:
 
-```
+```json
 {
     "/": {
         "readonly": true
@@ -116,7 +122,7 @@ E.g this JSON generated faulty code:
 * Support for objects with diffrents properties in an Array
 
 Eg this JSON 
-```
+```json
 {
    "ArrayTest":[
       {
@@ -130,7 +136,7 @@ Eg this JSON
 ```
 
 Generates the following DTO:
-```
+```pascal
   TArrayTestDTO = class
   private
     FS1: string;
