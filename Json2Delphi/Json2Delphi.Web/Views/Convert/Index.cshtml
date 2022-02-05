@@ -13,7 +13,7 @@
                             <div class="card json2delphi-sourcecode">
                                 <div class="card-header">JSON source code</div>
                                 <div class="card-body">
-                                    <textarea asp-for="@Model.SourceText" spellcheck="false"></textarea>
+                                    <textarea asp-for="@Model.SourceText"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -28,10 +28,9 @@
                         </div>
 
                     </div>
-
                     <div class="row">
 
-                        <div class="col-md-4 col-xs-12 json2delphi-group">
+                        <div class="col-4 json2delphi-group">
 
                             <div class="card json2delphi-settings">
                                 <div class="card-header">Settings</div>
@@ -39,25 +38,25 @@
 
                                     <div class="form-check">
                                         <input type="checkbox" asp-for="@Model.UsePascalCase" class="form-check-input" />
-                                        <label for="@Model.UsePascalCase" class="form-check-label">Use PascalCase</label>
+                                        <label for="UsePascalCase" class="form-check-label">Use PascalCase</label>
                                     </div>
 
                                     <div class="form-check">
                                         <input type="checkbox" asp-for="@Model.AddJsonPropertyAttributes" class="form-check-input" />
-                                        <label for="@Model.AddJsonPropertyAttributes" class="form-check-label">Add JsonProperty Attributes</label>
+                                        <label for="AddJsonPropertyAttributes" class="form-check-label">Add JsonProperty Attributes</label>
                                     </div>
 
                                     <div class="form-check">
                                         <input type="checkbox" asp-for="@Model.SuppressZeroDate" class="form-check-input" />
-                                        <label for="@Model.SuppressZeroDate" class="form-check-label">Suppress Zero Date</label>
+                                        <label for="SuppressZeroDate" class="form-check-label">Suppress Zero Date</label>
                                     </div>
 
                                     <div class="form-check">
                                         <input type="checkbox" asp-for="@Model.PostFixClassNames" class="form-check-input" />
-                                        <label for="@Model.PostFixClassNames" class="form-check-label">Postfix class names</label>
+                                        <label for="PostFixClassNames" class="form-check-label">Postfix class names</label>
                                     </div>
 
-                                    <div class="form-text postfix-classnames">
+                                    <div class="form-check">
                                         <input type="text" asp-for="@Model.PostFix" class="form-text" />
                                     </div>
                                 </div>
@@ -65,12 +64,12 @@
 
                         </div>
 
-                        <div class="col-md-4 col-xs-12 json2delphi-group">
-                            <input type="submit" class="btn btn-success settings-buttons" value="Convert" />
+                        <div class="col-4 json2delphi-group">
+                            <input type="submit" class="btn btn-primary btn-lg" value="Convert" />
                         </div>
 
-                        <div class="padding">
-                            <div class="col-md-12">
+                        <div class="col-md-4 col-xs-12 json2delphi-group">
+                            <div class="col-6 json2delphi-group">
                                 <div class="wow fadeInUp animated" data-wow-duration="2s" data-wow-delay="0.2s" style="visibility: visible; animation-duration: 2s; animation-delay: 0.2s; animation-name: fadeInUp;">
                                     <h2>Download base class </h2>
                                     <p> <b>Pkg.Json.DTO</b> is the base class for all generated files </p>
@@ -82,8 +81,9 @@
                                     </a>
                                 </div>
                             </div>
-
                         </div>
+
+
                     </div>
                 </div>
             </form>
