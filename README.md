@@ -1,5 +1,13 @@
 Delphi-JsonToDelphiClass
 ========================
+
+## Fixes & Features: 06th February 2022 ##
+
+### Features ###
+* More interceptors where published in a new repo: https://github.com/JensBorrisholt/Json-Interceptors
+* Added the possibility to download Pkg.Json.DTO.pas from www.Json2Delphi.com
+
+
 ## Fixes & Features: 23th December 2021 ##
 
 ### Features ###
