@@ -1,0 +1,16 @@
+.delphiDefault { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:black; }
+.delphiDefault table, td, th { border-spacing:0px;padding:0px; }
+.delphiDefault .comment { font-family:monospace;font-style:italic;font-weight:normal;background-color:white;color:green; }
+.delphiDefault .keyword { font-family:monospace;font-style:normal;font-weight:bold;background-color:white;color:navy; }
+.delphiDefault .identifier { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:black; }
+.delphiDefault .symbol { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:black; }
+.delphiDefault .string { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:blue; }
+.delphiDefault .character { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:purple; }
+.delphiDefault .number { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:blue; }
+.delphiDefault .float { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:blue; }
+.delphiDefault .hex { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:blue; }
+.delphiDefault .assembler { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:black; }
+.delphiDefault .preprocessor { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:teal; }
+.delphiDefault .error { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:black; }
+.delphiDefault .gutter { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:gray;text-align:right;padding-right:4px;border-right-color:lightgray;border-right-style:solid;border-right-width:2px; }
+.delphiDefault .content { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:black;padding-left:6px; }

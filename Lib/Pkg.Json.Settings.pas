@@ -2,8 +2,10 @@ unit Pkg.Json.Settings;
 
 interface
 
+uses Pkg.Json.DTO;
+
 Type
-  TSettings = class
+  TSettings = class(TJsonDTO)
   private
     class var FInstance: TSettings;
 
@@ -12,6 +14,7 @@ Type
     FPostFix: string;
     FPostFixClassNames: Boolean;
     FUsePascalCase: Boolean;
+    FSuppressZeroDate: Boolean;
     constructor MakeSingleton;
   public
     constructor Create; reintroduce; deprecated 'Don''t use this!';
@@ -21,12 +24,12 @@ Type
     property PostFixClassNames: Boolean read FPostFixClassNames write FPostFixClassNames;
     property PostFix: string read FPostFix write FPostFix;
     property UsePascalCase: Boolean read FUsePascalCase write FUsePascalCase;
+    property SuppressZeroDate: Boolean read FSuppressZeroDate write FSuppressZeroDate;
   end;
 
 implementation
 
-uses
-  System.SysUtils, System.Strutils;
+uses System.SysUtils, System.Strutils;
 
 { TSettings }
 
@@ -54,6 +57,7 @@ begin
   FAddJsonPropertyAttributes := False;
   FPostFixClassNames := False;
   FPostFix := 'DTO';
+  FSuppressZeroDate := True;
 end;
 
 initialization
@@ -63,3 +67,5 @@ finalization
 TSettings.Instance.Free;
 
 end.
+
+

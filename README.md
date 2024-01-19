@@ -1,5 +1,76 @@
 Delphi-JsonToDelphiClass
 ========================
+
+## Fixes & Features: 19th January 2024 ##
+
+
+### Features ###
+* Upgrade to Delphi 12
+
+### Bugs: ###
+* Unittest TestDateTime didnt pass under Delphi 12 
+
+## Fixes & Features: 06th February 2022 ##
+
+### Features ###
+* More interceptors where published in a new repo: https://github.com/JensBorrisholt/Json-Interceptors
+* Added the possibility to download Pkg.Json.DTO.pas from www.Json2Delphi.com
+
+
+## Fixes & Features: 23th December 2021 ##
+
+### Features ###
+* Added ASP.NET interface: www.Json2Delphi.com
+* Source code included
+
+## Fixes & Features: 03th October 2021 ##
+
+### Bugs: ###
+* Wrong type detection. '2019-08-29' wasn't recognized as a Date, but a string
+* All unittests didn't pass
+* In the generator main form, the correct JSON wans't allways read from the MEMO 
+* In the generator main form, the JSON wasn't allways updated
+
+### Features ###
+* Upgraded to Delphi 11
+* New property attribute : ```[SuppressZero]```
+  Delphi doesn't support Nullable types, so use this attribute to strip TDateTime property where value is 0.
+
+A Small example:
+``` pascal 
+type
+  TDateTimeDTO = class(TJsonDTO)
+  private
+    [SuppressZero]
+    FSuppressDate: TDateTime;
+    FNoSuppressDate: TDateTime;
+  public
+    property DateSuppress: TDateTime read FSuppressDate write FSuppressDate;
+    property NoDateSuppress: TDateTime read FNoSuppressDate write FNoSuppressDate;
+  end;
+```
+The above class will generate the following JSON, if both properties is 0 
+
+```json
+  {
+    "suppressDate":"",
+    "noSuppressDate":"1899-12-30T00:00:00.000Z"
+  }
+```
+NOTE: You can turn off this feature in the settings form 
+
+## Fixes & Features: 04th June 2021 ##
+
+### Bugs: ###
+* An error message occured when switching between the diffrent demo files
+* Dates without timestamp wasn't recognized within  the RegEx
+* Compile error in unit tests
+* Updated elements in a list wasn't applied to the generated json.
+* Issue #2 [Out of memory error and High CPU usage](https://github.com/JensBorrisholt/Delphi-JsonToDelphiClass/pull/2) - Thank You [MarkRSill](https://github.com/MarkRSill)
+
+### Features ###
+* Added unit tests for updating elements in lists.
+
 ## Fixes & Features: 26th Marts 2021 ##
 
 ### Bugs: ###
@@ -7,7 +78,7 @@ Delphi-JsonToDelphiClass
 
 E.g this JSON generated faulty code:
 
-```
+```json
 {
     "/": {
         "readonly": true
@@ -68,7 +139,7 @@ E.g this JSON generated faulty code:
 * Support for objects with diffrents properties in an Array
 
 Eg this JSON 
-```
+```json
 {
    "ArrayTest":[
       {
@@ -82,7 +153,7 @@ Eg this JSON
 ```
 
 Generates the following DTO:
-```
+```pascal
   TArrayTestDTO = class
   private
     FS1: string;

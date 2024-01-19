@@ -2,8 +2,7 @@ unit Pkg.Json.JsonValueHelper;
 
 interface
 
-uses
-  System.Json;
+uses System.Json;
 
 type
   TJsonType = (jtUnknown, jtObject, jtArray, jtString, jtTrue, jtFalse, jtNumber, jtDateTime, jtBytes, jtInteger, jtInteger64);
@@ -15,13 +14,12 @@ type
 
 implementation
 
-uses
-  System.SysUtils, System.RegularExpressions;
+uses System.SysUtils, System.DateUtils;
+
 { TJsonValueHelper }
 
 class function TJsonValueHelper.GetJsonType(aJsonValue: TJsonValue): TJsonType;
 var
-  JsonString: TJsonString;
   Value: string;
   i: Integer;
   j: Int64;
@@ -33,10 +31,12 @@ begin
     exit(jtObject);
 
   if aJsonValue is TJSONObject then
-    Result := jtObject
-  else if aJsonValue is TJSONArray then
-    Result := jtArray
-  else if (aJsonValue is TJSONNumber) then
+    exit(jtObject);
+
+  if aJsonValue is TJSONArray then
+    exit(jtArray);
+
+  if (aJsonValue is TJSONNumber) then
   begin
     Value := aJsonValue.AsType<string>;
     if not TryJsonToFloat(Value, d) then
@@ -54,13 +54,18 @@ begin
     Result := jtFalse
   else if aJsonValue is TJsonString then
   begin
-    JsonString := (aJsonValue as TJsonString);
-    if TRegEx.IsMatch(JsonString.Value,
-      '^(-?(?:[1-9][0-9]*)?[0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|[+-](?:2[0-3]|[01][0-9]):[0-5][0-9])?$|(([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])))') then
-      Result := jtDateTime
-    else if TryStrToFloat(JsonString.Value, E) then
+    Value := aJsonValue.AsType<string>;
+
+    try
+      ISO8601ToDate(Value);
+      exit(jtDateTime);
+    except
+
+    end;
+
+    if TryStrToFloat(Value, E) then
       Result := jtString
-    else if TryStrToBool(JsonString.Value, b) then
+    else if TryStrToBool(Value, b) then
     begin
       if b then
         Result := jtTrue

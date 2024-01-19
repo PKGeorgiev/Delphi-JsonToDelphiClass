@@ -2,8 +2,7 @@ unit TeskPkg.TestJsonValueHelper;
 
 interface
 
-uses
-  DUnitX.TestFramework, DUnitX.Assert.Ex,
+uses DUnitX.TestFramework, DUnitX.Assert.Ex,
   System.JSON, System.SysUtils,
   Pkg.JSON.JsonValueHelper;
 
@@ -140,7 +139,15 @@ end;
 
 procedure TTestJsonValueHelper.Test_TJSONNumber_float_wrong_decimalseperator_jtString;
 begin
-  JsonNumberTest('3,14', jtString); // NOTE: Json ALLWAYS uses . as decimal seperator
+  Assert.WillRaise(
+    procedure
+    begin
+      JsonNumberTest('3,14', jtString)
+    end);
+
+    JsonStringTest('3,14', jtString);
+
+  // NOTE: Json ALLWAYS uses . as decimal seperator
 end;
 
 procedure TTestJsonValueHelper.Test_TJSONNumber_int64_jtInteger64;
@@ -170,6 +177,7 @@ end;
 
 procedure TTestJsonValueHelper.Test_TJSONString_ISO8601DateTime_jtDateTime;
 begin
+  JsonStringTest('2014-02-01T09:28:56.321-10:00', jtDateTime);
   JsonStringTest('2019-08-29T15:33:15', jtDateTime);
   JsonStringTest('2008-08-30T01:45:36.123Z', jtDateTime);
 end;

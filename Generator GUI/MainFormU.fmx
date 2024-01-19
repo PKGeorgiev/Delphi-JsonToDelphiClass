@@ -123,11 +123,14 @@ object MainForm: TMainForm
             '"'
           ''
           'See also the possibilities in the MenuBar')
-        OnChangeTracking = MemoJSONChangeTracking
+        OnChange = MemoJSONExit
+        OnChangeTracking = MemoJSONExit
         Align = Client
         Size.Width = 613.000000000000000000
         Size.Height = 355.000000000000000000
         Size.PlatformDefault = False
+        TabOrder = 2
+        OnExit = MemoJSONExit
         Viewport.Width = 613.000000000000000000
         Viewport.Height = 355.000000000000000000
       end
@@ -140,6 +143,7 @@ object MainForm: TMainForm
         Size.Width = 158.000000000000000000
         Size.Height = 430.000000000000000000
         Size.PlatformDefault = False
+        TabOrder = 3
         Visible = False
         OnChange = ListView1Change
       end
