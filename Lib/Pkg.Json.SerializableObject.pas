@@ -65,7 +65,7 @@ var
   LResult: string;
 begin
   WebRequest(aUrl,
-      procedure(LHttp: TIdHttp)
+    procedure(LHttp: TIdHttp)
     begin
 
       // Allow HTTP client pre-configuration
@@ -134,21 +134,19 @@ begin
   WebRequest(aUrl,
     procedure(LHttp: TIdHttp)
     var
-      LString: string;
-      LJsonValue: TJsonValue;
-      LJsonObject: TJSONObject;
+      Respons: string;
     begin
 
       try // Allow HTTP client pre-configuration
         if Assigned(AOnBeforeRequest) then
           AOnBeforeRequest(LHttp);
 
-        LString := LHttp.Get(aUrl);
+        Respons := LHttp.Get(aUrl);
 
         EnsureHttpResponseCode(LHttp.ResponseCode, aUrl, [200, 304]);
         EnsureHttpContentType(LHttp);
         LResult := T.Create;
-        LResult.AsJson := LString;
+        LResult.AsJson := Respons;
       except
         FreeAndNil(LResult);
       end;

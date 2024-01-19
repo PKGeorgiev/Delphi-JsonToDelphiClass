@@ -15,9 +15,6 @@
         <Projects Include="Generator LIB\GeneratorLIB.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="..\Adresser\VCL\Demo.dproj">
-            <Dependencies/>
-        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -62,23 +59,14 @@
     <Target Name="GeneratorLIB:Make">
         <MSBuild Projects="Generator LIB\GeneratorLIB.dproj" Targets="Make"/>
     </Target>
-    <Target Name="Demo">
-        <MSBuild Projects="..\Adresser\VCL\Demo.dproj"/>
-    </Target>
-    <Target Name="Demo:Clean">
-        <MSBuild Projects="..\Adresser\VCL\Demo.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="Demo:Make">
-        <MSBuild Projects="..\Adresser\VCL\Demo.dproj" Targets="Make"/>
-    </Target>
     <Target Name="Build">
-        <CallTarget Targets="JsonToDelphiClass;EndToEndTest;JsonToDelphiClassTests;GeneratorLIB;Demo"/>
+        <CallTarget Targets="JsonToDelphiClass;EndToEndTest;JsonToDelphiClassTests;GeneratorLIB"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="JsonToDelphiClass:Clean;EndToEndTest:Clean;JsonToDelphiClassTests:Clean;GeneratorLIB:Clean;Demo:Clean"/>
+        <CallTarget Targets="JsonToDelphiClass:Clean;EndToEndTest:Clean;JsonToDelphiClassTests:Clean;GeneratorLIB:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="JsonToDelphiClass:Make;EndToEndTest:Make;JsonToDelphiClassTests:Make;GeneratorLIB:Make;Demo:Make"/>
+        <CallTarget Targets="JsonToDelphiClass:Make;EndToEndTest:Make;JsonToDelphiClassTests:Make;GeneratorLIB:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

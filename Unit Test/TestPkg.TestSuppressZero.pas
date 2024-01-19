@@ -50,7 +50,11 @@ procedure TestSuppressZero.TestDateTime;
 begin
   FDateTimeDTO.DateSuppress := 0;
   FDateTimeDTO.NoDateSuppress := 0;
+{$IF CompilerVersion >= 36} //Delphi 12
+  Assert.AreEqual(FDateTimeDTO.AsJson, '{"suppressDate":"","noSuppressDate":"1899-12-30T00:00:00.000Z","options":["joDateIsUTC","joDateFormatISO8601"]}');
+{$ELSE}
   Assert.AreEqual(FDateTimeDTO.AsJson, '{"suppressDate":"","noSuppressDate":"1899-12-30T00:00:00.000Z"}');
+{$IFEND}
 end;
 
 end.
