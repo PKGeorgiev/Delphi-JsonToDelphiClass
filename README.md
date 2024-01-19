@@ -5,7 +5,7 @@ Delphi-JsonToDelphiClass
 
 
 ### Features ###
-Upgrade to Delphi 12
+* Upgrade to Delphi 12
 
 ### Bugs: ###
 * Unittest TestDateTime didnt pass under Delphi 12 
