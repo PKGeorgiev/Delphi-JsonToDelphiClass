@@ -294,16 +294,20 @@ begin
   Buffer.Text := Output;
   Buffer.SaveToFile(sd.FileName);
 
-  if not SameText(FileExtention, 'pas') then
-    exit;
-
-  ResourceStream := TResourceStream.Create(HInstance, 'JsonDTO', 'PAS');
   try
-    ResourceStream.Position := 0;
-    Buffer.LoadFromStream(ResourceStream);
-    Buffer.SaveToFile(ExtractFilePath(sd.FileName) + 'Pkg.Json.DTO.pas');
+    if not SameText(FileExtention, 'pas') then
+      exit;
+
+    ResourceStream := TResourceStream.Create(HInstance, 'JsonDTO', 'PAS');
+    try
+      ResourceStream.Position := 0;
+      Buffer.LoadFromStream(ResourceStream);
+      Buffer.SaveToFile(ExtractFilePath(sd.FileName) + 'Pkg.Json.DTO.pas');
+    finally
+      ResourceStream.Free;
+    end;
+
   finally
-    ResourceStream.Free;
     Buffer.Free;
   end;
 end;
@@ -337,7 +341,10 @@ begin
   CheckForUpdate(
     procedure(aRelease: TRelease; aErrorMessage: string)
     begin
-      FCheckVersionResponse := aRelease;
+      if aRelease <> nil then
+        FCheckVersionResponse := aRelease.Clone<TRelease>
+      else
+        FCheckVersionResponse := nil;
 
       if (aRelease = nil) and (aErrorMessage = '') then
       begin
@@ -405,4 +412,3 @@ begin
 end;
 
 end.
-

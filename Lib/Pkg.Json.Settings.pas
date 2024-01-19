@@ -2,7 +2,8 @@ unit Pkg.Json.Settings;
 
 interface
 
-uses Pkg.Json.DTO;
+uses
+  Pkg.Json.DTO;
 
 Type
   TSettings = class(TJsonDTO)
@@ -29,7 +30,8 @@ Type
 
 implementation
 
-uses System.SysUtils, System.Strutils;
+uses
+  System.SysUtils, System.Strutils;
 
 { TSettings }
 
@@ -67,5 +69,3 @@ finalization
 TSettings.Instance.Free;
 
 end.
-
-

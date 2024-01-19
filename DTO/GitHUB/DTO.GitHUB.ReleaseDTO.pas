@@ -124,7 +124,7 @@ type
     property Url: string read FUrl write FUrl;
   end;
   
-  TItemsDTO = class(TArrayMapper)
+  TItemsDTO = class(TJsonDTO)
   private
     [JSONName('assets')]
     [JSONMarshalled(False)]

@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Top = 0
   Caption = 'Form1'
   ClientHeight = 480
-  ClientWidth = 613
+  ClientWidth = 612
   StyleBook = StyleBook1
   FormFactor.Width = 320
   FormFactor.Height = 480
@@ -12,26 +12,24 @@ object MainForm: TMainForm
   OnDestroy = FormDestroy
   DesignerMasterStyle = 0
   object MenuBar1: TMenuBar
-    Size.Width = 613.000000000000000000
+    Size.Width = 612.000000000000000000
     Size.Height = 24.000000000000000000
     Size.PlatformDefault = False
+    TabOrder = 0
     object MenuItem1: TMenuItem
       Text = '&File'
       object MenuItem2: TMenuItem
         Action = actOpen
-        Enabled = True
         Locked = True
         ImageIndex = -1
       end
       object MenuItem3: TMenuItem
         Action = actSaveAs
-        Enabled = True
         Locked = True
         ImageIndex = -1
       end
       object MenuItem4: TMenuItem
         Action = actExit
-        Enabled = True
         Locked = True
         ImageIndex = -1
       end
@@ -40,25 +38,21 @@ object MainForm: TMainForm
       Text = '&View'
       object MenuItem5: TMenuItem
         Action = actOnlineValidation
-        Enabled = True
         Locked = True
         ImageIndex = -1
       end
       object MenuItem6: TMenuItem
         Action = actSettings
-        Enabled = True
         Locked = True
         ImageIndex = -1
       end
       object MenuItem7: TMenuItem
         Action = actDemoData
-        Enabled = True
         Locked = True
         ImageIndex = -1
       end
       object MenuItem8: TMenuItem
         Action = actClassVisualizer
-        Enabled = True
         Locked = True
         ImageIndex = -1
       end
@@ -67,25 +61,21 @@ object MainForm: TMainForm
       Text = 'Formats'
       object MenuItem9: TMenuItem
         Action = actBSON
-        Enabled = True
         Locked = True
         ImageIndex = -1
       end
       object MenuItem10: TMenuItem
         Action = actDelphiUnit
-        Enabled = True
         Locked = True
         ImageIndex = -1
       end
       object MenuItem11: TMenuItem
         Action = actMinifyJson
-        Enabled = True
         Locked = True
         ImageIndex = -1
       end
       object MenuItem12: TMenuItem
         Action = actDemoProject
-        Enabled = True
         Locked = True
         ImageIndex = -1
       end
@@ -93,20 +83,22 @@ object MainForm: TMainForm
   end
   object TabControl1: TTabControl
     Align = Client
-    Size.Width = 613.000000000000000000
+    Size.Width = 612.000000000000000000
     Size.Height = 434.000000000000000000
     Size.PlatformDefault = False
     TabIndex = 0
+    TabOrder = 1
     TabPosition = PlatformDefault
     Sizes = (
-      613s
+      612s
       408s)
     object TabItemJSON: TTabItem
       CustomIcon = <
         item
         end>
+      TextSettings.Trimming = None
       IsSelected = True
-      Size.Width = 44.000000000000000000
+      Size.Width = 43.000000000000000000
       Size.Height = 26.000000000000000000
       Size.PlatformDefault = False
       StyleLookup = ''
@@ -126,13 +118,13 @@ object MainForm: TMainForm
         OnChange = MemoJSONExit
         OnChangeTracking = MemoJSONExit
         Align = Client
-        Size.Width = 613.000000000000000000
+        Size.Width = 612.000000000000000000
         Size.Height = 355.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 2
         OnExit = MemoJSONExit
-        Viewport.Width = 613.000000000000000000
-        Viewport.Height = 355.000000000000000000
+        Viewport.Width = 608.000000000000000000
+        Viewport.Height = 351.000000000000000000
       end
       object ListView1: TListView
         ItemAppearanceClassName = 'TListItemAppearance'
@@ -173,7 +165,7 @@ object MainForm: TMainForm
         Padding.Right = 6.000000000000000000
         Padding.Bottom = 6.000000000000000000
         Position.Y = 355.000000000000000000
-        Size.Width = 613.000000000000000000
+        Size.Width = 612.000000000000000000
         Size.Height = 53.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 1
@@ -193,6 +185,7 @@ object MainForm: TMainForm
             Size.Width = 182.000000000000000000
             Size.Height = 17.000000000000000000
             Size.PlatformDefault = False
+            TextSettings.Trimming = None
             Text = 'Destination Unit Name:'
           end
           object EditUnitName: TEdit
@@ -211,6 +204,7 @@ object MainForm: TMainForm
             Size.Width = 182.000000000000000000
             Size.Height = 17.000000000000000000
             Size.PlatformDefault = False
+            TextSettings.Trimming = None
             Text = 'Destination Class Name:'
             TabOrder = 3
           end
@@ -229,10 +223,10 @@ object MainForm: TMainForm
         object Button1: TButton
           Action = actConvert
           Anchors = [akTop, akRight]
-          Enabled = True
           ImageIndex = -1
-          Position.X = 528.000000000000000000
+          Position.X = 527.000000000000000000
           Position.Y = 21.000000000000000000
+          TextSettings.Trimming = None
         end
       end
       object Splitter2: TSplitter
@@ -1713,17 +1707,18 @@ object MainForm: TMainForm
     Padding.Bottom = 2.000000000000000000
     Position.Y = 458.000000000000000000
     ShowSizeGrip = True
-    Size.Width = 613.000000000000000000
+    Size.Width = 612.000000000000000000
     Size.Height = 22.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 2
     object Label1: TLabel
       Align = Client
       HitTest = True
-      Size.Width = 607.000000000000000000
+      Size.Width = 606.000000000000000000
       Size.Height = 18.000000000000000000
       Size.PlatformDefault = False
       StyleLookup = 'LabelNormalStyle'
+      TextSettings.Trimming = None
       Text = 'Idle'
       OnClick = Label1Click
     end

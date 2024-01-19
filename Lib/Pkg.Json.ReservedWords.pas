@@ -106,6 +106,10 @@ ReservedWords.Add('var');
 ReservedWords.Add('while');
 ReservedWords.Add('with');
 ReservedWords.Add('xor');
+ReservedWords.Add('threadvar');
+ReservedWords.Add('raise');
+ReservedWords.Add('interface');
+
 ReservedWords.Sorted := True;
 
 finalization
