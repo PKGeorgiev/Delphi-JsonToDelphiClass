@@ -24,29 +24,30 @@ uses
 function CheckForUpdate(AOnFinish: TProc<TRelease, string>): ITaskEx;
 var
   Releases: TObjectList<TRelease>;
-  LResult: TRelease;
-  LErrorMessage: string;
+  Release: TRelease;
+  ErrorMessage: string;
 begin
   Result := TTaskEx.Run(
-      procedure
+    procedure
     begin
       try
         Releases := TUGitHubSerializableObject.RestRequest<TReleasesDTO>(UpdateUrl).Releases;
         if Releases.Count >= 0 then
-          LResult := Releases.Last;
+          Release := Releases.Last;
 
-        if JsonToFloat(LResult.Tag_Name) <= ProgramVersion then
-          FreeAndNil(LResult);
+        if JsonToFloat(Release.Tag_Name) <= ProgramVersion then
+          FreeAndNil(Release);
 
-        LErrorMessage := '';
+        ErrorMessage := '';
       except
         on e: Exception do
-          LErrorMessage := e.message;
+          ErrorMessage := e.message;
       end;
     end).ContinueWithInMainThread(
     procedure(const aTask: ITaskEx)
     begin
-      AOnFinish(LResult, LErrorMessage);
+      AOnFinish(Release, ErrorMessage);
+      FreeAndNil(Releases);
     end, TTaskContinuationOptions.OnlyOnCompleted);
 end;
 

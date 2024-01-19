@@ -27,6 +27,7 @@ type
     constructor Create; override;
     class function PrettyPrintJSON(aJson: string): string; overload;
     function ToString: string; override;
+    function Clone<T: TJsonDTO, constructor>: T;
     property AsJson: string read GetAsJson write SetAsJson;
   end;
 
@@ -45,6 +46,12 @@ implementation
 uses System.Sysutils, System.JSONConsts, System.Rtti, System.DateUtils;
 
 { TJsonDTO }
+
+function TJsonDTO.Clone<T>: T;
+begin
+  Result := T.Create;
+  Result.AsJson := AsJson;
+end;
 
 constructor TJsonDTO.Create;
 begin

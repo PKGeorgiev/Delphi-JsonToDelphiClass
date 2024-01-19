@@ -337,7 +337,10 @@ begin
   CheckForUpdate(
     procedure(aRelease: TRelease; aErrorMessage: string)
     begin
-      FCheckVersionResponse := aRelease;
+      if aRelease <> nil then
+        FCheckVersionResponse := aRelease.Clone<TRelease>
+      else
+        FCheckVersionResponse := nil;
 
       if (aRelease = nil) and (aErrorMessage = '') then
       begin
@@ -405,4 +408,3 @@ begin
 end;
 
 end.
-
