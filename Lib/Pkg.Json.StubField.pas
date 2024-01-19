@@ -106,7 +106,8 @@ type
 
 implementation
 
-uses System.StrUtils, System.Classes,
+uses
+  System.StrUtils, System.Classes,
 
   Pkg.Json.ReservedWords, Pkg.Json.Settings;
 
@@ -118,7 +119,7 @@ end;
 class function TStubClass.Construct(aParentClass: TStubClass; aClassName: string; aStubClasses: TStubClassList; aArrayProperty: string; aNeedsSourceCode: Boolean): TStubClass;
 var
   StubClass: TJsonName;
-  lIndex: Integer;
+  Index: Integer;
 begin
   StubClass := aStubClasses.ItemByName(aClassName);
 
@@ -126,26 +127,26 @@ begin
     Result := TStubClass.Create(aParentClass, aClassName, aStubClasses, aArrayProperty, aNeedsSourceCode)
   else
   begin
-    lIndex := aStubClasses.IndexOf(StubClass as TStubClass);
-    aStubClasses.Move(lIndex, aStubClasses.Count - 1);
+    Index := aStubClasses.IndexOf(StubClass as TStubClass);
+    aStubClasses.Move(Index, aStubClasses.Count - 1);
     Result := StubClass as TStubClass;
   end;
 end;
 
 constructor TStubClass.Create(aParentClass: TStubClass; aClassName: string; aStubClasses: TStubClassList; aArrayProperty: string; aNeedsSourceCode: Boolean);
 var
-  lIndex: Integer;
+  Index: Integer;
 begin
   inherited Create(aClassName);
   FStubClasses := aStubClasses;
   aClassName := DelphiName;
 
-  lIndex := -1;
+  Index := -1;
 
   while UsedClassNames.ContainsValue(aClassName) do
   begin
-    inc(lIndex);
-    aClassName := aClassName + Char(ORD('A') + lIndex);
+    inc(Index);
+    aClassName := aClassName + Char(ORD('A') + Index);
   end;
 
   UsedClassNames.Add(JSONName, aClassName);
@@ -252,8 +253,6 @@ begin
           continue;
         Lines.AddFormat('  RefreshArray<%s>(%s, %sArray);', [(StubField as TStubArrayField).TypeAsString, StubField.FieldName, StubField.FieldName]);
       end;
-
-      // RefreshArray<TPerson>(FPersons, FPersonsArray);
 
       Lines.Add('  Result := inherited;');
       Lines.Add('end;');
@@ -483,8 +482,6 @@ end;
 
 function TStubField.DateAttribute: string;
 begin
-  Result := '';
-
   if (not TSettings.Instance.SuppressZeroDate) or (FFieldType <> jtDateTime) then
     exit('');
 
