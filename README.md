@@ -6,9 +6,11 @@ Delphi-JsonToDelphiClass
 
 ### Features ###
 * Upgrade to Delphi 12
+* Added Clone function on TJsonDTO class
 
 ### Bugs: ###
-* Unittest TestDateTime didnt pass under Delphi 12 
+* Unittest TestDateTime didnt pass under Delphi 12
+* Added missing Reserved words
 
 ## Fixes & Features: 06th February 2022 ##
 
