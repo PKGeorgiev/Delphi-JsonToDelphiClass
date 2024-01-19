@@ -1,6 +1,15 @@
 Delphi-JsonToDelphiClass
 ========================
 
+## Fixes & Features: 19th January 2024 ##
+
+
+### Features ###
+Upgrade to Delphi 12
+
+### Bugs: ###
+* Unittest TestDateTime didnt pass under Delphi 12 
+
 ## Fixes & Features: 06th February 2022 ##
 
 ### Features ###
