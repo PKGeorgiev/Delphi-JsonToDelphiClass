@@ -8,7 +8,7 @@ uses
   FMX.Controls.Presentation, FMX.ScrollBox, FMX.Memo, FMX.ListView.Types, FMX.ListView.Appearances, FMX.ListView.Adapters.Base, FMX.StdCtrls,
   FMX.ListView, FMX.Layouts, FMX.TreeView, FMX.Edit,
 
-  Pkg.Json.Mapper, DTO.GitHUB.Release, Pkg.Json.OutputFormat;
+  Pkg.Json.Mapper, DTO.GitHUB.ReleaseDTO, Pkg.Json.OutputFormat;
 
 type
   TMainForm = class(TForm)
@@ -95,12 +95,12 @@ var
 implementation
 
 uses
-  System.IOUtils, System.Json, IdURI,
+  System.IOUtils, System.Json, IdURI, Pkg.Json.Utils,
 
   FMX.DialogService,
 
   uSettingsForm, uUpdate, uUpdateForm,
-  Pkg.Json.Utils, Pkg.Json.ThreadingEx, Pkg.Json.Lib.JSONConverter, Pkg.Json.Visualizer, Pkg.Json.DemoGenerator;
+  Pkg.Json.ThreadingEx, Pkg.Json.Lib.JSONConverter, Pkg.Json.Visualizer, Pkg.Json.DemoGenerator;
 
 {$R *.fmx}
 
@@ -349,13 +349,13 @@ begin
       if (aRelease = nil) and (aErrorMessage = '') then
       begin
         Label1.StyleLookup := 'LabelGreenStyle';
-        Label1.Text := 'Your version ' + FormatFloat('#.0', ProgramVersion, TFormatSettings.Invariant)  + ' is up to date! For more information about JsonToDelphiClass click here!';
+        Label1.Text := 'Your version ' + FormatFloat('#.0', ProgramVersion, TFormatSettings.Invariant) + ' is up to date! For more information about JsonToDelphiClass click here!';
         (Label1.FindStyleResource('text') as TText).OnClick := Label1Click;
       end
       else if aErrorMessage = '' then
       begin
         Label1.StyleLookup := 'LabelLinkStyle';
-        Label1.Text := 'Version ' + aRelease.Tag_Name + ' is available! Click here to download!';
+        Label1.Text := 'Version ' + aRelease.TagName + ' is available! Click here to download!';
         (Label1.FindStyleResource('text') as TText).OnClick := Label1Click;
         Label1.HitTest := True;
       end

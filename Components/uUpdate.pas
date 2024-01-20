@@ -1,56 +1,69 @@
-unit uUpdate;
+﻿unit uUpdate;
 
 interface
 
 uses
-  System.JSON, System.SysUtils, System.Classes, IPPeerClient,
+  System.JSON, System.SysUtils,
 
-  DTO.GitHUB.Release, Pkg.JSON.ThreadingEx;
+  Pkg.JSON.ThreadingEx, DTO.GitHUB.ReleaseDTO;
 
 const
   ProgramVersion: double = 3.1;
   UpdateUrl = 'https://api.github.com/repos/JensBorrisholt/Delphi-JsonToDelphiClass/releases';
   ProgramUrl = 'https://github.com/JensBorrisholt/Delphi-JsonToDelphiClass';
+  HTTP_OK = 200;
 
 function CheckForUpdate(AOnFinish: TProc<TRelease, string>): ITaskEx;
 
 implementation
 
 uses
-  System.Generics.Collections,
-
-  Pkg.JSON.SerializableObject;
+  System.Net.HttpClient, System.Net.HttpClientComponent;
 
 function CheckForUpdate(AOnFinish: TProc<TRelease, string>): ITaskEx;
 var
-  Releases: TObjectList<TRelease>;
-  Release: TRelease;
   ErrorMessage: string;
+  Releases: TReleases;
+  Release: TRelease;
+  Respons: IHTTPResponse;
 begin
   Result := TTaskEx.Run(
     procedure
+
     begin
-      try
-        Releases := TUGitHubSerializableObject.RestRequest<TReleasesDTO>(UpdateUrl).Releases;
-        if Releases.Count >= 0 then
-          Release := Releases.Last;
+      Releases := TReleases.Create;
+      with TNetHTTPClient.Create(nil) do
+        try
+          try
+            Respons := Get(UpdateUrl);
 
-        if JsonToFloat(Release.Tag_Name) <= ProgramVersion then
-          FreeAndNil(Release);
+            if Respons.StatusCode = HTTP_OK then
+              Releases.AsJson := Respons.ContentAsString;
 
-        ErrorMessage := '';
-      except
-        on e: Exception do
-          ErrorMessage := e.message;
-      end;
-    end).ContinueWithInMainThread(
+            if Releases.Items.Count >= 0 then
+            begin
+              Release := Releases.Items.First;
+              if JsonToFloat(Release.TagName) <= ProgramVersion then
+                Release := nil;
+            end
+            else
+              Release := nil;
+
+            ErrorMessage := '';
+          except
+            on e: Exception do
+              ErrorMessage := e.message;
+          end;
+        finally
+          Free;
+        end;
+    end
+    ).ContinueWithInMainThread(
     procedure(const aTask: ITaskEx)
     begin
       AOnFinish(Release, ErrorMessage);
       FreeAndNil(Releases);
     end, TTaskContinuationOptions.OnlyOnCompleted);
 end;
-
-initialization
 
 end.
