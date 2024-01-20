@@ -8,238 +8,189 @@ uses
 {$M+}
 
 type
-  TUploaderDTO = class
+  TAssets = class;
+  TAuthor = class;
+
+  TAssets = class
+  end;
+
+  TAuthor = class
   private
-    FAvatar_Url: string;
-    FEvents_Url: string;
-    FFollowers_Url: string;
-    FFollowing_Url: string;
-    FGists_Url: string;
-    FGravatar_Id: string;
-    FHtml_Url: string;
+    [JSONName('avatar_url')]
+    FAvatarUrl: string;
+    [JSONName('events_url')]
+    FEventsUrl: string;
+    [JSONName('followers_url')]
+    FFollowersUrl: string;
+    [JSONName('following_url')]
+    FFollowingUrl: string;
+    [JSONName('gists_url')]
+    FGistsUrl: string;
+    [JSONName('gravatar_id')]
+    FGravatarId: string;
+    [JSONName('html_url')]
+    FHtmlUrl: string;
     FId: Integer;
     FLogin: string;
-    FNode_Id: string;
-    FOrganizations_Url: string;
-    FReceived_Events_Url: string;
-    FRepos_Url: string;
-    FSite_Admin: Boolean;
-    FStarred_Url: string;
-    FSubscriptions_Url: string;
+    [JSONName('node_id')]
+    FNodeId: string;
+    [JSONName('organizations_url')]
+    FOrganizationsUrl: string;
+    [JSONName('received_events_url')]
+    FReceivedEventsUrl: string;
+    [JSONName('repos_url')]
+    FReposUrl: string;
+    [JSONName('site_admin')]
+    FSiteAdmin: Boolean;
+    [JSONName('starred_url')]
+    FStarredUrl: string;
+    [JSONName('subscriptions_url')]
+    FSubscriptionsUrl: string;
     FType: string;
     FUrl: string;
   published
-    property Avatar_Url: string read FAvatar_Url write FAvatar_Url;
-    property Events_Url: string read FEvents_Url write FEvents_Url;
-    property Followers_Url: string read FFollowers_Url write FFollowers_Url;
-    property Following_Url: string read FFollowing_Url write FFollowing_Url;
-    property Gists_Url: string read FGists_Url write FGists_Url;
-    property Gravatar_Id: string read FGravatar_Id write FGravatar_Id;
-    property Html_Url: string read FHtml_Url write FHtml_Url;
+    property AvatarUrl: string read FAvatarUrl write FAvatarUrl;
+    property EventsUrl: string read FEventsUrl write FEventsUrl;
+    property FollowersUrl: string read FFollowersUrl write FFollowersUrl;
+    property FollowingUrl: string read FFollowingUrl write FFollowingUrl;
+    property GistsUrl: string read FGistsUrl write FGistsUrl;
+    property GravatarId: string read FGravatarId write FGravatarId;
+    property HtmlUrl: string read FHtmlUrl write FHtmlUrl;
     property Id: Integer read FId write FId;
     property Login: string read FLogin write FLogin;
-    property Node_Id: string read FNode_Id write FNode_Id;
-    property Organizations_Url: string read FOrganizations_Url write FOrganizations_Url;
-    property Received_Events_Url: string read FReceived_Events_Url write FReceived_Events_Url;
-    property Repos_Url: string read FRepos_Url write FRepos_Url;
-    property Site_Admin: Boolean read FSite_Admin write FSite_Admin;
-    property Starred_Url: string read FStarred_Url write FStarred_Url;
-    property Subscriptions_Url: string read FSubscriptions_Url write FSubscriptions_Url;
+    property NodeId: string read FNodeId write FNodeId;
+    property OrganizationsUrl: string read FOrganizationsUrl write FOrganizationsUrl;
+    property ReceivedEventsUrl: string read FReceivedEventsUrl write FReceivedEventsUrl;
+    property ReposUrl: string read FReposUrl write FReposUrl;
+    property SiteAdmin: Boolean read FSiteAdmin write FSiteAdmin;
+    property StarredUrl: string read FStarredUrl write FStarredUrl;
+    property SubscriptionsUrl: string read FSubscriptionsUrl write FSubscriptionsUrl;
     property &Type: string read FType write FType;
     property Url: string read FUrl write FUrl;
   end;
-  
-  TAssetsDTO = class
+
+  TItems = class(TJsonDTO)
   private
-    FBrowser_Download_Url: string;
-    FContent_Type: string;
-    FCreated_At: TDateTime;
-    FDownload_Count: Integer;
-    FId: Integer;
-    FLabel: string;
-    FName: string;
-    FNode_Id: string;
-    FSize: Integer;
-    FState: string;
-    FUpdated_At: TDateTime;
-    FUploader: TUploaderDTO;
-    FUrl: string;
-  published
-    property Browser_Download_Url: string read FBrowser_Download_Url write FBrowser_Download_Url;
-    property Content_Type: string read FContent_Type write FContent_Type;
-    property Created_At: TDateTime read FCreated_At write FCreated_At;
-    property Download_Count: Integer read FDownload_Count write FDownload_Count;
-    property Id: Integer read FId write FId;
-    property &Label: string read FLabel write FLabel;
-    property Name: string read FName write FName;
-    property Node_Id: string read FNode_Id write FNode_Id;
-    property Size: Integer read FSize write FSize;
-    property State: string read FState write FState;
-    property Updated_At: TDateTime read FUpdated_At write FUpdated_At;
-    property Uploader: TUploaderDTO read FUploader;
-    property Url: string read FUrl write FUrl;
-  public
-    constructor Create;
-    destructor Destroy; override;
-  end;
-  
-  TAuthorDTO = class
-  private
-    FAvatar_Url: string;
-    FEvents_Url: string;
-    FFollowers_Url: string;
-    FFollowing_Url: string;
-    FGists_Url: string;
-    FGravatar_Id: string;
-    FHtml_Url: string;
-    FId: Integer;
-    FLogin: string;
-    FNode_Id: string;
-    FOrganizations_Url: string;
-    FReceived_Events_Url: string;
-    FRepos_Url: string;
-    FSite_Admin: Boolean;
-    FStarred_Url: string;
-    FSubscriptions_Url: string;
-    FType: string;
-    FUrl: string;
-  published
-    property Avatar_Url: string read FAvatar_Url write FAvatar_Url;
-    property Events_Url: string read FEvents_Url write FEvents_Url;
-    property Followers_Url: string read FFollowers_Url write FFollowers_Url;
-    property Following_Url: string read FFollowing_Url write FFollowing_Url;
-    property Gists_Url: string read FGists_Url write FGists_Url;
-    property Gravatar_Id: string read FGravatar_Id write FGravatar_Id;
-    property Html_Url: string read FHtml_Url write FHtml_Url;
-    property Id: Integer read FId write FId;
-    property Login: string read FLogin write FLogin;
-    property Node_Id: string read FNode_Id write FNode_Id;
-    property Organizations_Url: string read FOrganizations_Url write FOrganizations_Url;
-    property Received_Events_Url: string read FReceived_Events_Url write FReceived_Events_Url;
-    property Repos_Url: string read FRepos_Url write FRepos_Url;
-    property Site_Admin: Boolean read FSite_Admin write FSite_Admin;
-    property Starred_Url: string read FStarred_Url write FStarred_Url;
-    property Subscriptions_Url: string read FSubscriptions_Url write FSubscriptions_Url;
-    property &Type: string read FType write FType;
-    property Url: string read FUrl write FUrl;
-  end;
-  
-  TItemsDTO = class(TJsonDTO)
-  private
-    [JSONName('assets')]
-    [JSONMarshalled(False)]
-    FAssetsArray: TArray<TAssetsDTO>;
+    [JSONName('assets'), JSONMarshalled(False)]
+    FAssetsArray: TArray<TAssets>;
     [GenericListReflect]
-    FAssets: TObjectList<TAssetsDTO>;
-    FAssets_Url: string;
-    FAuthor: TAuthorDTO;
+    FAssets: TObjectList<TAssets>;
+    [JSONName('assets_url')]
+    FAssetsUrl: string;
+    FAuthor: TAuthor;
     FBody: string;
-    FCreated_At: TDateTime;
+    [SuppressZero, JSONName('created_at')]
+    FCreatedAt: TDateTime;
     FDraft: Boolean;
-    FHtml_Url: string;
+    [JSONName('html_url')]
+    FHtmlUrl: string;
     FId: Integer;
     FName: string;
-    FNode_Id: string;
+    [JSONName('node_id')]
+    FNodeId: string;
     FPrerelease: Boolean;
-    FPublished_At: TDateTime;
-    FTag_Name: string;
-    FTarball_Url: string;
-    FTarget_Commitish: string;
-    FUpload_Url: string;
+    [SuppressZero, JSONName('published_at')]
+    FPublishedAt: TDateTime;
+    [JSONName('tag_name')]
+    FTagName: string;
+    [JSONName('tarball_url')]
+    FTarballUrl: string;
+    [JSONName('target_commitish')]
+    FTargetCommitish: string;
+    [JSONName('upload_url')]
+    FUploadUrl: string;
     FUrl: string;
-    FZipball_Url: string;
-    function GetAssets: TObjectList<TAssetsDTO>;
+    [JSONName('zipball_url')]
+    FZipballUrl: string;
+    function GetAssets: TObjectList<TAssets>;
+  protected
+    function GetAsJson: string; override;
   published
-    property Assets: TObjectList<TAssetsDTO> read GetAssets;
-    property Assets_Url: string read FAssets_Url write FAssets_Url;
-    property Author: TAuthorDTO read FAuthor;
+    property Assets: TObjectList<TAssets> read GetAssets;
+    property AssetsUrl: string read FAssetsUrl write FAssetsUrl;
+    property Author: TAuthor read FAuthor;
     property Body: string read FBody write FBody;
-    property Created_At: TDateTime read FCreated_At write FCreated_At;
+    property CreatedAt: TDateTime read FCreatedAt write FCreatedAt;
     property Draft: Boolean read FDraft write FDraft;
-    property Html_Url: string read FHtml_Url write FHtml_Url;
+    property HtmlUrl: string read FHtmlUrl write FHtmlUrl;
     property Id: Integer read FId write FId;
     property Name: string read FName write FName;
-    property Node_Id: string read FNode_Id write FNode_Id;
+    property NodeId: string read FNodeId write FNodeId;
     property Prerelease: Boolean read FPrerelease write FPrerelease;
-    property Published_At: TDateTime read FPublished_At write FPublished_At;
-    property Tag_Name: string read FTag_Name write FTag_Name;
-    property Tarball_Url: string read FTarball_Url write FTarball_Url;
-    property Target_Commitish: string read FTarget_Commitish write FTarget_Commitish;
-    property Upload_Url: string read FUpload_Url write FUpload_Url;
+    property PublishedAt: TDateTime read FPublishedAt write FPublishedAt;
+    property TagName: string read FTagName write FTagName;
+    property TarballUrl: string read FTarballUrl write FTarballUrl;
+    property TargetCommitish: string read FTargetCommitish write FTargetCommitish;
+    property UploadUrl: string read FUploadUrl write FUploadUrl;
     property Url: string read FUrl write FUrl;
-    property Zipball_Url: string read FZipball_Url write FZipball_Url;
+    property ZipballUrl: string read FZipballUrl write FZipballUrl;
   public
     constructor Create; override;
     destructor Destroy; override;
   end;
-  
-  TReleaseDTO = class(TJsonDTO)
-  protected
-    [JSONName('Items')]
-    [JSONMarshalled(False)]
-    FItemsArray: TArray<TItemsDTO>;
+
+  TReleases = class(TJsonDTO)
+  private
+    [JSONName('Items'), JSONMarshalled(False)]
+    FItemsArray: TArray<TItems>;
     [GenericListReflect]
-    FItems: TObjectList<TItemsDTO>;
-    function GetItems: TObjectList<TItemsDTO>;
+    FItems: TObjectList<TItems>;
+    function GetItems: TObjectList<TItems>;
+  protected
+    function GetAsJson: string; override;
   published
-    property Items: TObjectList<TItemsDTO> read GetItems;
+    property Items: TObjectList<TItems> read GetItems;
   public
-    constructor Create; override;
     destructor Destroy; override;
   end;
-  
+
+  TRelease = DTO.GitHUB.ReleaseDTO.TItems;
+
 implementation
 
-{ TAssetsDTO }
+{ TItems }
 
-constructor TAssetsDTO.Create;
+constructor TItems.Create;
 begin
   inherited;
-  FUploader := TUploaderDTO.Create;
+  FAuthor := TAuthor.Create;
 end;
 
-destructor TAssetsDTO.Destroy;
-begin
-  FUploader.Free;
-  inherited;
-end;
-
-{ TItemsDTO }
-
-constructor TItemsDTO.Create;
-begin
-  inherited;
-  FAuthor := TAuthorDTO.Create;
-end;
-
-destructor TItemsDTO.Destroy;
+destructor TItems.Destroy;
 begin
   FAuthor.Free;
-  FAssets.Free;
+  GetAssets.Free;
   inherited;
 end;
 
-function TItemsDTO.GetAssets: TObjectList<TAssetsDTO>;
+function TItems.GetAssets: TObjectList<TAssets>;
 begin
-  Result := ObjectList<TAssetsDTO>(FAssets, FAssetsArray);
+  Result := ObjectList<TAssets>(FAssets, FAssetsArray);
 end;
 
-{ TReleaseDTO }
-
-constructor TReleaseDTO.Create;
+function TItems.GetAsJson: string;
 begin
+  RefreshArray<TAssets>(FAssets, FAssetsArray);
+  Result := inherited;
+end;
+
+{ TReleases }
+
+destructor TReleases.Destroy;
+begin
+  GetItems.Free;
   inherited;
 end;
 
-destructor TReleaseDTO.Destroy;
+function TReleases.GetItems: TObjectList<TItems>;
 begin
-  FItems.Free;
-  inherited;
+  Result := ObjectList<TItems>(FItems, FItemsArray);
 end;
 
-function TReleaseDTO.GetItems: TObjectList<TItemsDTO>;
+function TReleases.GetAsJson: string;
 begin
-  Result := ObjectList<TItemsDTO>(FItems, FItemsArray);
+  RefreshArray<TItems>(FItems, FItemsArray);
+  Result := inherited;
 end;
 
 end.
