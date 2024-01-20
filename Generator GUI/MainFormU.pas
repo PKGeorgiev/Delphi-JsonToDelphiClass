@@ -336,7 +336,7 @@ procedure TMainForm.FormCreate(Sender: TObject);
 begin
   FJsonMapper := TPkgJsonMapper.Create;
   FJson := '';
-  Caption := 'JsonToDelphiClass - ' + FloatToJson(ProgramVersion) + '.0 | By Jens Borrisholt';
+  Caption := 'JsonToDelphiClass - ' + FormatFloat('#.0', ProgramVersion, TFormatSettings.Invariant) + ' | By Jens Borrisholt';
 
   CheckForUpdate(
     procedure(aRelease: TRelease; aErrorMessage: string)
@@ -349,7 +349,7 @@ begin
       if (aRelease = nil) and (aErrorMessage = '') then
       begin
         Label1.StyleLookup := 'LabelGreenStyle';
-        Label1.Text := 'Your version ' + FloatToJson(uUpdate.ProgramVersion) + ' is up to date! For more information about JsonToDelphiClass click here!';
+        Label1.Text := 'Your version ' + FormatFloat('#.0', ProgramVersion, TFormatSettings.Invariant)  + ' is up to date! For more information about JsonToDelphiClass click here!';
         (Label1.FindStyleResource('text') as TText).OnClick := Label1Click;
       end
       else if aErrorMessage = '' then
