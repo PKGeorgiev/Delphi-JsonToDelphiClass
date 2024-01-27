@@ -8,10 +8,8 @@ uses
   Pkg.JSON.ThreadingEx, DTO.GitHUB.ReleaseDTO;
 
 const
-  ProgramVersion: double = 3.1;
-  UpdateUrl = 'https://api.github.com/repos/JensBorrisholt/Delphi-JsonToDelphiClass/releases';
+  ProgramVersion: double = 3.2;
   ProgramUrl = 'https://github.com/JensBorrisholt/Delphi-JsonToDelphiClass';
-  HTTP_OK = 200;
 
 function CheckForUpdate(AOnFinish: TProc<TRelease, string>): ITaskEx;
 
@@ -21,9 +19,12 @@ uses
   System.Net.HttpClient, System.Net.HttpClientComponent;
 
 function CheckForUpdate(AOnFinish: TProc<TRelease, string>): ITaskEx;
+const
+  UpdateUrl = 'https://api.github.com/repos/JensBorrisholt/Delphi-JsonToDelphiClass/releases';
+  HTTP_OK = 200;
 var
   ErrorMessage: string;
-  Releases: TReleases;
+  Releases: TReleasesDTO;
   Release: TRelease;
   Respons: IHTTPResponse;
 begin
@@ -31,7 +32,7 @@ begin
     procedure
 
     begin
-      Releases := TReleases.Create;
+      Releases := TReleasesDTO.Create;
       with TNetHTTPClient.Create(nil) do
         try
           try

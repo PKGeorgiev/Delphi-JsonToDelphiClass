@@ -4,8 +4,8 @@ object UpdateForm: TUpdateForm
   BorderIcons = [biSystemMenu]
   BorderStyle = Single
   Caption = 'New Version Information'
-  ClientHeight = 332
-  ClientWidth = 676
+  ClientHeight = 388
+  ClientWidth = 1200
   Padding.Left = 10.000000000000000000
   Padding.Top = 10.000000000000000000
   Padding.Right = 10.000000000000000000
@@ -20,8 +20,8 @@ object UpdateForm: TUpdateForm
   object Panel1: TPanel
     Align = Bottom
     Position.X = 10.000000000000000000
-    Position.Y = 297.000000000000000000
-    Size.Width = 656.000000000000000000
+    Position.Y = 353.000000000000000000
+    Size.Width = 1180.000000000000000000
     Size.Height = 25.000000000000000000
     Size.PlatformDefault = False
     StyleLookup = 'Panel1Style1'
@@ -29,7 +29,7 @@ object UpdateForm: TUpdateForm
     object Button1: TButton
       Align = Right
       ModalResult = 2
-      Position.X = 576.000000000000000000
+      Position.X = 1100.000000000000000000
       Size.Width = 80.000000000000000000
       Size.Height = 25.000000000000000000
       Size.PlatformDefault = False
@@ -43,14 +43,14 @@ object UpdateForm: TUpdateForm
     Margins.Bottom = 4.000000000000000000
     Position.X = 10.000000000000000000
     Position.Y = 10.000000000000000000
-    Size.Width = 656.000000000000000000
+    Size.Width = 1180.000000000000000000
     Size.Height = 127.000000000000000000
     Size.PlatformDefault = False
     StyleLookup = 'Panel1Style1'
     TabOrder = 1
     object Label1: TLabel
       Align = Top
-      Size.Width = 656.000000000000000000
+      Size.Width = 1180.000000000000000000
       Size.Height = 17.000000000000000000
       Size.PlatformDefault = False
       StyleLookup = 'Label1Style1'
@@ -60,7 +60,7 @@ object UpdateForm: TUpdateForm
     object lblVersion: TLabel
       Align = Top
       Position.Y = 17.000000000000000000
-      Size.Width = 656.000000000000000000
+      Size.Width = 1180.000000000000000000
       Size.Height = 17.000000000000000000
       Size.PlatformDefault = False
       TextSettings.Trimming = None
@@ -70,7 +70,7 @@ object UpdateForm: TUpdateForm
       Align = Top
       Margins.Top = 6.000000000000000000
       Position.Y = 40.000000000000000000
-      Size.Width = 656.000000000000000000
+      Size.Width = 1180.000000000000000000
       Size.Height = 17.000000000000000000
       Size.PlatformDefault = False
       StyleLookup = 'Label1Style1'
@@ -81,7 +81,7 @@ object UpdateForm: TUpdateForm
       Align = Top
       HitTest = True
       Position.Y = 57.000000000000000000
-      Size.Width = 656.000000000000000000
+      Size.Width = 1180.000000000000000000
       Size.Height = 17.000000000000000000
       Size.PlatformDefault = False
       StyleLookup = 'Label4Style1'
@@ -93,7 +93,7 @@ object UpdateForm: TUpdateForm
       Align = Top
       Margins.Top = 6.000000000000000000
       Position.Y = 80.000000000000000000
-      Size.Width = 656.000000000000000000
+      Size.Width = 1180.000000000000000000
       Size.Height = 17.000000000000000000
       Size.PlatformDefault = False
       StyleLookup = 'Label1Style1'
@@ -105,7 +105,7 @@ object UpdateForm: TUpdateForm
       HitTest = True
       Margins.Bottom = 6.000000000000000000
       Position.Y = 97.000000000000000000
-      Size.Width = 656.000000000000000000
+      Size.Width = 1180.000000000000000000
       Size.Height = 17.000000000000000000
       Size.PlatformDefault = False
       StyleLookup = 'Label4Style1'
@@ -117,15 +117,15 @@ object UpdateForm: TUpdateForm
   object Panel3: TPanel
     Align = Client
     Margins.Bottom = 4.000000000000000000
-    Size.Width = 656.000000000000000000
-    Size.Height = 152.000000000000000000
+    Size.Width = 1180.000000000000000000
+    Size.Height = 208.000000000000000000
     Size.PlatformDefault = False
     StyleLookup = 'Panel1Style1'
     TabOrder = 2
     object Label5: TLabel
       Align = Top
       Margins.Bottom = 4.000000000000000000
-      Size.Width = 656.000000000000000000
+      Size.Width = 1180.000000000000000000
       Size.Height = 17.000000000000000000
       Size.PlatformDefault = False
       StyleLookup = 'Label1Style1'
@@ -138,12 +138,12 @@ object UpdateForm: TUpdateForm
       ReadOnly = True
       Align = Client
       Margins.Bottom = 4.000000000000000000
-      Size.Width = 656.000000000000000000
-      Size.Height = 127.000000000000000000
+      Size.Width = 1180.000000000000000000
+      Size.Height = 183.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 1
-      Viewport.Width = 652.000000000000000000
-      Viewport.Height = 123.000000000000000000
+      Viewport.Width = 1176.000000000000000000
+      Viewport.Height = 179.000000000000000000
     end
   end
   object StyleBook1: TStyleBook
@@ -184,7 +184,7 @@ object UpdateForm: TUpdateForm
           726D44656661756C74081A5465787453657474696E67732E466F6E742E537479
           6C654578740A0D00000000070000000000000004000000000000}
       end>
-    Left = 496
-    Top = 24
+    Left = 512
+    Top = 40
   end
 end
