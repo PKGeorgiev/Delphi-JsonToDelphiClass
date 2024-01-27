@@ -10,7 +10,6 @@ uses
 type
   TAssets = class;
   TAuthor = class;
-  TReactions = class;
 
   TAssets = class
   end;
@@ -70,32 +69,7 @@ type
     property Url: string read FUrl write FUrl;
   end;
 
-  TReactions = class
-  private
-    FConfused: Integer;
-    FEyes: Integer;
-    FHeart: Integer;
-    FHooray: Integer;
-    FLaugh: Integer;
-    FRocket: Integer;
-    [JSONName('total_count')]
-    FTotalCount: Integer;
-    FUrl: string;
-    [JSONName('-1')]
-    F_1: Integer;
-  published
-    property Confused: Integer read FConfused write FConfused;
-    property Eyes: Integer read FEyes write FEyes;
-    property Heart: Integer read FHeart write FHeart;
-    property Hooray: Integer read FHooray write FHooray;
-    property Laugh: Integer read FLaugh write FLaugh;
-    property Rocket: Integer read FRocket write FRocket;
-    property TotalCount: Integer read FTotalCount write FTotalCount;
-    property Url: string read FUrl write FUrl;
-    property _1: Integer read F_1 write F_1;
-  end;
-
-  TRelease = class(TJsonDTO)
+  TItems = class(TJsonDTO)
   private
     [JSONName('assets'), JSONMarshalled(False)]
     FAssetsArray: TArray<TAssets>;
@@ -117,7 +91,6 @@ type
     FPrerelease: Boolean;
     [SuppressZero, JSONName('published_at')]
     FPublishedAt: TDateTime;
-    FReactions: TReactions;
     [JSONName('tag_name')]
     FTagName: string;
     [JSONName('tarball_url')]
@@ -145,7 +118,6 @@ type
     property NodeId: string read FNodeId write FNodeId;
     property Prerelease: Boolean read FPrerelease write FPrerelease;
     property PublishedAt: TDateTime read FPublishedAt write FPublishedAt;
-    property Reactions: TReactions read FReactions;
     property TagName: string read FTagName write FTagName;
     property TarballUrl: string read FTarballUrl write FTarballUrl;
     property TargetCommitish: string read FTargetCommitish write FTargetCommitish;
@@ -157,67 +129,67 @@ type
     destructor Destroy; override;
   end;
 
-  TReleasesDTO = class(TJsonDTO)
+  TReleases = class(TJsonDTO)
   private
     [JSONName('Items'), JSONMarshalled(False)]
-    FItemsArray: TArray<TRelease>;
+    FItemsArray: TArray<TItems>;
     [GenericListReflect]
-    FItems: TObjectList<TRelease>;
-    function GetItems: TObjectList<TRelease>;
+    FItems: TObjectList<TItems>;
+    function GetItems: TObjectList<TItems>;
   protected
     function GetAsJson: string; override;
   published
-    property Items: TObjectList<TRelease> read GetItems;
+    property Items: TObjectList<TItems> read GetItems;
   public
     destructor Destroy; override;
   end;
+
+  TRelease = DTO.GitHUB.ReleaseDTO.TItems;
 
 implementation
 
 { TItems }
 
-constructor TRelease.Create;
+constructor TItems.Create;
 begin
   inherited;
-  FReactions := TReactions.Create;
   FAuthor := TAuthor.Create;
 end;
 
-destructor TRelease.Destroy;
+destructor TItems.Destroy;
 begin
-  FReactions.Free;
   FAuthor.Free;
   GetAssets.Free;
   inherited;
 end;
 
-function TRelease.GetAssets: TObjectList<TAssets>;
+function TItems.GetAssets: TObjectList<TAssets>;
 begin
   Result := ObjectList<TAssets>(FAssets, FAssetsArray);
 end;
 
-function TRelease.GetAsJson: string;
+function TItems.GetAsJson: string;
 begin
   RefreshArray<TAssets>(FAssets, FAssetsArray);
   Result := inherited;
 end;
 
-{ TRoot }
+{ TReleases }
 
-destructor TReleasesDTO.Destroy;
+destructor TReleases.Destroy;
 begin
   GetItems.Free;
   inherited;
 end;
 
-function TReleasesDTO.GetItems: TObjectList<TRelease>;
+function TReleases.GetItems: TObjectList<TItems>;
 begin
-  Result := ObjectList<TRelease>(FItems, FItemsArray);
+  Result := ObjectList<TItems>(FItems, FItemsArray);
 end;
 
-function TReleasesDTO.GetAsJson: string;
+function TReleases.GetAsJson: string;
 begin
-  RefreshArray<TRelease>(FItems, FItemsArray);
+  RefreshArray<TItems>(FItems, FItemsArray);
   Result := inherited;
 end;
 

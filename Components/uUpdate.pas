@@ -1,4 +1,4 @@
-﻿unit uUpdate;
+unit uUpdate;
 
 interface
 
@@ -10,6 +10,7 @@ uses
 const
   ProgramVersion: double = 3.2;
   ProgramUrl = 'https://github.com/JensBorrisholt/Delphi-JsonToDelphiClass';
+  HTTP_OK = 200;
 
 function CheckForUpdate(AOnFinish: TProc<TRelease, string>): ITaskEx;
 
@@ -24,7 +25,7 @@ const
   HTTP_OK = 200;
 var
   ErrorMessage: string;
-  Releases: TReleasesDTO;
+  Releases: TReleases;
   Release: TRelease;
   Respons: IHTTPResponse;
 begin
@@ -32,7 +33,7 @@ begin
     procedure
 
     begin
-      Releases := TReleasesDTO.Create;
+      Releases := TReleases.Create;
       with TNetHTTPClient.Create(nil) do
         try
           try
