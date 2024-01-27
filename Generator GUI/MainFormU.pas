@@ -95,7 +95,7 @@ var
 implementation
 
 uses
-  System.IOUtils, System.Json, IdURI, Pkg.Json.Utils,
+  System.IOUtils, System.Json,  System.NetEncoding,  Pkg.Json.Utils,
 
   FMX.DialogService,
 
@@ -246,7 +246,7 @@ procedure TMainForm.actOnlineValidationExecute(Sender: TObject);
 const
   JsonValidatorUrl = 'https://jsonformatter.curiousconcept.com/?data=%s&process=true';
 begin
-  ShellExecute(TIdURI.URLEncode(Format(JsonValidatorUrl, [MinifyJson(MemoJSON.Text)])));
+  ShellExecute(TNetEncoding.URL.Encode(Format(JsonValidatorUrl, [MinifyJson(MemoJSON.Text)])));
 end;
 
 procedure TMainForm.actOpenExecute(Sender: TObject);
