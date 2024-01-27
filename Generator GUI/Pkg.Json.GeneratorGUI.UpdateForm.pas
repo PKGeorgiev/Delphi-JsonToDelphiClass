@@ -1,4 +1,4 @@
-unit uUpdateForm;
+﻿unit Pkg.Json.GeneratorGUI.UpdateForm;
 
 interface
 

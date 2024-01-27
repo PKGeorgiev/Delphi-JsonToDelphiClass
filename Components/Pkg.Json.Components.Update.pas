@@ -1,4 +1,4 @@
-unit uUpdate;
+﻿unit Pkg.Json.Components.Update;
 
 interface
 
@@ -40,7 +40,14 @@ begin
             Respons := Get(UpdateUrl);
 
             if Respons.StatusCode = HTTP_OK then
-              Releases.AsJson := Respons.ContentAsString;
+              Releases.AsJson := Respons.ContentAsString
+            else
+            begin
+              Release := nil;
+              Exit;
+
+
+            end;
 
             if Releases.Items.Count >= 0 then
             begin

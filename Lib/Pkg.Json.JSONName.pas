@@ -1,4 +1,4 @@
-unit Pkg.Json.JSONName;
+﻿unit Pkg.Json.JSONName;
 
 interface
 

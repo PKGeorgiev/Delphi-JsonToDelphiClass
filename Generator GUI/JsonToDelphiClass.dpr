@@ -6,8 +6,7 @@ program JsonToDelphiClass;
 uses
   System.StartUpCopy,
   FMX.Forms,
-  uUpdateForm in 'uUpdateForm.pas' {UpdateForm},
-  uUpdate in '..\Components\uUpdate.pas',
+  Pkg.Json.Components.Update in '..\Components\Pkg.Json.Components.Update.pas',
   Pkg.Json.Visualizer in '..\Components\Pkg.Json.Visualizer.pas',
   Pkg.Json.DemoGenerator in '..\Demo Generator\Pkg.Json.DemoGenerator.pas',
   Pkg.Json.DTO in '..\Lib\Pkg.Json.DTO.pas',
@@ -21,11 +20,12 @@ uses
   Pkg.Json.Utils in '..\Lib\Pkg.Json.Utils.pas',
   Pkg.JSON.SubTypes in '..\Lib\Pkg.JSON.SubTypes.pas',
   Pkg.Json.Settings in '..\Lib\Pkg.Json.Settings.pas',
-  uSettingsForm in 'uSettingsForm.pas' {SettingsForm},
   Pkg.Json.ThreadingEx in '..\Lib\Pkg.Json.ThreadingEx.pas',
   MainFormU in 'MainFormU.pas' {MainForm},
   Pkg.Json.Lib.JSONConverter in '..\Lib\Pkg.Json.Lib.JSONConverter.pas',
-  Pkg.Json.OutputFormat in '..\Lib\Pkg.Json.OutputFormat.pas';
+  Pkg.Json.OutputFormat in '..\Lib\Pkg.Json.OutputFormat.pas',
+  Pkg.Json.GeneratorGUI.SettingsForm in 'Pkg.Json.GeneratorGUI.SettingsForm.pas' {SettingsForm},
+  Pkg.Json.GeneratorGUI.UpdateForm in 'Pkg.Json.GeneratorGUI.UpdateForm.pas' {UpdateForm};
 
 {$R *.res}
 

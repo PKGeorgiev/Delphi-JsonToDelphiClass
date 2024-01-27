@@ -135,11 +135,7 @@
         <RcCompile Include="..\Lib\JSON_PAS.rc">
             <Form>JSON_PAS.res</Form>
         </RcCompile>
-        <DCCReference Include="uUpdateForm.pas">
-            <Form>UpdateForm</Form>
-            <FormType>fmx</FormType>
-        </DCCReference>
-        <DCCReference Include="..\Components\uUpdate.pas"/>
+        <DCCReference Include="..\Components\Pkg.Json.Components.Update.pas"/>
         <DCCReference Include="..\Components\Pkg.Json.Visualizer.pas"/>
         <DCCReference Include="..\Demo Generator\Pkg.Json.DemoGenerator.pas"/>
         <DCCReference Include="..\Lib\Pkg.Json.DTO.pas"/>
@@ -153,10 +149,6 @@
         <DCCReference Include="..\Lib\Pkg.Json.Utils.pas"/>
         <DCCReference Include="..\Lib\Pkg.JSON.SubTypes.pas"/>
         <DCCReference Include="..\Lib\Pkg.Json.Settings.pas"/>
-        <DCCReference Include="uSettingsForm.pas">
-            <Form>SettingsForm</Form>
-            <FormType>fmx</FormType>
-        </DCCReference>
         <DCCReference Include="..\Lib\Pkg.Json.ThreadingEx.pas"/>
         <DCCReference Include="MainFormU.pas">
             <Form>MainForm</Form>
@@ -164,6 +156,14 @@
         </DCCReference>
         <DCCReference Include="..\Lib\Pkg.Json.Lib.JSONConverter.pas"/>
         <DCCReference Include="..\Lib\Pkg.Json.OutputFormat.pas"/>
+        <DCCReference Include="Pkg.Json.GeneratorGUI.SettingsForm.pas">
+            <Form>SettingsForm</Form>
+            <FormType>fmx</FormType>
+        </DCCReference>
+        <DCCReference Include="Pkg.Json.GeneratorGUI.UpdateForm.pas">
+            <Form>UpdateForm</Form>
+            <FormType>fmx</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

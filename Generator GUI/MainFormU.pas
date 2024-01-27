@@ -1,4 +1,4 @@
-unit MainFormU;
+﻿unit MainFormU;
 
 interface
 
@@ -99,7 +99,7 @@ uses
 
   FMX.DialogService,
 
-  uSettingsForm, uUpdate, uUpdateForm,
+  Pkg.Json.GeneratorGUI.SettingsForm, Pkg.Json.Components.Update, Pkg.Json.GeneratorGUI.UpdateForm,
   Pkg.Json.ThreadingEx, Pkg.Json.Lib.JSONConverter, Pkg.Json.Visualizer, Pkg.Json.DemoGenerator;
 
 {$R *.fmx}
