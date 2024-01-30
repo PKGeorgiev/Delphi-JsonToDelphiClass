@@ -1,4 +1,4 @@
-unit uUpdateForm;
+﻿unit Pkg.Json.GeneratorGUI.UpdateForm;
 
 interface
 
@@ -6,7 +6,7 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, FMX.Types, FMX.Controls, FMX.Forms,
   FMX.Graphics, FMX.Dialogs, FMX.StdCtrls, FMX.Layouts, FMX.Memo, FMX.Objects, FMX.Memo.Types, FMX.ScrollBox, FMX.Controls.Presentation,
 
-  DTO.GitHUB.Release;
+  DTO.GitHUB.ReleaseDTO;
 
 type
   TUpdateForm = class(TForm)
@@ -23,8 +23,6 @@ type
     StyleBook1: TStyleBook;
     Label6: TLabel;
     lblDownloadLink: TLabel;
-    Label2: TLabel;
-    lblDownloadCount: TLabel;
     procedure FormShow(Sender: TObject);
     procedure lblReleasesLinkClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
@@ -51,21 +49,12 @@ end;
 
 procedure TUpdateForm.FormShow(Sender: TObject);
 begin
-  lblVersion.Text := FRelease.Tag_Name;
-  lblReleasesLink.Text := FRelease.Html_Url;
+  lblVersion.Text := FRelease.TagName;
+  lblReleasesLink.Text := FRelease.HtmlUrl;
 
-  if FRelease.Assets.Count > 0 then
-  begin
-    lblDownloadLink.Text := FRelease.Assets.First.Browser_Download_Url;
-    lblDownloadCount.Text := FRelease.Assets.First.Download_Count.ToString();
-  end
-  else
-  begin
-    lblDownloadLink.Text := lblReleasesLink.Text;
-    lblDownloadCount.Text := '0';
-  end;
+  lblDownloadLink.Text := FRelease.AssetsUrl;
 
-  Memo1.Text := FRelease.body;
+  Memo1.Text := FRelease.Body;
   (lblReleasesLink.FindStyleResource('text') as TText).OnClick := lblReleasesLinkClick;
   (lblDownloadLink.FindStyleResource('text') as TText).OnClick := lblReleasesLinkClick;
 end;
@@ -75,4 +64,5 @@ begin
   ShellExecute((Sender as TText).Text);
   ModalResult := mrOk;
 end;
+
 end.

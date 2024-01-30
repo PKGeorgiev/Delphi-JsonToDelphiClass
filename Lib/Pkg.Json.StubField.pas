@@ -1,4 +1,4 @@
-unit Pkg.Json.StubField;
+﻿unit Pkg.Json.StubField;
 
 interface
 

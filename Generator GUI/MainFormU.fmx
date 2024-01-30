@@ -98,7 +98,7 @@ object MainForm: TMainForm
         end>
       TextSettings.Trimming = None
       IsSelected = True
-      Size.Width = 43.000000000000000000
+      Size.Width = 44.000000000000000000
       Size.Height = 26.000000000000000000
       Size.PlatformDefault = False
       StyleLookup = ''
@@ -123,8 +123,8 @@ object MainForm: TMainForm
         Size.PlatformDefault = False
         TabOrder = 2
         OnExit = MemoJSONExit
-        Viewport.Width = 608.000000000000000000
-        Viewport.Height = 351.000000000000000000
+        Viewport.Width = 612.000000000000000000
+        Viewport.Height = 355.000000000000000000
       end
       object ListView1: TListView
         ItemAppearanceClassName = 'TListItemAppearance'
@@ -155,8 +155,8 @@ object MainForm: TMainForm
         Size.PlatformDefault = False
         TabOrder = 0
         Visible = False
-        Viewport.Width = 209.000000000000000000
-        Viewport.Height = 377.000000000000000000
+        Viewport.Width = 205.000000000000000000
+        Viewport.Height = 373.000000000000000000
       end
       object Panel3: TPanel
         Align = Bottom

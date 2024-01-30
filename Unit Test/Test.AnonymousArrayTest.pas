@@ -1,4 +1,4 @@
-unit Test.AnonymousArrayTest;
+﻿unit Test.AnonymousArrayTest;
 
 interface
 

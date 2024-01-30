@@ -3,8 +3,8 @@ object SettingsForm: TSettingsForm
   Top = 0
   BorderStyle = ToolWindow
   Caption = 'Settings'
-  ClientHeight = 178
-  ClientWidth = 246
+  ClientHeight = 180
+  ClientWidth = 248
   Position = MainFormCenter
   FormFactor.Width = 320
   FormFactor.Height = 480
@@ -16,6 +16,7 @@ object SettingsForm: TSettingsForm
     Size.Width = 233.000000000000000000
     Size.Height = 19.000000000000000000
     Size.PlatformDefault = False
+    TabOrder = 0
     Text = 'Add JsonProperty Attributes'
   end
   object Label1: TLabel
@@ -27,18 +28,23 @@ object SettingsForm: TSettingsForm
     Size.PlatformDefault = False
     TextSettings.Font.Size = 20.000000000000000000
     TextSettings.Font.StyleExt = {00070000000000000004000000}
+    TextSettings.Trimming = None
     Text = 'Settings'
+    TabOrder = 1
   end
   object chbUsePascalCase: TCheckBox
     Position.X = 8.000000000000000000
     Position.Y = 73.000000000000000000
+    TabOrder = 3
     Text = 'Use Pascal Case'
   end
   object btnOk: TButton
     ModalResult = 1
     Position.X = 160.000000000000000000
     Position.Y = 152.000000000000000000
+    TabOrder = 4
     Text = '&Ok'
+    TextSettings.Trimming = None
   end
   object chbPostfixClassNames: TCheckBox
     Position.X = 8.000000000000000000
@@ -46,10 +52,12 @@ object SettingsForm: TSettingsForm
     Size.Width = 129.000000000000000000
     Size.Height = 19.000000000000000000
     Size.PlatformDefault = False
+    TabOrder = 5
     Text = 'Postfix Class Names'
   end
   object edPostFix: TEdit
     Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 6
     Text = '67,67'
     Position.X = 152.000000000000000000
     Position.Y = 96.000000000000000000
@@ -72,30 +80,25 @@ object SettingsForm: TSettingsForm
         Name = 'AddJsonPropertyAttributes'
         FieldType = ftBoolean
         Generator = 'Booleans'
-        ReadOnly = False
       end
       item
         Name = 'PostFixClassNames'
         FieldType = ftBoolean
         Generator = 'Booleans'
-        ReadOnly = False
       end
       item
         Name = 'PostFix'
         Generator = 'Currency'
-        ReadOnly = False
       end
       item
         Name = 'UsePascalCase'
         FieldType = ftBoolean
         Generator = 'Booleans'
-        ReadOnly = False
       end
       item
         Name = 'SuppressZeroDate'
         FieldType = ftBoolean
         Generator = 'Booleans'
-        ReadOnly = False
       end>
     ScopeMappings = <>
     OnCreateAdapter = PrototypeBindSource1CreateAdapter

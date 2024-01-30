@@ -1,4 +1,4 @@
-unit TestPkg.SimpleDTO;
+﻿unit TestPkg.SimpleDTO;
 
 interface
 

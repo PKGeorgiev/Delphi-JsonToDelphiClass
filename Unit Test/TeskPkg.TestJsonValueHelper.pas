@@ -1,9 +1,12 @@
-unit TeskPkg.TestJsonValueHelper;
+﻿unit TeskPkg.TestJsonValueHelper;
 
 interface
 
-uses DUnitX.TestFramework, DUnitX.Assert.Ex,
+uses
+  DUnitX.TestFramework, DUnitX.Assert.Ex,
+
   System.JSON, System.SysUtils,
+
   Pkg.JSON.JsonValueHelper;
 
 type
@@ -145,7 +148,7 @@ begin
       JsonNumberTest('3,14', jtString)
     end);
 
-    JsonStringTest('3,14', jtString);
+  JsonStringTest('3,14', jtString);
 
   // NOTE: Json ALLWAYS uses . as decimal seperator
 end;

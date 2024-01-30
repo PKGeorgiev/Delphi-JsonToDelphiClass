@@ -1,4 +1,4 @@
-unit Pkg.Json.Settings;
+﻿unit Pkg.Json.Settings;
 
 interface
 

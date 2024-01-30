@@ -1,4 +1,4 @@
-unit Pkg.Json.DemoGenerator;
+﻿unit Pkg.Json.DemoGenerator;
 
 interface
 

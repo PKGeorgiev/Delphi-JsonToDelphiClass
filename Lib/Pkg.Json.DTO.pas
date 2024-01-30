@@ -1,4 +1,4 @@
-unit Pkg.Json.DTO;
+﻿unit Pkg.Json.DTO;
 
 interface
 

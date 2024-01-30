@@ -1,4 +1,4 @@
-unit uSettingsForm;
+﻿unit Pkg.Json.GeneratorGUI.SettingsForm;
 
 interface
 

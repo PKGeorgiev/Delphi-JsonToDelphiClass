@@ -1,4 +1,4 @@
-unit RegistryHelperU;
+﻿unit RegistryHelperU;
 
 interface
 

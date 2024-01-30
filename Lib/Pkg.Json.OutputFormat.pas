@@ -1,4 +1,4 @@
-unit Pkg.Json.OutputFormat;
+﻿unit Pkg.Json.OutputFormat;
 
 interface
 
