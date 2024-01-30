@@ -1,7 +1,7 @@
 Delphi-JsonToDelphiClass
 ========================
 
-## Fixes & Features: 130h January 2024 ##
+## Fixes & Features: 13th January 2024 ##
 ### Features ###
 * Major code cleanup, especially naming
 * Removed INDY from Upgrade chekker
