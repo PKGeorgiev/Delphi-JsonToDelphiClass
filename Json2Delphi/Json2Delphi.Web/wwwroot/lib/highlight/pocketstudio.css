@@ -1,0 +1,16 @@
+.delphiPocketStudio { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:black; }
+.delphiPocketStudio table, td, th { border-spacing:0px;padding:0px; }
+.delphiPocketStudio .comment { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:green; }
+.delphiPocketStudio .keyword { font-family:monospace;font-style:normal;font-weight:bold;background-color:white;color:navy; }
+.delphiPocketStudio .identifier { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:black; }
+.delphiPocketStudio .symbol { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:black; }
+.delphiPocketStudio .string { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:blue; }
+.delphiPocketStudio .character { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:purple; }
+.delphiPocketStudio .number { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:navy; }
+.delphiPocketStudio .float { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:navy; }
+.delphiPocketStudio .hex { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:navy; }
+.delphiPocketStudio .assembler { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:black; }
+.delphiPocketStudio .preprocessor { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:teal; }
+.delphiPocketStudio .error { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:black; }
+.delphiPocketStudio .gutter { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:gray;text-align:right;padding-right:4px;border-right-color:lightgray;border-right-style:solid;border-right-width:2px; }
+.delphiPocketStudio .content { font-family:monospace;font-style:normal;font-weight:normal;background-color:white;color:black;padding-left:6px; }

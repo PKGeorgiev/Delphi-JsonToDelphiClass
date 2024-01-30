@@ -1,0 +1,97 @@
+﻿@model Json2Delphi.Web.Models.MainViewModel
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-10 offset-1 json2delphi-form">
+
+            <form method="post" asp-antiforgery="true" asp-controller="Convert" asp-action="ConvertDelphi">
+                <input type="hidden" id="resultText" value="@ViewData.GetResultText()" />
+                <div class="container-fluid">
+                    <div class="row">
+
+                        <div class="col-6 json2delphi-group">
+                            <div class="card json2delphi-sourcecode">
+                                <div class="card-header">JSON source code</div>
+                                <div class="card-body">
+                                    <textarea asp-for="@Model.SourceText"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6 json2delphi-group">
+                            <div class="card json2delphi-sourcecode">
+                                <div class="card-header">Delphi source code</div>
+                                <div class="card-body">
+                                    <div id="highlight" class="result-text delphiDefault" contenteditable="true"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-4 json2delphi-group">
+
+                            <div class="card json2delphi-settings">
+                                <div class="card-header">Settings</div>
+                                <div class="card-body">
+
+                                    <div class="form-check">
+                                        <input type="checkbox" asp-for="@Model.UsePascalCase" class="form-check-input" />
+                                        <label for="UsePascalCase" class="form-check-label">Use PascalCase</label>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="checkbox" asp-for="@Model.AddJsonPropertyAttributes" class="form-check-input" />
+                                        <label for="AddJsonPropertyAttributes" class="form-check-label">Add JsonProperty Attributes</label>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="checkbox" asp-for="@Model.SuppressZeroDate" class="form-check-input" />
+                                        <label for="SuppressZeroDate" class="form-check-label">Suppress Zero Date</label>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="checkbox" asp-for="@Model.PostFixClassNames" class="form-check-input" />
+                                        <label for="PostFixClassNames" class="form-check-label">Postfix class names</label>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="text" asp-for="@Model.PostFix" class="form-text" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-4 json2delphi-group">
+                            <input type="submit" class="btn btn-primary btn-lg" value="Convert" />
+                        </div>
+
+                        <div class="col-md-4 col-xs-12 json2delphi-group">
+                            <div class="col-6 json2delphi-group">
+                                <div class="wow fadeInUp animated" data-wow-duration="2s" data-wow-delay="0.2s" style="visibility: visible; animation-duration: 2s; animation-delay: 0.2s; animation-name: fadeInUp;">
+                                    <h2>Download base class </h2>
+                                    <p> <b>Pkg.Json.DTO</b> is the base class for all generated files </p>
+                                </div>
+
+                                <div class="buttons">
+                                    <a asp-controller="Convert" asp-action="DownloadDTO" class="btn btn-success btn-lg" data-wow-duration="2s" data-wow-delay="0.2s" style="visibility: visible; animation-duration: 2s; animation-delay: 0.2s; animation-name: fadeInLeft;">
+                                        Download<br> <small>Pkg.Json.DTO.pas</small>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section viewScripts {
+<script src="~/lib/highlight/highlight.js"></script>
+<script src="~/js/json2delphi-bundle.js"></script>
+}

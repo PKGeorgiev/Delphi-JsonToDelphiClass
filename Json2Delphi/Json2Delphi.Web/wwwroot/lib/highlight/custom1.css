@@ -1,0 +1,16 @@
+.delphiCustom1 { font-family:"Consolas","Bitstream Vera Sans Mono","Courier New",Courier,monospace !important;font-style:normal;font-weight:normal;background-color:white;color:black; }
+.delphiCustom1 table, td, th { border-spacing:0px;padding:0px; }
+.delphiCustom1 .comment { font-family:"Consolas","Bitstream Vera Sans Mono","Courier New",Courier,monospace !important;font-style:italic;font-weight:normal;background-color:white;color:green; }
+.delphiCustom1 .keyword { font-family:"Consolas","Bitstream Vera Sans Mono","Courier New",Courier,monospace !important;font-style:normal;font-weight:bold;background-color:white;color:navy; }
+.delphiCustom1 .identifier { font-family:"Consolas","Bitstream Vera Sans Mono","Courier New",Courier,monospace !important;font-style:normal;font-weight:normal;background-color:white;color:black; }
+.delphiCustom1 .symbol { font-family:"Consolas","Bitstream Vera Sans Mono","Courier New",Courier,monospace !important;font-style:normal;font-weight:normal;background-color:white;color:black; }
+.delphiCustom1 .string { font-family:"Consolas","Bitstream Vera Sans Mono","Courier New",Courier,monospace !important;font-style:normal;font-weight:normal;background-color:white;color:blue; }
+.delphiCustom1 .character { font-family:"Consolas","Bitstream Vera Sans Mono","Courier New",Courier,monospace !important;font-style:normal;font-weight:normal;background-color:white;color:purple; }
+.delphiCustom1 .number { font-family:"Consolas","Bitstream Vera Sans Mono","Courier New",Courier,monospace !important;font-style:normal;font-weight:normal;background-color:white;color:blue; }
+.delphiCustom1 .float { font-family:"Consolas","Bitstream Vera Sans Mono","Courier New",Courier,monospace !important;font-style:normal;font-weight:normal;background-color:white;color:blue; }
+.delphiCustom1 .hex { font-family:"Consolas","Bitstream Vera Sans Mono","Courier New",Courier,monospace !important;font-style:normal;font-weight:normal;background-color:white;color:blue; }
+.delphiCustom1 .assembler { font-family:"Consolas","Bitstream Vera Sans Mono","Courier New",Courier,monospace !important;font-style:normal;font-weight:normal;background-color:white;color:black; }
+.delphiCustom1 .preprocessor { font-family:"Consolas","Bitstream Vera Sans Mono","Courier New",Courier,monospace !important;font-style:normal;font-weight:normal;background-color:white;color:teal; }
+.delphiCustom1 .error { font-family:"Consolas","Bitstream Vera Sans Mono","Courier New",Courier,monospace !important;font-style:normal;font-weight:normal;background-color:white;color:black; }
+.delphiCustom1 .gutter { font-family:"Consolas","Bitstream Vera Sans Mono","Courier New",Courier,monospace !important;font-style:normal;font-weight:normal;background-color:white;color:gray;text-align:right;padding-right:4px;border-right-color:lightgray;border-right-style:solid;border-right-width:2px; }
+.delphiCustom1 .content { font-family:"Consolas","Bitstream Vera Sans Mono","Courier New",Courier,monospace !important;font-style:normal;font-weight:normal;background-color:white;color:black;padding-left:6px; }

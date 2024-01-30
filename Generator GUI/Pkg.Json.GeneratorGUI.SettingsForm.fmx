@@ -1,0 +1,156 @@
+object SettingsForm: TSettingsForm
+  Left = 0
+  Top = 0
+  BorderStyle = ToolWindow
+  Caption = 'Settings'
+  ClientHeight = 180
+  ClientWidth = 248
+  Position = MainFormCenter
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  DesignerMasterStyle = 0
+  object chbAddJsonPropertyAttributes: TCheckBox
+    Position.X = 8.000000000000000000
+    Position.Y = 49.000000000000000000
+    Size.Width = 233.000000000000000000
+    Size.Height = 19.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    Text = 'Add JsonProperty Attributes'
+  end
+  object Label1: TLabel
+    StyledSettings = [Family, FontColor]
+    Position.X = 16.000000000000000000
+    Position.Y = 8.000000000000000000
+    Size.Width = 129.000000000000000000
+    Size.Height = 33.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.Font.Size = 20.000000000000000000
+    TextSettings.Font.StyleExt = {00070000000000000004000000}
+    TextSettings.Trimming = None
+    Text = 'Settings'
+    TabOrder = 1
+  end
+  object chbUsePascalCase: TCheckBox
+    Position.X = 8.000000000000000000
+    Position.Y = 73.000000000000000000
+    TabOrder = 3
+    Text = 'Use Pascal Case'
+  end
+  object btnOk: TButton
+    ModalResult = 1
+    Position.X = 160.000000000000000000
+    Position.Y = 152.000000000000000000
+    TabOrder = 4
+    Text = '&Ok'
+    TextSettings.Trimming = None
+  end
+  object chbPostfixClassNames: TCheckBox
+    Position.X = 8.000000000000000000
+    Position.Y = 98.000000000000000000
+    Size.Width = 129.000000000000000000
+    Size.Height = 19.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 5
+    Text = 'Postfix Class Names'
+  end
+  object edPostFix: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 6
+    Text = '67,67'
+    Position.X = 152.000000000000000000
+    Position.Y = 96.000000000000000000
+    Enabled = False
+    Size.Width = 73.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+  end
+  object CheckBoxSuppressZeroDate: TCheckBox
+    Position.X = 8.000000000000000000
+    Position.Y = 123.000000000000000000
+    TabOrder = 2
+    Text = 'Suppress Zero Date'
+  end
+  object PrototypeBindSource1: TPrototypeBindSource
+    AutoActivate = True
+    AutoPost = False
+    FieldDefs = <
+      item
+        Name = 'AddJsonPropertyAttributes'
+        FieldType = ftBoolean
+        Generator = 'Booleans'
+      end
+      item
+        Name = 'PostFixClassNames'
+        FieldType = ftBoolean
+        Generator = 'Booleans'
+      end
+      item
+        Name = 'PostFix'
+        Generator = 'Currency'
+      end
+      item
+        Name = 'UsePascalCase'
+        FieldType = ftBoolean
+        Generator = 'Booleans'
+      end
+      item
+        Name = 'SuppressZeroDate'
+        FieldType = ftBoolean
+        Generator = 'Booleans'
+      end>
+    ScopeMappings = <>
+    OnCreateAdapter = PrototypeBindSource1CreateAdapter
+    Left = 160
+    Top = 24
+  end
+  object BindingsList1: TBindingsList
+    Methods = <>
+    OutputConverters = <>
+    Left = 32
+    Top = 13
+    object LinkControlToField1: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = PrototypeBindSource1
+      FieldName = 'AddJsonPropertyAttributes'
+      Control = chbAddJsonPropertyAttributes
+      Track = True
+    end
+    object LinkControlToField2: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = PrototypeBindSource1
+      FieldName = 'UsePascalCase'
+      Control = chbUsePascalCase
+      Track = True
+    end
+    object LinkControlToField3: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = PrototypeBindSource1
+      FieldName = 'PostFixClassNames'
+      Control = chbPostfixClassNames
+      Track = True
+    end
+    object LinkControlToField4: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = PrototypeBindSource1
+      FieldName = 'PostFix'
+      Control = edPostFix
+      Track = False
+    end
+    object LinkPropertyToFieldEnabled: TLinkPropertyToField
+      Category = 'Quick Bindings'
+      DataSource = PrototypeBindSource1
+      FieldName = 'PostFixClassNames'
+      Component = edPostFix
+      ComponentProperty = 'Enabled'
+    end
+    object LinkControlToField5: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = PrototypeBindSource1
+      FieldName = 'SuppressZeroDate'
+      Control = CheckBoxSuppressZeroDate
+      Track = True
+    end
+  end
+end
