@@ -8,7 +8,7 @@ uses
   DTO.GitHUB.Release, Pkg.JSON.ThreadingEx;
 
 const
-  ProgramVersion: double = 3.0;
+  ProgramVersion: double = 3.1;
   UpdateUrl = 'https://api.github.com/repos/JensBorrisholt/Delphi-JsonToDelphiClass/releases';
   ProgramUrl = 'https://github.com/JensBorrisholt/Delphi-JsonToDelphiClass';
 
