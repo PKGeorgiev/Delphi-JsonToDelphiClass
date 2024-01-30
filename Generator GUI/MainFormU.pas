@@ -3,10 +3,10 @@
 interface
 
 uses
-  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, System.Threading,
-  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.TabControl, FMX.Menus, System.Actions, FMX.ActnList, FMX.Memo.Types, FMX.Objects,
-  FMX.Controls.Presentation, FMX.ScrollBox, FMX.Memo, FMX.ListView.Types, FMX.ListView.Appearances, FMX.ListView.Adapters.Base, FMX.StdCtrls,
-  FMX.ListView, FMX.Layouts, FMX.TreeView, FMX.Edit,
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, System.Threading, System.Actions,
+
+  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.TabControl, FMX.Menus, FMX.ActnList, FMX.Memo.Types, FMX.Objects, FMX.Controls.Presentation,
+  FMX.ScrollBox, FMX.Memo, FMX.ListView.Types, FMX.ListView.Appearances, FMX.ListView.Adapters.Base, FMX.StdCtrls, FMX.ListView, FMX.Layouts, FMX.TreeView, FMX.Edit,
 
   Pkg.Json.Mapper, DTO.GitHUB.ReleaseDTO, Pkg.Json.OutputFormat;
 
@@ -95,7 +95,7 @@ var
 implementation
 
 uses
-  System.IOUtils, System.Json,  System.NetEncoding,  Pkg.Json.Utils,
+  System.IOUtils, System.Json, System.NetEncoding, Pkg.Json.Utils,
 
   FMX.DialogService,
 

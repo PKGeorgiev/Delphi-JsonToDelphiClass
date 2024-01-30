@@ -52,7 +52,7 @@ uses
 const
   INDENT_SIZE = 2;
 
-{ TPkgJsonMapper }
+  { TPkgJsonMapper }
 
 procedure TPkgJsonMapper.ProcessJsonObject(aJsonValue: TJsonValue; aParentClass: TStubClass);
 var
@@ -69,7 +69,9 @@ begin
   if not(aJsonValue is TJSONObject) then
   begin
     JsonType := GetJsonType(aJsonValue);
-    var name := (aJsonValue as TJsonString).Value;
+
+    var Name := (aJsonValue as TJsonString).Value;
+
     if Name = '' then
       Name := 'Element';
 
@@ -143,11 +145,13 @@ begin
     for i := FStubClasses.Count - 1 downto 1 do
       SubTypes.AddSubTypes(FStubClasses[i], SubClasslist);
 
-    for Tmp in SubClasslist do
-      StringList.Addformat('  %s = class;', [Tmp]);
+    if SubClasslist.Count > 1 then
+    begin
+      for Tmp in SubClasslist do
+        StringList.Addformat('  %s = class;', [Tmp]);
 
-    if SubClasslist.Count > 0 then
       StringList.Add('');
+    end;
 
     SubClasslist.Free;
 
@@ -273,7 +277,7 @@ end;
 
 function TPkgJsonMapper.IsValid(aJsonString: string): boolean;
 var
-  Value: TJSONValue;
+  Value: TJsonValue;
 begin
   Value := TJSONObject.ParseJSONValue(aJsonString);
   Result := Value <> nil;
