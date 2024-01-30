@@ -1,8 +1,13 @@
 Delphi-JsonToDelphiClass
 ========================
 
-## Fixes & Features: 19th January 2024 ##
+## Fixes & Features: 130h January 2024 ##
+### Features ###
+* Major code cleanup, especially naming
+* Removed INDY from Upgrade chekker
+* Forward classes are only generated if there are more than one thanks to [Daniel](https://github.com/DanielMorlova) for pointing this out 
 
+## Fixes & Features: 19th January 2024 ##
 
 ### Features ###
 * Upgrade to Delphi 12
