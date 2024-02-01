@@ -9,13 +9,6 @@ Delphi-JsonToDelphiClass
   
   Thanks to [DummyJSON](https://dummyjson.com/) for providing this service.
 
-
-## Fixes & Features: 13th January 2024 ##
-### Features ###
-* Major code cleanup, especially naming
-* Removed INDY from Upgrade chekker
-* Forward classes are only generated if there are more than one thanks to [Daniel](https://github.com/DanielMorlova) for pointing this out 
-
 ## Fixes & Features: 19th January 2024 ##
 
 ### Features ###
@@ -25,6 +18,12 @@ Delphi-JsonToDelphiClass
 ### Bugs: ###
 * Unittest TestDateTime didnt pass under Delphi 12
 * Added missing Reserved words
+
+## Fixes & Features: 13th January 2024 ##
+### Features ###
+* Major code cleanup, especially naming
+* Removed INDY from Upgrade chekker
+* Forward classes are only generated if there are more than one thanks to [Daniel](https://github.com/DanielMorlova) for pointing this out 
 
 ## Fixes & Features: 06th February 2022 ##
 
