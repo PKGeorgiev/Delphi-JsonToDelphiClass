@@ -1,6 +1,15 @@
 Delphi-JsonToDelphiClass
 ========================
 
+## Fixes & Features: 01th February 2024 ##
+### Features ###
+* Added a Demo, getting Json from a WebAPI
+  
+  ![Demo Application](https://github.com/JensBorrisholt/Delphi-JsonToDelphiClass/blob/master/Dummy%20JSON%20demos/Demo.png)
+  
+  Thanks to [DummyJSON](https://dummyjson.com/) for providing this service.
+
+
 ## Fixes & Features: 13th January 2024 ##
 ### Features ###
 * Major code cleanup, especially naming
