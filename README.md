@@ -1,14 +1,29 @@
 Delphi-JsonToDelphiClass
 ========================
 
-## Fixes & Features: 19th January 2024 ##
+## Fixes & Features: 01th February 2024 ##
+### Features ###
+* Added a Demo, getting Json from a WebAPI
+  
+  ![Demo Application](https://github.com/JensBorrisholt/Delphi-JsonToDelphiClass/blob/master/Dummy%20JSON%20demos/Demo.png)
+  
+  Thanks to [DummyJSON](https://dummyjson.com/) for providing this service.
 
+## Fixes & Features: 19th January 2024 ##
 
 ### Features ###
 * Upgrade to Delphi 12
+* Added Clone function on TJsonDTO class
 
 ### Bugs: ###
-* Unittest TestDateTime didnt pass under Delphi 12 
+* Unittest TestDateTime didnt pass under Delphi 12
+* Added missing Reserved words
+
+## Fixes & Features: 13th January 2024 ##
+### Features ###
+* Major code cleanup, especially naming
+* Removed INDY from Upgrade chekker
+* Forward classes are only generated if there are more than one thanks to [Daniel](https://github.com/DanielMorlova) for pointing this out 
 
 ## Fixes & Features: 06th February 2022 ##
 
