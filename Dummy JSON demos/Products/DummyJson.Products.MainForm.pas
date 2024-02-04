@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, System.UITypes, System.Actions,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ActnList,
 
-  Pkg.Json.DTO, DummyJson.Lib.Enumerator, DummyJson.ProductsDTO;
+  DummyJson.Lib.Enumerator, DummyJson.ProductsDTO;
 
 type
   TMainForm = class(TForm)
@@ -41,8 +41,6 @@ type
   private
     { Private declarations }
     FListeEumerator: TListeEumerator<TProduct>;
-    function GetDTO<T: TJsonDTO, constructor>(const aUrl: string; var aErrorText: string): T;
-    function GetProducts: TProductsDTO;
     procedure ListeEumeratorChanged(Sender: TObject);
   public
     { Public declarations }
@@ -54,7 +52,7 @@ var
 implementation
 
 uses
-  System.Net.HttpClient, System.Net.HttpClientComponent;
+  DummyJson.Lib.DTODownloader;
 
 {$R *.dfm}
 
@@ -69,56 +67,14 @@ begin
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
-var
-  ProductsDTO: TProductsDTO;
-begin
-  ProductsDTO := GetProducts;
-  FListeEumerator := TListeEumerator<TProduct>.Create(Self, ProductsDTO, ProductsDTO.Products);
-  FListeEumerator.OnChange := ListeEumeratorChanged;
-  ListeEumeratorChanged(nil);
-end;
-
-function TMainForm.GetDTO<T>(const aUrl: string; var aErrorText: string): T;
-const
-  HTTP_OK = 200;
-var
-  DTO: T;
-  Respons: IHTTPResponse;
-begin
-  DTO := nil;
-  with TNetHTTPClient.Create(nil) do
-    try
-      try
-        Respons := Get(aUrl);
-
-        if Respons.StatusCode = HTTP_OK then
-        begin
-          DTO := T.Create;
-          DTO.AsJson := Respons.ContentAsString;
-        end
-        else
-          Exit;
-
-        aErrorText := '';
-      except
-        on e: Exception do
-          aErrorText := e.message;
-      end;
-    finally
-      Result := DTO;
-      Free;
-    end;
-end;
-
-function TMainForm.GetProducts: TProductsDTO;
 const
   Url = 'https://dummyjson.com/products';
 var
-  aErrorText: string;
+  ProductsDTO: TProductsDTO;
 begin
-  Result := GetDTO<TProductsDTO>(Url, aErrorText);
-  if Result = nil then
-    MessageDlg(aErrorText, TMsgDlgType.mtError, [TMsgDlgBtn.mbOK], 0);
+  ProductsDTO := DTODownloader.GetDTO<TProductsDTO>(Url);
+  FListeEumerator := TListeEumerator<TProduct>.Create(Self, ProductsDTO, ProductsDTO.Products);
+  FListeEumerator.OnChange := ListeEumeratorChanged;
 end;
 
 procedure TMainForm.ListeEumeratorChanged(Sender: TObject);

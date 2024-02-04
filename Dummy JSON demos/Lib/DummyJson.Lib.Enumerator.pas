@@ -10,7 +10,7 @@ uses
 {$M+}
 
 Type
-  TListeEumerator<TElement: TJsonDTO> = class(TComponent)
+  TListeEumerator<TElement: class> = class(TComponent)
   strict private
     FDto: TJsonDTO;
     FElements: TList<TElement>;
@@ -20,9 +20,10 @@ Type
     function GetCurrent: TElement;
   private
     FOnChange: TNotifyEvent;
+    procedure SetOnChange(const Value: TNotifyEvent);
   published
     property Current: TElement read GetCurrent;
-    property OnChange: TNotifyEvent read FOnChange write FOnChange;
+    property OnChange: TNotifyEvent read FOnChange write SetOnChange;
   public
     constructor Create(aOwner: TComponent; aDTO: TJsonDTO; aElements: TList<TElement>); reintroduce;
     destructor Destroy; override;
@@ -85,6 +86,12 @@ begin
     FCurrentIndex := FElements.Count - 1;
 
   Result := Current;
+  DoChange;
+end;
+
+procedure TListeEumerator<TElement>.SetOnChange(const Value: TNotifyEvent);
+begin
+  FOnChange := Value;
   DoChange;
 end;
 
