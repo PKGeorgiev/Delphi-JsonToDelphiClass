@@ -4,7 +4,7 @@ Delphi-JsonToDelphiClass
 ## Fixes & Features: 04h February 2024 ##
 ### Features ###
 * Added a Demo, using and authenticated endpoint
-  ![Demo Application](https://github.com/JensBorrisholt/Delphi-JsonToDelphiClass/blob/master/Dummy%20JSON%20demos/Authentication/Demo.png)
+  ![Demo Application](https://github.com/JensBorrisholt/Delphi-JsonToDelphiClass/blob/master/Dummy%20JSON%20demos/Authentication/Demo.PNG)
 
 This demo illustrates how to authenticate a user to obtain a Bearer token.
 Subsequently, this token is used to retrieve a list of products from an endpoint that requires authentication.
