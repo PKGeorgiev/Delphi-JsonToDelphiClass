@@ -10,6 +10,7 @@ uses
 const
   HTTP_OK = 200;
   CONTENT_TYPE = 'Content-Type';
+  CONTENT_LENGTH = 'Content-Length';
   HEADER_PARAM_ACCEPT = 'Accept';
   HEADER_PARAM_AUTHORIZATION = 'Authorization';
   HEADER_PARAM_BEARER = 'Bearer ';
@@ -36,7 +37,7 @@ type
     destructor Destroy; override;
     function Post: T; virtual;
     function Get: T; virtual;
-    class function GetDTO(aBaseUrl: string = ''): T;
+    class function GetDTO(aBaseUrl: string; aAuthenticationToken: string = ''): T;
   end;
 
   TUserAuthWebService<T: TJsonDTO, constructor> = class sealed(TWebService<T>)
@@ -66,7 +67,7 @@ uses
 procedure TWebService<T>.AddBody(aBody: string; aAddCoontentLength: Boolean);
 begin
   if aAddCoontentLength then
-    FRequest.Params.AddItem('Content-Length', (aBody.Length).ToString, TRESTRequestParameterKind.pkHTTPHEADER);
+    FRequest.Params.AddItem(CONTENT_LENGTH, (aBody.Length).ToString, TRESTRequestParameterKind.pkHTTPHEADER);
 
   FRequest.AddBody(aBody, TRESTContentType.ctAPPLICATION_JSON);
 end;
@@ -99,7 +100,7 @@ begin
   AddHeaderParam(CONTENT_TYPE, CONTENTTYPE_APPLICATION_JSON);
   AddHeaderParam(HEADER_PARAM_ACCEPT, CONTENTTYPE_APPLICATION_JSON);
   if aAuthenticationToken <> '' then
-    AddHeaderParam(HEADER_PARAM_AUTHORIZATION, HEADER_PARAM_BEARER  + aAuthenticationToken);
+    AddHeaderParam(HEADER_PARAM_AUTHORIZATION, HEADER_PARAM_BEARER + aAuthenticationToken);
 end;
 
 destructor TWebService<T>.Destroy;
@@ -145,9 +146,9 @@ begin
   Result := FClient.BaseURL;
 end;
 
-class function TWebService<T>.GetDTO(aBaseUrl: string): T;
+class function TWebService<T>.GetDTO(aBaseUrl: string; aAuthenticationToken: string = ''): T;
 begin
-  with TWebService<T>.Create(aBaseUrl) do
+  with TWebService<T>.Create(aBaseUrl, aAuthenticationToken) do
     try
       Result := Get;
     finally

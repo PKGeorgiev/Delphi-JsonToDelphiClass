@@ -168,9 +168,12 @@ begin
 end;
 
 procedure TMainForm.UserEumeratorChanged(Sender: TObject);
+const
+  Url = 'https://dummyjson.com/auth/products';
 var
   User: TUser;
   ProductsDTO: TProductsDTO;
+  Token: string;
 begin
   User := FUserEumerator.Current;
   if User = nil then
@@ -201,12 +204,8 @@ begin
 
   FreeAndNil(FProductsEumerator);
 
-  with TWebService<TProductsDTO>.Create('https://dummyjson.com/auth/products', AuthenticaticedUsers.AuthenticateUser(User).Token) do
-    try
-      ProductsDTO := Get;
-    finally
-      Free;
-    end;
+  Token := AuthenticaticedUsers.AuthenticateUser(User).Token;
+  ProductsDTO := TWebService<TProductsDTO>.GetDTO(Url, Token);
 
   FProductsEumerator := TListeEumerator<TProduct>.Create(Self, ProductsDTO, ProductsDTO.Products);
   FProductsEumerator.OnChange := ProductsEumeratorChanged;

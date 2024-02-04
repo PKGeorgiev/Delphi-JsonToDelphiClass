@@ -123,7 +123,7 @@ type
     FUniversity: string;
     FUserAgent: string;
     FUsername: string;
-    FWeight: Integer;
+    FWeight: Double;
   published
     property Address: TAddress read FAddress;
     property Age: Integer read FAge write FAge;
@@ -152,7 +152,7 @@ type
     property University: string read FUniversity write FUniversity;
     property UserAgent: string read FUserAgent write FUserAgent;
     property Username: string read FUsername write FUsername;
-    property Weight: Integer read FWeight write FWeight;
+    property Weight: Double read FWeight write FWeight;
   public
     constructor Create;
     destructor Destroy; override;
