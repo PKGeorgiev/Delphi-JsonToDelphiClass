@@ -1,12 +1,22 @@
 Delphi-JsonToDelphiClass
 ========================
 
+## Fixes & Features: 04h February 2024 ##
+### Features ###
+* Added a Demo, using and authenticated endpoint
+  ![Demo Application](https://github.com/JensBorrisholt/Delphi-JsonToDelphiClass/blob/master/Dummy%20JSON%20demos/Authentication/Demo.png)
+
+This demo illustrates how to authenticate a user to obtain a Bearer token.
+Subsequently, this token is used to retrieve a list of products from an endpoint that requires authentication.
+
+Thanks to [DummyJSON](https://dummyjson.com/) for providing this service.
+
 ## Fixes & Features: 01th February 2024 ##
 ### Features ###
 * Added a Demo, getting Json from a WebAPI
-  
-  ![Demo Application](https://github.com/JensBorrisholt/Delphi-JsonToDelphiClass/blob/master/Dummy%20JSON%20demos/Demo.png)
-  
+
+  ![Demo Application](https://github.com/JensBorrisholt/Delphi-JsonToDelphiClass/blob/master/Dummy%20JSON%20demos/Products/Demo.png)
+
   Thanks to [DummyJSON](https://dummyjson.com/) for providing this service.
 
 ## Fixes & Features: 19th January 2024 ##
@@ -23,7 +33,7 @@ Delphi-JsonToDelphiClass
 ### Features ###
 * Major code cleanup, especially naming
 * Removed INDY from Upgrade chekker
-* Forward classes are only generated if there are more than one thanks to [Daniel](https://github.com/DanielMorlova) for pointing this out 
+* Forward classes are only generated if there are more than one thanks to [Daniel](https://github.com/DanielMorlova) for pointing this out
 
 ## Fixes & Features: 06th February 2022 ##
 
@@ -43,7 +53,7 @@ Delphi-JsonToDelphiClass
 ### Bugs: ###
 * Wrong type detection. '2019-08-29' wasn't recognized as a Date, but a string
 * All unittests didn't pass
-* In the generator main form, the correct JSON wans't allways read from the MEMO 
+* In the generator main form, the correct JSON wans't allways read from the MEMO
 * In the generator main form, the JSON wasn't allways updated
 
 ### Features ###
@@ -52,7 +62,7 @@ Delphi-JsonToDelphiClass
   Delphi doesn't support Nullable types, so use this attribute to strip TDateTime property where value is 0.
 
 A Small example:
-``` pascal 
+``` pascal
 type
   TDateTimeDTO = class(TJsonDTO)
   private
@@ -64,7 +74,7 @@ type
     property NoDateSuppress: TDateTime read FNoSuppressDate write FNoSuppressDate;
   end;
 ```
-The above class will generate the following JSON, if both properties is 0 
+The above class will generate the following JSON, if both properties is 0
 
 ```json
   {
@@ -72,7 +82,7 @@ The above class will generate the following JSON, if both properties is 0
     "noSuppressDate":"1899-12-30T00:00:00.000Z"
   }
 ```
-NOTE: You can turn off this feature in the settings form 
+NOTE: You can turn off this feature in the settings form
 
 ## Fixes & Features: 04th June 2021 ##
 
