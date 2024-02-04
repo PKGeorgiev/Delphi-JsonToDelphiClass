@@ -1,7 +1,7 @@
 Delphi-JsonToDelphiClass
 ========================
 
-## Fixes & Features: 04h February 2024 ##
+## Fixes & Features: 04th February 2024 ##
 ### Features ###
 * Added a Demo, using and authenticated endpoint
   ![Demo Application](https://github.com/JensBorrisholt/Delphi-JsonToDelphiClass/blob/master/Dummy%20JSON%20demos/Authentication/Demo.PNG)
