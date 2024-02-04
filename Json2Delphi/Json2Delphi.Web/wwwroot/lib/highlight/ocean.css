@@ -1,0 +1,16 @@
+.delphiOcean { font-family:monospace;font-style:normal;font-weight:normal;background-color:aqua;color:black; }
+.delphiOcean table, td, th { border-spacing:0px;padding:0px; }
+.delphiOcean .comment { font-family:monospace;font-style:italic;font-weight:normal;background-color:aqua;color:teal; }
+.delphiOcean .keyword { font-family:monospace;font-style:normal;font-weight:normal;background-color:aqua;color:black; }
+.delphiOcean .identifier { font-family:monospace;font-style:normal;font-weight:normal;background-color:aqua;color:blue; }
+.delphiOcean .symbol { font-family:monospace;font-style:normal;font-weight:normal;background-color:aqua;color:black; }
+.delphiOcean .string { font-family:monospace;font-style:normal;font-weight:normal;background-color:aqua;color:purple; }
+.delphiOcean .character { font-family:monospace;font-style:normal;font-weight:normal;background-color:aqua;color:purple; }
+.delphiOcean .number { font-family:monospace;font-style:normal;font-weight:normal;background-color:aqua;color:olive; }
+.delphiOcean .float { font-family:monospace;font-style:normal;font-weight:normal;background-color:aqua;color:olive; }
+.delphiOcean .hex { font-family:monospace;font-style:normal;font-weight:normal;background-color:aqua;color:olive; }
+.delphiOcean .assembler { font-family:monospace;font-style:normal;font-weight:normal;background-color:aqua;color:blue; }
+.delphiOcean .preprocessor { font-family:monospace;font-style:normal;font-weight:normal;background-color:aqua;color:black; }
+.delphiOcean .error { font-family:monospace;font-style:normal;font-weight:normal;background-color:aqua;color:red; }
+.delphiOcean .gutter { font-family:monospace;font-style:normal;font-weight:normal;background-color:aqua;color:gray;text-align:right;padding-right:4px;border-right-color:lightgray;border-right-style:solid;border-right-width:2px; }
+.delphiOcean .content { font-family:monospace;font-style:normal;font-weight:normal;background-color:aqua;padding-left:6px; }

@@ -1,0 +1,18 @@
+.delphiTwilightAlt { font-family:monospace;font-style:normal;font-weight:normal;background-color:black;color:white; }
+.delphiTwilightAlt table, td, th { border-spacing:0px;padding:0px; }
+.delphiTwilightAlt .comment { font-family:monospace;font-style:italic;font-weight:normal;color:lime; }
+.delphiTwilightAlt .keyword { font-family:monospace;font-style:normal;font-weight:normal;color:aqua; }
+.delphiTwilightAlt .identifier { font-family:monospace;font-style:normal;font-weight:normal;color:white; }
+.delphiTwilightAlt .symbol { font-family:monospace;font-style:normal;font-weight:normal;color:silver; }
+.delphiTwilightAlt .string { font-family:monospace;font-style:normal;font-weight:normal;color:yellow; }
+.delphiTwilightAlt .character { font-family:monospace;font-style:normal;font-weight:normal;color:yellow; }
+.delphiTwilightAlt .number { font-family:monospace;font-style:normal;font-weight:normal;color:fuchsia; }
+.delphiTwilightAlt .float { font-family:monospace;font-style:normal;font-weight:normal;color:fuchsia; }
+.delphiTwilightAlt .hex { font-family:monospace;font-style:normal;font-weight:normal;color:fuchsia; }
+.delphiTwilightAlt .assembler { font-family:monospace;font-style:normal;font-weight:normal;color:lime; }
+.delphiTwilightAlt .preprocessor { font-family:monospace;font-style:normal;font-weight:normal;color:green; }
+.delphiTwilightAlt .error { font-family:monospace;font-style:normal;font-weight:normal;color:red; }
+.delphiTwilightAlt .gutter { font-family:monospace;font-style:normal;font-weight:normal;text-align:right;padding-right:4px;border-right-color:lightgray;border-right-style:solid;border-right-width:2px; }
+.delphiTwilightAlt .content { font-family:monospace;font-style:normal;font-weight:normal;padding-left:6px; }
+.delphiTwilightAlt tr:nth-child(odd) { background:black; }
+.delphiTwilightAlt tr:nth-child(even) { background:silver; }

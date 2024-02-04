@@ -1,0 +1,72 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{560647DB-14E8-40D3-BA10-4E1D58DB5EE0}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Generator GUI\JsonToDelphiClass.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="End To End Test\EndToEndTest.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Unit Test\JsonToDelphiClassTests.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Generator LIB\GeneratorLIB.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="JsonToDelphiClass">
+        <MSBuild Projects="Generator GUI\JsonToDelphiClass.dproj"/>
+    </Target>
+    <Target Name="JsonToDelphiClass:Clean">
+        <MSBuild Projects="Generator GUI\JsonToDelphiClass.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="JsonToDelphiClass:Make">
+        <MSBuild Projects="Generator GUI\JsonToDelphiClass.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="EndToEndTest">
+        <MSBuild Projects="End To End Test\EndToEndTest.dproj"/>
+    </Target>
+    <Target Name="EndToEndTest:Clean">
+        <MSBuild Projects="End To End Test\EndToEndTest.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="EndToEndTest:Make">
+        <MSBuild Projects="End To End Test\EndToEndTest.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="JsonToDelphiClassTests">
+        <MSBuild Projects="Unit Test\JsonToDelphiClassTests.dproj"/>
+    </Target>
+    <Target Name="JsonToDelphiClassTests:Clean">
+        <MSBuild Projects="Unit Test\JsonToDelphiClassTests.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="JsonToDelphiClassTests:Make">
+        <MSBuild Projects="Unit Test\JsonToDelphiClassTests.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="GeneratorLIB">
+        <MSBuild Projects="Generator LIB\GeneratorLIB.dproj"/>
+    </Target>
+    <Target Name="GeneratorLIB:Clean">
+        <MSBuild Projects="Generator LIB\GeneratorLIB.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="GeneratorLIB:Make">
+        <MSBuild Projects="Generator LIB\GeneratorLIB.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="JsonToDelphiClass;EndToEndTest;JsonToDelphiClassTests;GeneratorLIB"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="JsonToDelphiClass:Clean;EndToEndTest:Clean;JsonToDelphiClassTests:Clean;GeneratorLIB:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="JsonToDelphiClass:Make;EndToEndTest:Make;JsonToDelphiClassTests:Make;GeneratorLIB:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
