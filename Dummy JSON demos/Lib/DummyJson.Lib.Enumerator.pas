@@ -12,14 +12,14 @@ uses
 Type
   TListeEumerator<TElement: class> = class(TComponent)
   strict private
+    FCurrentIndex: Integer;
     FDto: TJsonDTO;
     FElements: TList<TElement>;
-    FCurrentIndex: Integer;
+    FOnChange: TNotifyEvent;
+
     procedure DoChange;
     function IndexInrange: Boolean;
     function GetCurrent: TElement;
-  private
-    FOnChange: TNotifyEvent;
     procedure SetOnChange(const Value: TNotifyEvent);
   published
     property Current: TElement read GetCurrent;
